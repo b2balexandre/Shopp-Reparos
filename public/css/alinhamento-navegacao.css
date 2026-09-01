@@ -1,0 +1,80 @@
+/* ===== CORREÇÕES DE ALINHAMENTO DA NAVEGAÇÃO ===== */
+
+/* Garantir alinhamento consistente dos itens de navegação */
+.menu {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    flex-wrap: nowrap !important;
+}
+
+.menu a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+    min-height: 44px !important;
+    text-align: center !important;
+    position: relative !important;
+    z-index: 1001 !important;
+}
+
+/* Correção específica para "REPAROS HIDRÁULICOS" */
+.menu a[href="/reparos-hidraulicos"] {
+    white-space: nowrap !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    font-weight: 500 !important;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+    .menu {
+        gap: 6px !important;
+        padding: 10px 16px !important;
+    }
+    
+    .menu a {
+        font-size: 0.8rem !important;
+        padding: 8px 12px !important;
+        min-height: 40px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .menu {
+        flex-direction: column !important;
+        gap: 30px !important;
+        flex-wrap: wrap !important;
+    }
+    
+    .menu a {
+        white-space: normal !important;
+        min-height: auto !important;
+        font-size: 1.2rem !important;
+        padding: 15px 25px !important;
+    }
+}
+
+/* Correções para problemas de sobreposição */
+.menu,
+.menu a,
+.topo {
+    position: relative !important;
+}
+
+.topo {
+    z-index: 1002 !important;
+}
+
+.menu {
+    z-index: 1000 !important;
+}
+
+.menu a {
+    z-index: 1001 !important;
+}

@@ -1,0 +1,723 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Variáveis CSS customizadas */
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --primary-light: #3b82f6;
+    --secondary: #64748b;
+    --accent: #06b6d4;
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --dark: #1e293b;
+    --light: #f8fafc;
+    
+    /* Gradientes */
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --gradient-success: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    
+    /* Sombras */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+    
+    /* Transições */
+    --transition-fast: 0.15s ease-in-out;
+    --transition-normal: 0.3s ease-in-out;
+    --transition-slow: 0.5s ease-in-out;
+}
+
+/* Reset e base */
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: var(--dark);
+    background-color: var(--light);
+}
+
+/* Animações */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Classes de animação */
+.animate-in {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.animate-in-left {
+    animation: fadeInLeft 0.6s ease-out forwards;
+}
+
+.animate-in-right {
+    animation: fadeInRight 0.6s ease-out forwards;
+}
+
+.animate-scale-in {
+    animation: scaleIn 0.4s ease-out forwards;
+}
+
+.animate-slide-up {
+    animation: slideInUp 0.5s ease-out forwards;
+}
+
+/* Componentes customizados */
+@layer components {
+    /* Botões modernos */
+    .btn-modern {
+        @apply inline-flex items-center justify-center px-6 py-3 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-offset-2;
+    }
+    
+    .btn-primary {
+        @apply bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg hover:shadow-xl hover:from-blue-700 hover:to-blue-800 focus:ring-blue-500;
+    }
+    
+    .btn-secondary {
+        @apply bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 shadow-md hover:shadow-lg hover:from-gray-200 hover:to-gray-300 focus:ring-gray-500;
+    }
+    
+    .btn-accent {
+        @apply bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg hover:shadow-xl hover:from-cyan-600 hover:to-blue-600 focus:ring-cyan-500;
+    }
+    
+    .btn-success {
+        @apply bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg hover:shadow-xl hover:from-green-600 hover:to-emerald-600 focus:ring-green-500;
+    }
+    
+    .btn-danger {
+        @apply bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-lg hover:shadow-xl hover:from-red-600 hover:to-pink-600 focus:ring-red-500;
+    }
+    
+    /* Cards modernos */
+    .card-modern {
+        @apply bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100;
+    }
+    
+    .card-glass {
+        @apply bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20;
+    }
+    
+    .card-gradient {
+        @apply bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg border border-gray-100;
+    }
+    
+    /* Formulários modernos */
+    .form-input-modern {
+        @apply w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white/50 backdrop-blur-sm transition-all duration-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 focus:outline-none placeholder-gray-400;
+    }
+    
+    .form-input-modern:focus {
+        @apply transform scale-[1.02];
+    }
+    
+    .form-input-modern.error {
+        @apply border-red-500 focus:border-red-500 focus:ring-red-500/20;
+    }
+    
+    /* Navegação moderna */
+    .nav-link-modern {
+        @apply relative px-4 py-2 text-gray-700 font-medium transition-all duration-300 hover:text-blue-600;
+    }
+    
+    .nav-link-modern::after {
+        content: '';
+        @apply absolute bottom-0 left-1/2 w-0 h-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 transition-all duration-300 transform -translate-x-1/2;
+    }
+    
+    .nav-link-modern:hover::after {
+        @apply w-full;
+    }
+    
+    .nav-link-modern.active {
+        @apply text-blue-600;
+    }
+    
+    .nav-link-modern.active::after {
+        @apply w-full;
+    }
+    
+    /* Seções modernas */
+    .section-modern {
+        @apply py-16 px-4;
+    }
+    
+    .section-title-modern {
+        @apply text-3xl md:text-4xl font-bold text-center mb-4 bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent;
+    }
+    
+    .section-subtitle-modern {
+        @apply text-lg text-gray-600 text-center mb-12 max-w-2xl mx-auto;
+    }
+    
+    /* Grid moderno */
+    .grid-modern {
+        @apply grid gap-6 md:gap-8;
+    }
+    
+    /* Container moderno */
+    .container-modern {
+        @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    }
+}
+
+/* Swiper customizado */
+.swiper {
+    @apply relative;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    @apply w-12 h-12 bg-white/90 backdrop-blur-sm rounded-full shadow-lg border border-gray-200 transition-all duration-300 hover:bg-white hover:shadow-xl hover:scale-110;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    @apply text-lg font-bold text-blue-600;
+}
+
+.swiper-pagination-bullet {
+    @apply w-3 h-3 bg-gray-300 opacity-70 transition-all duration-300;
+}
+
+.swiper-pagination-bullet-active {
+    @apply bg-blue-600 opacity-100 scale-125;
+}
+
+/* Header moderno */
+.header-modern {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-modern .container-modern {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.5rem 1rem;
+}
+
+@media (min-width: 640px) {
+    .header-modern .container-modern {
+        padding: 0.5rem 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .header-modern .container-modern {
+        padding: 0.5rem 2rem;
+    }
+}
+
+/* Ajustar para telas XL considerando o stories */
+@media (min-width: 1280px) {
+    .header-modern .container-modern {
+        padding-right: calc(2rem + 6rem); /* 2rem do container + 6rem do stories */
+    }
+}
+
+/* Footer moderno */
+.footer-modern {
+    @apply bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white;
+}
+
+/* Responsividade */
+@media (max-width: 1023px) {
+    .banner-swiper {
+        @apply hidden;
+    }
+}
+
+@media (min-width: 1024px) {
+    .mobile-banner-swiper {
+        @apply hidden;
+    }
+}
+
+@media (max-width: 768px) {
+    .swiper-button-next,
+    .swiper-button-prev {
+        @apply w-10 h-10;
+    }
+    
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+        @apply text-sm;
+    }
+    
+    .section-title-modern {
+        @apply text-2xl;
+    }
+    
+    .mobile-banner-swiper {
+        @apply h-80;
+    }
+}
+
+/* Estados de loading */
+.loading {
+    @apply relative overflow-hidden;
+}
+
+.loading::after {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse;
+}
+
+/* Estados de sucesso */
+.success {
+    @apply bg-green-500 text-white;
+}
+
+/* Back to top button */
+.back-to-top {
+    @apply fixed bottom-8 right-8 w-12 h-12 bg-blue-600 text-white rounded-full shadow-lg transition-all duration-300 opacity-0 pointer-events-none hover:bg-blue-700 hover:shadow-xl hover:scale-110;
+}
+
+.back-to-top.show {
+    @apply opacity-100 pointer-events-auto;
+}
+
+/* Menu mobile */
+.mobile-menu {
+    @apply fixed inset-0 bg-white/95 backdrop-blur-md z-50 transform translate-x-full transition-transform duration-300;
+}
+
+.mobile-menu.active {
+    @apply translate-x-0;
+}
+
+.menu-toggle {
+    @apply relative w-8 h-8 flex flex-col justify-center items-center;
+}
+
+.menu-toggle span {
+    @apply w-6 h-0.5 bg-gray-800 transition-all duration-300;
+}
+
+.menu-toggle span:nth-child(2) {
+    @apply my-1;
+}
+
+.menu-toggle.active span:nth-child(1) {
+    @apply transform rotate-45 translate-y-1.5;
+}
+
+.menu-toggle.active span:nth-child(2) {
+    @apply opacity-0;
+}
+
+.menu-toggle.active span:nth-child(3) {
+    @apply transform -rotate-45 -translate-y-1.5;
+}
+
+/* Utilitários adicionais */
+.text-gradient {
+    @apply bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent;
+}
+
+.bg-gradient-primary {
+    background: var(--gradient-primary);
+}
+
+.bg-gradient-secondary {
+    background: var(--gradient-secondary);
+}
+
+.bg-gradient-accent {
+    background: var(--gradient-accent);
+}
+
+.bg-gradient-success {
+    background: var(--gradient-success);
+}
+
+/* Animações de entrada */
+.animate-on-scroll {
+    @apply opacity-0 transform translate-y-8 transition-all duration-700;
+}
+
+.animate-on-scroll.animate-in {
+    @apply opacity-100 translate-y-0;
+}
+
+/* Hover effects */
+.hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-xl;
+}
+
+.hover-scale {
+    @apply transition-all duration-300 hover:scale-105;
+}
+
+.hover-glow {
+    @apply transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/25;
+}
+
+.bg-secondary { 
+    background-color: var(--bg-secondary); 
+}
+
+/* Otimização de espaço para telas menores */
+@media (max-height: 800px) {
+    .header-modern {
+        padding: 0.5rem 0;
+    }
+    
+    .header-modern .container-modern {
+        padding: 0.25rem 1rem;
+    }
+    
+    .carrossel-banner {
+        margin-bottom: 1rem !important;
+    }
+    
+    .section-modern {
+        margin-bottom: 2rem !important;
+    }
+    
+    .card-modern {
+        padding: 1rem !important;
+    }
+    
+    .card-modern h3 {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .card-modern p {
+        font-size: 0.9rem !important;
+        margin-bottom: 0.75rem !important;
+    }
+    
+    .section-title-modern {
+        font-size: 1.75rem !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .section-subtitle-modern {
+        font-size: 1rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+}
+
+/* Logo menor e mais moderna */
+.header-modern img {
+    height: 2rem !important;
+    width: auto;
+    transition: all 0.3s ease;
+}
+
+.header-modern img:hover {
+    transform: scale(1.05);
+}
+
+/* Reduzir espaçamentos gerais */
+.container-modern {
+    padding: 0 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+    .container-modern {
+        padding: 0 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .container-modern {
+        padding: 0 2rem;
+    }
+}
+
+/* Otimizar seções */
+.section-modern {
+    margin-bottom: 2rem;
+}
+
+.grid-modern {
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .grid-modern {
+        gap: 1.5rem;
+    }
+}
+
+/* Carrossel mais compacto */
+.carrossel-banner {
+    margin-bottom: 1.5rem;
+}
+
+.carrossel-banner .indicator {
+    width: 0.625rem;
+    height: 0.625rem;
+}
+
+.carrossel-banner .prev-btn,
+.carrossel-banner .next-btn {
+    padding: 0.375rem;
+}
+
+.carrossel-banner .prev-btn i,
+.carrossel-banner .next-btn i {
+    font-size: 0.875rem;
+}
+
+/* Cards mais compactos */
+.card-modern {
+    padding: 1.25rem;
+}
+
+.card-modern h3 {
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+}
+
+.card-modern p {
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+}
+
+/* Títulos de seção mais compactos */
+.section-title-modern {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.section-subtitle-modern {
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .section-title-modern {
+        font-size: 1.5rem;
+    }
+    
+    .section-subtitle-modern {
+        font-size: 1rem;
+    }
+}
+
+/* Navegação mais compacta */
+.nav-link-modern {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+@media (min-width: 1024px) {
+    .nav-link-modern {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Otimizar espaçamento do main */
+main.container-modern {
+    padding-top: 1rem;
+}
+
+/* Reduzir margem do banner */
+main .relative.mb-16 {
+    margin-bottom: 1.5rem !important;
+}
+
+/* Otimizar grid de cards principais */
+.grid-modern.grid-cols-1.md\\:grid-cols-3 {
+    margin-bottom: 1.5rem !important;
+}
+
+/* Ajustar altura dos vídeos nos cards */
+.card-modern video {
+    height: 8rem !important;
+}
+
+@media (min-width: 768px) {
+    .card-modern video {
+        height: 10rem !important;
+    }
+} 
+
+/* ========================================
+   ESTILOS ESPECÍFICOS PARA LOGO
+   ======================================== */
+
+/* Logo principal do header - Desktop */
+.header-logo-desktop img {
+    height: 3.5rem !important; /* h-14 */
+    width: auto !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    max-height: 3.5rem !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Logo principal do header - Mobile */
+.header-logo-mobile img {
+    height: 2.5rem !important; /* h-10 */
+    width: auto !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    max-height: 2.5rem !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Logo do footer */
+.footer-logo img {
+    height: 2.5rem !important; /* h-10 */
+    width: auto !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    max-height: 2.5rem !important;
+    filter: brightness(0) invert(1) !important; /* brightness-0 invert */
+}
+
+/* Hover effects para logos */
+.header-logo-desktop img:hover,
+.header-logo-mobile img:hover {
+    transform: scale(1.05) !important;
+}
+
+/* Garantir que todas as logos mantenham proporções */
+img[src*="logohorizontal.png"] {
+    object-fit: contain !important;
+    object-position: center !important;
+    max-width: 100% !important;
+    height: auto !important;
+}
+
+/* Responsividade para logos */
+@media (max-width: 768px) {
+    .header-logo-desktop img {
+        height: 2.5rem !important;
+    }
+    
+    .footer-logo img {
+        height: 2rem !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    .header-logo-desktop img {
+        height: 3.5rem !important;
+    }
+    
+    .footer-logo img {
+        height: 2.5rem !important;
+    }
+} 
+
+/* ========================================
+   CORREÇÃO DO ESPAÇAMENTO DO FOOTER
+   ======================================== */
+
+/* Garantir espaçamento adequado entre conteúdo e footer */
+main {
+    margin-bottom: 6rem !important; /* 96px - equivalente ao pb-24 */
+}
+
+/* Footer com padding adequado */
+footer {
+    margin-top: 2rem !important;
+}
+
+/* Conteúdo do footer com espaçamento interno */
+footer .container {
+    padding-top: 5rem !important; /* 80px - equivalente ao py-20 */
+    padding-bottom: 5rem !important;
+}
+
+/* Responsividade para o espaçamento */
+@media (max-width: 768px) {
+    main {
+        margin-bottom: 4rem !important; /* 64px em mobile */
+    }
+    
+    footer .container {
+        padding-top: 3rem !important; /* 48px em mobile */
+        padding-bottom: 3rem !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    main {
+        margin-bottom: 6rem !important; /* 96px em desktop */
+    }
+    
+    footer .container {
+        padding-top: 5rem !important; /* 80px em desktop */
+        padding-bottom: 5rem !important;
+    }
+} 

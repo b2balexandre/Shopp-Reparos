@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Logo Mobile - Corrigida</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        
+        .test-content {
+            padding: 20px;
+            margin-top: 100px;
+        }
+        
+        .test-info {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .test-info h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        
+        .test-info p {
+            margin: 5px 0;
+            color: #666;
+        }
+        
+        .test-info ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .test-info li {
+            margin: 5px 0;
+        }
+        
+        .logo-test {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .logo-test img {
+            border: 2px dashed #ddd;
+            padding: 10px;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- TOPO / HEADER -->
+        <header class="topo">
+            <button class="menu-mobile only-mobile">☰</button>
+            <div class="logo">
+                <img src="img/logohorizontal.png" alt="SHOPP REPAROS">
+            </div>
+            <div class="icones">
+                <!-- WhatsApp -->
+                <span class="icone whatsapp">
+                    <img src="img/whatsapp.svg" alt="">
+                    <div class="dropdown-info">
+                        <img src="img/logohorizontal.png" class="logo" alt="Logo">
+                        <p>Atendimento rápido e direto no WhatsApp!</p>
+                        <a href="#" class="whatsapp-btn">Águas Claras</a>
+                        <a href="#" class="whatsapp-btn">Taguatinga</a>
+                    </div>
+                </span>
+                <!-- Blog -->
+                <span class="icone blog">
+                    <a href="#" title="Blog - Dicas e Soluções">
+                        <img src="img/blog.svg" alt="Blog">
+                    </a>
+                    <div class="dropdown-info">
+                        <img src="img/logohorizontal.png" class="logo" alt="Logo">
+                        <p>Descubra dicas práticas e soluções para seus reparos!</p>
+                        <a href="#" class="blog-btn">Acessar Blog</a>
+                    </div>
+                </span>
+                <!-- Localização -->
+                <span class="icone local">
+                    <img src="img/location.svg" alt="">
+                    <div class="dropdown-info">
+                        <p><strong>Águas Claras:</strong><br>Q 204 Alfa Mix Loja 15A - Águas Claras, Brasília</p>
+                        <p><strong>Taguatinga:</strong><br>St. E Sul CSE 2 - Taguatinga Sul, Brasília</p>
+                    </div>
+                </span>
+            </div>
+        </header>
+        
+        <nav class="menu">
+            <a href="/">HOME</a>
+            <a href="#">LOJAS</a>
+            <a href="/reparos-hidraulicos">REPAROS HIDRÁULICOS</a>
+            <a href="/site/produtos">PRODUTOS</a>
+            <a href="/site/servicos">SERVIÇOS</a>
+            <a href="#">ASSISTÊNCIA TÉCNICA</a>
+        </nav>
+    </div>
+    
+    <div class="test-content">
+        <div class="test-info">
+            <h3>✅ Logo Corrigida - Não Mais Esticada</h3>
+            <p><strong>Status:</strong> Logo corrigida para manter proporção correta no mobile</p>
+            <p><strong>Problema resolvido:</strong></p>
+            <ul>
+                <li>✅ Logo não está mais esticada horizontalmente</li>
+                <li>✅ Proporção original mantida</li>
+                <li>✅ Tamanho otimizado para mobile</li>
+                <li>✅ Centralização mantida</li>
+            </ul>
+        </div>
+        
+        <div class="logo-test">
+            <h3>🔍 Teste da Logo</h3>
+            <p>Logo abaixo deve estar com proporção correta (não esticada):</p>
+            <img src="img/logohorizontal.png" alt="SHOPP REPAROS" style="height: 45px; width: auto;">
+        </div>
+        
+        <div class="test-info">
+            <h3>🔧 Correções Técnicas Aplicadas</h3>
+            <p><strong>CSS Corrigido:</strong></p>
+            <ul>
+                <li><strong>Flex:</strong> Alterado de `flex: 1` para `flex: 0 0 auto`</li>
+                <li><strong>Width:</strong> `width: auto` para manter proporção</li>
+                <li><strong>Max-width:</strong> `max-width: none` para evitar limitações</li>
+                <li><strong>Object-fit:</strong> `object-fit: contain` para preservar proporção</li>
+                <li><strong>Object-position:</strong> `center` para centralização</li>
+            </ul>
+        </div>
+        
+        <div class="test-info">
+            <h3>📱 Como Testar</h3>
+            <p>1. Abra esta página no seu dispositivo móvel</p>
+            <p>2. Verifique se a logo:</p>
+            <ul>
+                <li>Não está esticada horizontalmente</li>
+                <li>Mantém a proporção original</li>
+                <li>Está centralizada no header</li>
+                <li>Tem tamanho apropriado para mobile</li>
+            </ul>
+            <p>3. Compare com a logo de teste abaixo do header</p>
+        </div>
+        
+        <div class="test-info">
+            <h3>🎯 Resultado Esperado</h3>
+            <p>A logo agora deve:</p>
+            <ul>
+                <li>✅ Manter sua proporção original</li>
+                <li>✅ Não estar esticada horizontalmente</li>
+                <li>✅ Estar perfeitamente centralizada</li>
+                <li>✅ Ter tamanho apropriado para mobile</li>
+                <li>✅ Parecer natural e profissional</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // Script para testar o menu mobile
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuMobile = document.querySelector('.menu-mobile');
+            const menu = document.querySelector('.menu');
+            
+            if (menuMobile && menu) {
+                menuMobile.addEventListener('click', function() {
+                    menu.classList.toggle('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

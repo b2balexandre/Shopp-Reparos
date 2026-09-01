@@ -1,0 +1,192 @@
+/* ===== CORREÇÕES ESPECÍFICAS PARA SERVIÇOS - EVITAR CORTE ===== */
+
+/* Correções globais para evitar overflow */
+* {
+    box-sizing: border-box;
+}
+
+/* Grid de serviços - Corrigido para evitar corte */
+.servicos-grid,
+.grid {
+    max-width: 1200px !important; /* Largura máxima para não esticar */
+    overflow: visible !important;
+    width: 100% !important;
+    margin: 0 auto !important; /* Centralizar o grid */
+}
+
+/* Cards de serviço - Sempre visíveis */
+.servico-card,
+.service-card {
+    overflow: visible !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* Elevar cards no hover para evitar corte */
+.servico-card:hover,
+.service-card:hover {
+    z-index: 20 !important;
+    transform: translateY(-8px) !important;
+}
+
+/* Container de serviços */
+.servicos-section,
+.services-section {
+    overflow: visible !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+/* Grid responsivo corrigido */
+@media (max-width: 1200px) {
+    .servicos-grid,
+    .grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+        gap: 20px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .servicos-grid,
+    .grid {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)) !important;
+        gap: 20px !important;
+        padding: 0 10px !important;
+    }
+    
+    .servico-card,
+    .service-card {
+        min-height: 380px !important;
+        overflow: visible !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .servicos-grid,
+    .grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+        padding: 0 15px !important;
+    }
+    
+    .servico-card,
+    .service-card {
+        min-height: 360px !important;
+        margin: 0 auto !important;
+        max-width: 320px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .servicos-grid,
+    .grid {
+        gap: 15px !important;
+        padding: 0 10px !important;
+    }
+    
+    .servico-card,
+    .service-card {
+        min-height: 340px !important;
+        margin: 0 5px !important;
+    }
+}
+
+/* Correções específicas para conteúdo dos cards */
+.servico-info,
+.service-card-content {
+    overflow: visible !important;
+    max-width: 100% !important;
+}
+
+.servico-titulo,
+.service-card-title {
+    word-wrap: break-word !important;
+    hyphens: auto !important;
+    overflow: visible !important;
+}
+
+/* Garantir que botões não sejam cortados */
+.ver-servico,
+.service-card-action,
+.ver-detalhes {
+    overflow: visible !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+/* Correções para imagens */
+.servico-image,
+.service-card-image {
+    overflow: hidden !important; /* Apenas para imagens */
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+/* Prevenir scroll horizontal */
+body {
+    overflow-x: hidden !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+/* Container principal */
+.container,
+.content-container {
+    max-width: 100% !important;
+    overflow: visible !important;
+    width: 100% !important;
+}
+
+/* Correções para seções específicas */
+.services-hero,
+.servicos-section {
+    overflow: visible !important;
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+/* Garantir que filtros não causem problemas */
+.servicos-filter,
+.filter-container {
+    max-width: 100% !important;
+    overflow: visible !important;
+}
+
+/* Correções para paginação */
+.paginacao-container {
+    max-width: 100% !important;
+    overflow: visible !important;
+}
+
+/* Animações sem causar overflow */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.servico-card,
+.service-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Estados de loading sem overflow */
+.servicos-grid.loading,
+.grid.loading {
+    overflow: visible !important;
+}
+
+/* Mensagens de erro sem overflow */
+.servico-sem-servicos,
+#no-services-message {
+    max-width: 100% !important;
+    overflow: visible !important;
+    word-wrap: break-word !important;
+}

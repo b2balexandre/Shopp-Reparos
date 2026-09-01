@@ -1,0 +1,314 @@
+/* ===== ALINHAMENTO CENTRALIZADO DOS PREÇOS ===== */
+
+/* Produtos - Alinhamento centralizado e padronizado */
+.produto-card .produto-info {
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    height: 140px !important;
+    min-height: 140px !important;
+    max-height: 140px !important;
+}
+
+.produto-card .produto-nome {
+    text-align: center !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    height: 3rem !important;
+    min-height: 3rem !important;
+    max-height: 3rem !important;
+}
+
+.produto-card .produto-preco {
+    text-align: center !important;
+    display: flex !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 8px 0 !important;
+    background: #f0fdf4 !important;
+    border-radius: 8px !important;
+    border: 1px solid #bbf7d0 !important;
+    height: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.produto-card .ver-detalhes {
+    text-align: center !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    justify-content: center !important;
+    align-items: center !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    max-height: 44px !important;
+    flex-shrink: 0 !important;
+}
+
+/* Serviços - Alinhamento centralizado */
+.servico-card .servico-info {
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+.servico-card .servico-titulo {
+    text-align: center !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+}
+
+.servico-card .servico-valor {
+    text-align: center !important;
+    display: block !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+}
+
+.servico-card .ver-servico {
+    text-align: center !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+/* Responsividade - Mobile */
+@media (max-width: 768px) {
+    .produto-card .produto-info,
+    .servico-card .servico-info {
+        text-align: center !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        height: 120px !important;
+        min-height: 120px !important;
+        max-height: 120px !important;
+    }
+    
+    .produto-card .produto-nome,
+    .servico-card .servico-titulo {
+        text-align: center !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+        height: 2.8rem !important;
+        min-height: 2.8rem !important;
+        max-height: 2.8rem !important;
+    }
+    
+    .produto-card .produto-preco,
+    .servico-card .servico-valor {
+        text-align: center !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+        height: 36px !important;
+        min-height: 36px !important;
+        max-height: 36px !important;
+    }
+    
+    .produto-card .ver-detalhes,
+    .servico-card .ver-servico {
+        text-align: center !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+        justify-content: center !important;
+        align-items: center !important;
+        height: 40px !important;
+        min-height: 40px !important;
+        max-height: 40px !important;
+    }
+}
+
+/* Responsividade - Mobile pequeno */
+@media (max-width: 480px) {
+    .produto-card .produto-info,
+    .servico-card .servico-info {
+        text-align: center !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        height: 110px !important;
+        min-height: 110px !important;
+        max-height: 110px !important;
+    }
+    
+    .produto-card .produto-nome,
+    .servico-card .servico-titulo {
+        text-align: center !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+    }
+    
+    .produto-card .produto-preco,
+    .servico-card .servico-valor {
+        text-align: center !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+    }
+    
+    .produto-card .ver-detalhes,
+    .servico-card .ver-servico {
+        text-align: center !important;
+        width: 100% !important;
+        margin: 0 auto !important;
+        justify-content: center !important;
+        align-items: center !important;
+        height: 36px !important;
+        min-height: 36px !important;
+        max-height: 36px !important;
+    }
+}
+
+/* Garantir que os cards tenham altura consistente */
+.produto-card,
+.servico-card {
+    height: 380px !important;
+    min-height: 380px !important;
+    max-height: 380px !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+@media (max-width: 768px) {
+    .produto-card,
+    .servico-card {
+        height: 360px !important;
+        min-height: 360px !important;
+        max-height: 360px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .produto-card,
+    .servico-card {
+        height: 340px !important;
+        min-height: 340px !important;
+        max-height: 340px !important;
+    }
+}
+
+/* Garantir que as imagens tenham altura fixa */
+.produto-card .produto-image,
+.servico-card .servico-image {
+    height: 200px !important;
+    min-height: 200px !important;
+    max-height: 200px !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+}
+
+@media (max-width: 768px) {
+    .produto-card .produto-image,
+    .servico-card .servico-image {
+        height: 180px !important;
+        min-height: 180px !important;
+        max-height: 180px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .produto-card .produto-image,
+    .servico-card .servico-image {
+        height: 160px !important;
+        min-height: 160px !important;
+        max-height: 160px !important;
+    }
+}
+
+/* Garantir que o conteúdo tenha altura mínima */
+.produto-card .produto-info,
+.servico-card .servico-info {
+    height: 140px !important;
+    min-height: 140px !important;
+    max-height: 140px !important;
+    flex: 1 !important;
+    overflow: hidden !important;
+}
+
+@media (max-width: 768px) {
+    .produto-card .produto-info,
+    .servico-card .servico-info {
+        height: 120px !important;
+        min-height: 120px !important;
+        max-height: 120px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .produto-card .produto-info,
+    .servico-card .servico-info {
+        height: 110px !important;
+        min-height: 110px !important;
+        max-height: 110px !important;
+    }
+}
+
+/* Regras específicas para garantir que o placeholder só apareça quando necessário */
+.produto-image img + .produto-placeholder {
+    display: none !important;
+}
+
+.produto-image:not(:has(img)) .produto-placeholder {
+    display: flex !important;
+}
+
+/* Fallback para navegadores que não suportam :has() */
+.produto-image img ~ .produto-placeholder {
+    display: none !important;
+}
+
+/* Garantir que todos os elementos tenham altura fixa */
+.produto-card .produto-nome {
+    height: 3rem !important;
+    min-height: 3rem !important;
+    max-height: 3rem !important;
+}
+
+.produto-card .produto-preco {
+    height: 40px !important;
+    min-height: 40px !important;
+    max-height: 40px !important;
+}
+
+.produto-card .ver-detalhes {
+    height: 44px !important;
+    min-height: 44px !important;
+    max-height: 44px !important;
+}
+
+@media (max-width: 768px) {
+    .produto-card .produto-nome {
+        height: 2.8rem !important;
+        min-height: 2.8rem !important;
+        max-height: 2.8rem !important;
+    }
+    
+    .produto-card .produto-preco {
+        height: 36px !important;
+        min-height: 36px !important;
+        max-height: 36px !important;
+    }
+    
+    .produto-card .ver-detalhes {
+        height: 40px !important;
+        min-height: 40px !important;
+        max-height: 40px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .produto-card .ver-detalhes {
+        height: 36px !important;
+        min-height: 36px !important;
+        max-height: 36px !important;
+    }
+}
+

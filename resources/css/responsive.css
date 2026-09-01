@@ -1,0 +1,343 @@
+/* ========================================
+   RESPONSIVIDADE COMPLETA - SHOPP REPAROS
+   REGRA #1: SEM SCROLL NO MOBILE
+   ======================================== */
+
+/* ========================================
+   REGRA #1: SEM SCROLL NO MOBILE
+   ======================================== */
+@media (max-width: 768px) {
+    html, body {
+        overflow-x: hidden !important;
+        overflow-y: auto !important;
+        position: relative !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        -webkit-text-size-adjust: 100% !important;
+        -ms-text-size-adjust: 100% !important;
+    }
+    
+    /* Prevenir scroll horizontal */
+    * {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Container responsivo */
+    .container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        max-width: 100% !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+    }
+    
+    .max-w-7xl {
+        max-width: 100% !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+    
+    /* Grid responsivo */
+    .grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+    
+    .grid-cols-1.lg\\:grid-cols-2 {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+    
+    .grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-3.xl\\:grid-cols-4 {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+    
+    /* Flex responsivo */
+    .flex {
+        flex-wrap: wrap !important;
+    }
+    
+    .flex-row {
+        flex-direction: column !important;
+    }
+    
+    .lg\\:flex-row {
+        flex-direction: column !important;
+    }
+    
+    /* Espaçamentos responsivos */
+    .space-x-8 > * + * {
+        margin-left: 0 !important;
+        margin-top: 0.5rem !important;
+    }
+    
+    .space-x-6 > * + * {
+        margin-left: 0 !important;
+        margin-top: 0.5rem !important;
+    }
+    
+    .space-x-4 > * + * {
+        margin-left: 0 !important;
+        margin-top: 0.5rem !important;
+    }
+    
+    .space-x-2 > * + * {
+        margin-left: 0 !important;
+        margin-top: 0.25rem !important;
+    }
+    
+    /* Padding responsivo */
+    .p-8 { padding: 1.5rem !important; }
+    .p-12 { padding: 2rem !important; }
+    .px-8 { padding-left: 1rem !important; padding-right: 1rem !important; }
+    .px-12 { padding-left: 1rem !important; padding-right: 1rem !important; }
+    .py-16 { padding-top: 2rem !important; padding-bottom: 2rem !important; }
+    .py-12 { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
+    .py-8 { padding-top: 1.5rem !important; padding-bottom: 1.5rem !important; }
+    
+    /* Margin responsivo */
+    .mb-12 { margin-bottom: 2rem !important; }
+    .mb-8 { margin-bottom: 1.5rem !important; }
+    .mt-12 { margin-top: 2rem !important; }
+    .mt-8 { margin-top: 1.5rem !important; }
+    
+    /* Gap responsivo */
+    .gap-12 { gap: 1rem !important; }
+    .gap-8 { gap: 1rem !important; }
+    .gap-6 { gap: 1rem !important; }
+    
+    /* Textos responsivos */
+    .text-6xl { font-size: 2.5rem !important; line-height: 1.2 !important; }
+    .text-5xl { font-size: 2.25rem !important; line-height: 1.2 !important; }
+    .text-4xl { font-size: 2rem !important; line-height: 1.2 !important; }
+    .text-3xl { font-size: 1.75rem !important; line-height: 1.2 !important; }
+    .text-2xl { font-size: 1.5rem !important; line-height: 1.2 !important; }
+    .text-xl { font-size: 1.25rem !important; line-height: 1.2 !important; }
+    .text-lg { font-size: 1.125rem !important; line-height: 1.2 !important; }
+    
+    /* Alturas responsivas */
+    .min-h-\\[300px\\] { min-height: 200px !important; }
+    .h-48 { height: 8rem !important; }
+    .h-72 { height: 12rem !important; }
+    .h-96 { height: 16rem !important; }
+    
+    /* Larguras responsivas */
+    .w-96 { width: 100% !important; }
+    .w-80 { width: 100% !important; }
+    .w-64 { width: 100% !important; }
+    
+    /* Posicionamento responsivo */
+    .right-10 { right: 1rem !important; }
+    .left-10 { left: 1rem !important; }
+    .top-20 { top: 2rem !important; }
+    .bottom-20 { bottom: 2rem !important; }
+    
+    /* Tamanhos responsivos */
+    .w-72 { width: 100% !important; }
+    .w-48 { width: 100% !important; }
+}
+
+/* ========================================
+   RESPONSIVIDADE EXTREMA (480px)
+   ======================================== */
+@media (max-width: 480px) {
+    .text-6xl { font-size: 2rem !important; }
+    .text-5xl { font-size: 1.75rem !important; }
+    .text-4xl { font-size: 1.5rem !important; }
+    .text-3xl { font-size: 1.25rem !important; }
+    .text-2xl { font-size: 1.125rem !important; }
+    .text-xl { font-size: 1rem !important; }
+    .text-lg { font-size: 0.9rem !important; }
+    
+    .p-8 { padding: 1rem !important; }
+    .p-12 { padding: 1.5rem !important; }
+    .py-16 { padding-top: 3rem !important; padding-bottom: 3rem !important; }
+    .py-12 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+    
+    .mb-12 { margin-bottom: 1.5rem !important; }
+    .mb-8 { margin-bottom: 1rem !important; }
+    
+    .gap-12 { gap: 0.75rem !important; }
+    .gap-8 { gap: 0.75rem !important; }
+    .gap-6 { gap: 0.75rem !important; }
+}
+
+/* ========================================
+   PREVENÇÃO DE SCROLL HORIZONTAL
+   ======================================== */
+@media (max-width: 768px) {
+    .lojas-hero,
+    .loja-card,
+    .produto-card,
+    .servico-card,
+    .bg-white,
+    .bg-gray-50,
+    .bg-gradient-to-r,
+    .bg-gradient-to-br {
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    
+    /* Iframes responsivos */
+    iframe {
+        max-width: 100% !important;
+        height: 150px !important;
+        border-radius: 0.5rem !important;
+    }
+    
+    /* Imagens responsivas */
+    img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+    
+    /* Botões responsivos */
+    .inline-block {
+        display: block !important;
+        width: 100% !important;
+        text-align: center !important;
+        margin-bottom: 0.5rem !important;
+    }
+    
+    /* Formulários responsivos */
+    input, select, textarea {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    /* Tabelas responsivas */
+    table {
+        font-size: 0.875rem !important;
+    }
+    
+    .overflow-x-auto {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+}
+
+/* ========================================
+   MENU MOBILE MELHORADO
+   ======================================== */
+@media (max-width: 768px) {
+    #mobile-menu {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        z-index: 9999 !important;
+        height: 100vh !important;
+        overflow-y: auto !important;
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+        background: rgba(255, 255, 255, 0.98) !important;
+        backdrop-filter: blur(10px) !important;
+    }
+    
+    .mobile-menu-open {
+        overflow: hidden !important;
+    }
+    
+    /* Menu admin mobile */
+    .sm\\:hidden {
+        display: block !important;
+    }
+    
+    .hidden.sm\\:hidden {
+        display: none !important;
+    }
+    
+    .sm\\:flex {
+        display: flex !important;
+    }
+    
+    .sm\\:items-center {
+        align-items: center !important;
+    }
+    
+    .sm\\:ms-10 {
+        margin-left: 0 !important;
+    }
+    
+    .sm\\:ms-6 {
+        margin-left: 0 !important;
+    }
+    
+    .sm\\:space-x-8 > * + * {
+        margin-left: 0 !important;
+        margin-top: 0.5rem !important;
+    }
+}
+
+/* ========================================
+   UTILITÁRIOS RESPONSIVOS
+   ======================================== */
+@media (max-width: 768px) {
+    .hidden-mobile {
+        display: none !important;
+    }
+    
+    .block-mobile {
+        display: block !important;
+    }
+    
+    .text-center-mobile {
+        text-align: center !important;
+    }
+    
+    .w-full-mobile {
+        width: 100% !important;
+    }
+    
+    .h-auto-mobile {
+        height: auto !important;
+    }
+}
+
+/* ========================================
+   ANIMAÇÕES RESPONSIVAS
+   ======================================== */
+@media (max-width: 768px) {
+    .animate-float {
+        animation: none !important;
+    }
+    
+    .animate-scale-in {
+        animation: none !important;
+    }
+    
+    .animate-fade-in {
+        animation: none !important;
+    }
+    
+    /* Reduzir transições em mobile para performance */
+    * {
+        transition-duration: 0.2s !important;
+    }
+}
+
+/* ========================================
+   PERFORMANCE MOBILE
+   ======================================== */
+@media (max-width: 768px) {
+    /* Reduzir sombras em mobile */
+    .shadow-lg,
+    .shadow-xl,
+    .shadow-2xl {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    /* Reduzir blur em mobile */
+    .backdrop-blur-sm,
+    .backdrop-blur,
+    .backdrop-blur-md,
+    .backdrop-blur-lg,
+    .backdrop-blur-xl {
+        backdrop-filter: blur(4px) !important;
+    }
+}

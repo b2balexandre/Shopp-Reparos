@@ -1,0 +1,17 @@
+# Manter apenas arquivos sensíveis e temporários fora do versionamento
+.env
+.env.*
+!.env.example
+
+# Diretório externo que não faz parte do projeto
+C_/
+
+# Sub-repositório interno que não deve entrar no commit do site principal
+Shopp-Reparos/
+
+# Arquivos temporários comuns
+*.tmp
+*.temp
+.phpunit.result.cache
+coverage/
+public/hot

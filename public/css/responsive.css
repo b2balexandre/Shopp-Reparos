@@ -1,0 +1,300 @@
+/* CSS Responsivo para Shopp Reparos */
+
+/* Correções específicas para a seção "Nossas Lojas" */
+@media (max-width: 768px) {
+    .nossaslojas {
+        padding: 40px 20px !important;
+        width: 100% !important;
+        margin: 0 !important;
+        left: auto !important;
+        right: auto !important;
+        position: relative !important;
+        overflow: hidden !important;
+    }
+    
+    .nossaslojas h2 {
+        font-size: 2.2rem !important;
+        margin-bottom: 30px !important;
+        padding: 0 10px !important;
+        text-align: center !important;
+    }
+    
+    .lojas {
+        flex-direction: column !important;
+        align-items: center !important;
+        max-width: 100% !important;
+        gap: 30px !important;
+        padding: 0 !important;
+        margin: 0 auto !important;
+    }
+    
+    .loja {
+        flex: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: auto !important;
+        margin: 0 !important;
+        border-radius: 15px !important;
+    }
+    
+    .loja-content {
+        padding: 25px 20px !important;
+    }
+    
+    .loja h2 {
+        font-size: 1.6rem !important;
+        margin-bottom: 15px !important;
+    }
+    
+    .loja img {
+        height: 280px !important;
+        width: 100% !important;
+        object-fit: cover !important;
+    }
+    
+    .loja button {
+        padding: 12px 25px !important;
+        font-size: 1rem !important;
+        width: 100% !important;
+        justify-content: center !important;
+        border-radius: 25px !important;
+    }
+    
+    .loja p {
+        font-size: 0.9rem !important;
+        line-height: 1.5 !important;
+        margin-bottom: 15px !important;
+    }
+}
+
+/* Melhorias específicas para vídeos nos cards - Mobile */
+@media (max-width: 768px) {
+    .card .video-container {
+        min-height: 160px !important;
+        height: 160px !important;
+        max-height: 160px !important;
+        border-radius: 8px !important;
+    }
+    
+    .card .video-container::before {
+        font-size: 1.25rem !important;
+    }
+    
+    .card .video-container video {
+        max-height: 160px !important;
+        height: 100% !important;
+        width: 100% !important;
+        object-fit: cover !important;
+        object-position: center !important;
+    }
+    
+    /* Ajustar espaçamento dos cards no mobile */
+    .container-card {
+        gap: 15px !important;
+        margin: 25px 15px !important;
+    }
+    
+    .card {
+        padding: 15px !important;
+        margin-bottom: 15px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .nossaslojas {
+        padding: 30px 15px !important;
+    }
+    
+    .nossaslojas h2 {
+        font-size: 1.8rem !important;
+        margin-bottom: 25px !important;
+    }
+    
+    .loja {
+        border-radius: 12px !important;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    .loja-content {
+        padding: 20px 15px !important;
+    }
+    
+    .loja img {
+        height: 260px !important;
+    }
+    
+    .loja button {
+        padding: 10px 20px !important;
+        font-size: 0.9rem !important;
+        border-radius: 20px !important;
+    }
+    
+    .loja h2 {
+        font-size: 1.4rem !important;
+    }
+    
+    .loja p {
+        font-size: 0.85rem !important;
+    }
+    
+    /* Ajustes específicos para vídeos em telas muito pequenas */
+    .card .video-container {
+        min-height: 140px !important;
+        height: 140px !important;
+        max-height: 140px !important;
+    }
+    
+    .card .video-container video {
+        max-height: 140px !important;
+        height: 100% !important;
+        width: 100% !important;
+        object-fit: cover !important;
+        object-position: center !important;
+    }
+    
+    .card .video-container::before {
+        font-size: 1rem !important;
+    }
+    
+    .container-card {
+        gap: 10px !important;
+        margin: 20px 10px !important;
+    }
+    
+    .card {
+        padding: 12px !important;
+    }
+}
+
+/* Melhorias para tablets */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .card .video-container {
+        min-height: 170px !important;
+        height: 170px !important;
+        max-height: 170px !important;
+    }
+    
+    .card .video-container video {
+        max-height: 170px !important;
+        height: 100% !important;
+        width: 100% !important;
+        object-fit: cover !important;
+        object-position: center !important;
+    }
+    
+    .container-card {
+        gap: 18px !important;
+        margin: 40px 0 !important;
+    }
+}
+
+/* Otimizações para telas grandes */
+@media (min-width: 1025px) {
+    .card .video-container {
+        min-height: 180px !important;
+        height: 180px !important;
+        max-height: 180px !important;
+    }
+    
+    .card .video-container video {
+        max-height: 180px !important;
+        height: 100% !important;
+        width: 100% !important;
+        object-fit: cover !important;
+        object-position: center !important;
+    }
+    
+    .container-card {
+        gap: 25px !important;
+        margin: 60px 0 !important;
+    }
+}
+
+/* Correções para telas muito pequenas */
+@media (max-width: 360px) {
+    .nossaslojas {
+        padding: 25px 10px !important;
+    }
+    
+    .nossaslojas h2 {
+        font-size: 1.6rem !important;
+        margin-bottom: 20px !important;
+    }
+    
+    .loja {
+        border-radius: 10px !important;
+    }
+    
+    .loja-content {
+        padding: 15px 10px !important;
+    }
+    
+    .loja img {
+        height: 240px !important;
+    }
+    
+    .loja button {
+        padding: 8px 16px !important;
+        font-size: 0.8rem !important;
+        border-radius: 18px !important;
+    }
+}
+
+/* Garantir que não haja overflow horizontal */
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden !important;
+        width: 100% !important;
+    }
+    
+    .container {
+        max-width: 100% !important;
+        padding: 0 15px !important;
+        margin: 0 auto !important;
+    }
+    
+    /* Corrigir qualquer elemento que possa estar causando overflow */
+    * {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+}
+
+/* Correções para orientação landscape no mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    .nossaslojas {
+        padding: 30px 20px !important;
+    }
+    
+    .lojas {
+        gap: 20px !important;
+    }
+    
+    .loja {
+        min-height: 400px !important;
+    }
+    
+    .loja img {
+        height: 240px !important;
+    }
+}
+
+/* Animações suaves para mobile */
+@media (max-width: 768px) {
+    .loja {
+        transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    }
+    
+    .loja:hover {
+        transform: translateY(-5px) !important;
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
+    }
+    
+    .loja button {
+        transition: all 0.2s ease !important;
+    }
+    
+    .loja button:active {
+        transform: scale(0.95) !important;
+    }
+}

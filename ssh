@@ -1,0 +1,7 @@
+      PID    PPID    PGID     WINPID   TTY         UID    STIME COMMAND
+     1060       1    1060      13896  cons3     197609 16:35:52 /usr/bin/bash
+     1245    1059    1245      24752  cons1     197609 16:39:38 /usr/bin/winpty
+     1062       1    1062      17360  cons2     197609 16:35:52 /usr/bin/bash
+     1061       1    1061      24536  cons0     197609 16:35:52 /usr/bin/bash
+     1353    1060    1353      18864  cons3     197609 16:42:33 /usr/bin/PS
+     1059       1    1059      28344  cons1     197609 16:35:52 /usr/bin/bash

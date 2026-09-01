@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Dropdown Simples</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .btn-whatsapp { background-color: #25d366; }
+        .btn-location { background-color: #9c27b0; }
+        
+        .btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 10px;
+            width: 250px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            border: 1px solid #e0e0e0;
+            display: none;
+            z-index: 1000;
+        }
+        
+        .dropdown.show {
+            display: block;
+        }
+        
+        .dropdown-content {
+            padding: 15px;
+        }
+        
+        .dropdown h4 {
+            margin: 0 0 15px 0;
+            text-align: center;
+            color: #333;
+            font-size: 16px;
+        }
+        
+        .info-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .info-item h5 {
+            margin: 0 0 5px 0;
+            color: #007bff;
+            font-size: 14px;
+        }
+        
+        .info-item p {
+            margin: 0;
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .whatsapp-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #25d366;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            text-decoration: none;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .whatsapp-link:hover {
+            background: #128c7e;
+        }
+        
+        .debug-info {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #1976d2;
+        }
+        
+        .status {
+            background: #f0f8ff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #0066cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Teste Dropdown Simples</h2>
+        <p>Clique nos botões para testar os dropdowns:</p>
+        
+        <div class="button-group">
+            <!-- WhatsApp Button -->
+            <div style="position: relative;">
+                <button id="whatsappBtn" class="btn btn-whatsapp">
+                    <i class="fab fa-whatsapp"></i>
+                </button>
+                
+                <!-- WhatsApp Dropdown -->
+                <div id="whatsappDropdown" class="dropdown">
+                    <div class="dropdown-content">
+                        <h4>Fale Conosco</h4>
+                        
+                        <div class="info-item">
+                            <h5>Águas Claras</h5>
+                            <p>(61) 99609-6296</p>
+                            <a href="#" class="whatsapp-link">
+                                <i class="fab fa-whatsapp"></i>
+                                <span>Conversar</span>
+                            </a>
+                        </div>
+                        
+                        <div class="info-item">
+                            <h5>Taguatinga</h5>
+                            <p>(61) 99931-8077</p>
+                            <a href="#" class="whatsapp-link">
+                                <i class="fab fa-whatsapp"></i>
+                                <span>Conversar</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Location Button -->
+            <div style="position: relative;">
+                <button id="locationBtn" class="btn btn-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                </button>
+                
+                <!-- Location Dropdown -->
+                <div id="locationDropdown" class="dropdown">
+                    <div class="dropdown-content">
+                        <h4>Nossas Lojas</h4>
+                        
+                        <div class="info-item">
+                            <h5>Águas Claras</h5>
+                            <p>Q 204 Alfa Mix Loja 15A</p>
+                            <p>Águas Claras, Brasília - DF</p>
+                            <div class="flex space-x-2 mt-2">
+                                <a href="https://maps.google.com/?q=Q+204+Alfa+Mix+Loja+15A,+Águas+Claras,+Brasília+-+DF" 
+                                   target="_blank"
+                                   class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm text-center transition-colors">
+                                    <i class="fas fa-map-marked-alt mr-1"></i>
+                                    <span>Maps</span>
+                                </a>
+                                <a href="https://api.whatsapp.com/send?phone=5561996096296&text=Olá! Vim pelo site!" 
+                                   class="flex-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-full text-sm text-center transition-colors">
+                                    <i class="fab fa-whatsapp mr-1"></i>
+                                    <span>WhatsApp</span>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <h5>Taguatinga</h5>
+                            <p>St. E Sul CSE 2</p>
+                            <p>Taguatinga Sul, Brasília - DF</p>
+                            <div class="flex space-x-2 mt-2">
+                                <a href="https://share.google/vYHCBjEN96Ggz2SiY" 
+                                   target="_blank"
+                                   class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm text-center transition-colors">
+                                    <i class="fas fa-map-marked-alt mr-1"></i>
+                                    <span>Maps</span>
+                                </a>
+                                <a href="https://api.whatsapp.com/send?phone=5561999318077&text=Olá! Vim pelo site!" 
+                                   class="flex-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-full text-sm text-center transition-colors">
+                                    <i class="fab fa-whatsapp mr-1"></i>
+                                    <span>WhatsApp</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="status" id="status">
+            Status: Aguardando teste...
+        </div>
+        
+        <div class="debug-info">
+            <strong>Debug:</strong> Abra o console do navegador (F12) para ver os logs das funções.
+        </div>
+    </div>
+
+    <script>
+        // Elementos
+        const whatsappBtn = document.getElementById('whatsappBtn');
+        const locationBtn = document.getElementById('locationBtn');
+        const whatsappDropdown = document.getElementById('whatsappDropdown');
+        const locationDropdown = document.getElementById('locationDropdown');
+        const status = document.getElementById('status');
+        
+        // Função para atualizar status
+        function updateStatus(message) {
+            status.textContent = 'Status: ' + message;
+            console.log(message);
+        }
+        
+        // Função para toggle do WhatsApp
+        function toggleWhatsAppDropdown() {
+            updateStatus('Toggle WhatsApp chamado');
+            
+            // Fechar dropdown de localização se estiver aberto
+            if (locationDropdown.classList.contains('show')) {
+                locationDropdown.classList.remove('show');
+                updateStatus('Dropdown localização fechado');
+            }
+            
+            // Toggle do dropdown do WhatsApp
+            if (whatsappDropdown.classList.contains('show')) {
+                whatsappDropdown.classList.remove('show');
+                updateStatus('Dropdown WhatsApp fechado');
+            } else {
+                whatsappDropdown.classList.add('show');
+                updateStatus('Dropdown WhatsApp aberto');
+            }
+        }
+        
+        // Função para toggle da localização
+        function toggleLocationDropdown() {
+            updateStatus('Toggle Localização chamado');
+            
+            // Fechar dropdown do WhatsApp se estiver aberto
+            if (whatsappDropdown.classList.contains('show')) {
+                whatsappDropdown.classList.remove('show');
+                updateStatus('Dropdown WhatsApp fechado');
+            }
+            
+            // Toggle do dropdown de localização
+            if (locationDropdown.classList.contains('show')) {
+                locationDropdown.classList.remove('show');
+                updateStatus('Dropdown Localização fechado');
+            } else {
+                locationDropdown.classList.add('show');
+                updateStatus('Dropdown Localização aberto');
+            }
+        }
+        
+        // Event listeners
+        whatsappBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleWhatsAppDropdown();
+        });
+        
+        locationBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleLocationDropdown();
+        });
+        
+        // Fechar dropdowns ao clicar fora
+        document.addEventListener('click', function(e) {
+            const whatsappButton = e.target.closest('#whatsappBtn');
+            const locationButton = e.target.closest('#locationBtn');
+            
+            // Fechar dropdown do WhatsApp se clicou fora
+            if (!whatsappButton && whatsappDropdown.classList.contains('show')) {
+                whatsappDropdown.classList.remove('show');
+                updateStatus('Dropdown WhatsApp fechado (clique fora)');
+            }
+            
+            // Fechar dropdown de localização se clicou fora
+            if (!locationButton && locationDropdown.classList.contains('show')) {
+                locationDropdown.classList.remove('show');
+                updateStatus('Dropdown Localização fechado (clique fora)');
+            }
+        });
+        
+        updateStatus('Script carregado. Teste os dropdowns clicando nos botões.');
+        console.log('Script carregado. Teste os dropdowns clicando nos botões.');
+    </script>
+</body>
+</html>

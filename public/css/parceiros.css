@@ -1,0 +1,197 @@
+/* ===== ESTILOS ESPECÍFICOS PARA PARCEIROS ===== */
+
+/* Seção de Parceiros */
+.parceiros {
+    background: #ffffff;
+    padding: 60px 0;
+    margin: 40px 0;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.parceiros .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.parceiros h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-bottom: 40px;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Carrossel de Parceiros */
+.carrossel-parceiros-simples {
+    position: relative;
+    overflow: hidden;
+    padding: 20px 0;
+    width: 100%;
+}
+
+.parceiros-grid {
+    display: flex;
+    gap: 80px;
+    animation: scrollParceiros 30s linear infinite;
+    width: max-content;
+    padding: 20px 0;
+    /* Garantir que não cause scroll lateral */
+    max-width: none;
+    overflow: visible;
+}
+
+.parceiros-grid:hover {
+    animation-play-state: paused;
+}
+
+/* Item de Parceiro - Tamanho aumentado para desktop */
+.parceiro-item {
+    flex: 0 0 300px;
+    height: 200px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border: 1px solid #f3f4f6;
+    /* Garantir que não cause overflow */
+    min-width: 300px;
+    max-width: 300px;
+}
+
+.parceiro-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: #3b82f6;
+}
+
+.parceiro-item img {
+    max-width: 95%;
+    max-height: 95%;
+    object-fit: contain;
+    filter: grayscale(100%);
+    transition: all 0.3s ease;
+}
+
+.parceiro-item:hover img {
+    filter: grayscale(0%);
+}
+
+.parceiro-item.active img {
+    filter: grayscale(0%);
+}
+
+/* Animação de Scroll */
+@keyframes scrollParceiros {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* Indicadores de Progresso */
+.indicadores-parceiros {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.indicador {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #d1d5db;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.indicador.active {
+    background: #3b82f6;
+    transform: scale(1.2);
+}
+
+.indicador:hover {
+    background: #60a5fa;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .parceiros {
+        padding: 40px 0;
+        margin: 20px 0;
+    }
+    
+    .parceiros h2 {
+        font-size: 2rem;
+        margin-bottom: 30px;
+    }
+    
+    .parceiros-grid {
+        gap: 60px;
+        animation-duration: 40s;
+    }
+    
+    .parceiro-item {
+        flex: 0 0 200px;
+        height: 140px;
+    }
+    
+    .parceiro-item img {
+        max-width: 95%;
+        max-height: 95%;
+    }
+    
+    .indicadores-parceiros {
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .parceiros h2 {
+        font-size: 1.8rem;
+    }
+    
+    .parceiros-grid {
+        gap: 40px;
+        animation-duration: 30s;
+    }
+    
+    .parceiro-item {
+        flex: 0 0 150px;
+        height: 100px;
+    }
+    
+    .parceiro-item img {
+        max-width: 95%;
+        max-height: 95%;
+    }
+    
+    .indicador {
+        width: 10px;
+        height: 10px;
+    }
+}
+
+/* Garantir que os estilos sejam aplicados */
+.parceiros,
+.parceiros * {
+    box-sizing: border-box;
+}
+
+.parceiros-grid {
+    will-change: transform;
+}
+
+/* Otimizações para performance */
+.parceiro-item {
+    will-change: transform;
+    backface-visibility: hidden;
+}

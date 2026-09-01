@@ -1,0 +1,252 @@
+/* ===== ESTILOS PARA PAGINAÇÃO ===== */
+
+.paginacao-container {
+    margin-top: 3rem;
+    padding: 2rem 0;
+    border-top: 1px solid #e5e7eb;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.paginacao-info {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #6b7280;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.paginacao-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.paginacao-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 44px;
+    padding: 0 0.75rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Página ativa */
+.paginacao-item.paginacao-ativa {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    border-color: #3b82f6;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    transform: scale(1.05);
+}
+
+/* Páginas normais */
+.paginacao-item:not(.paginacao-ativa):not(.paginacao-disabled) {
+    background: #ffffff;
+    color: #374151;
+    border-color: #e5e7eb;
+}
+
+.paginacao-item:not(.paginacao-ativa):not(.paginacao-disabled):hover {
+    background: #f8fafc;
+    border-color: #3b82f6;
+    color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15);
+}
+
+/* Botões de navegação (anterior/próximo) */
+.paginacao-item.paginacao-prev,
+.paginacao-item.paginacao-next {
+    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+    color: #374151;
+    border-color: #d1d5db;
+}
+
+.paginacao-item.paginacao-prev:hover,
+.paginacao-item.paginacao-next:hover {
+    background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+    border-color: #3b82f6;
+    color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.15);
+}
+
+/* Botões desabilitados */
+.paginacao-item.paginacao-disabled {
+    background: #f3f4f6;
+    color: #9ca3af;
+    border-color: #e5e7eb;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.paginacao-item.paginacao-disabled:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Ícones nos botões de navegação */
+.paginacao-item i {
+    font-size: 0.8rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .paginacao-container {
+        margin-top: 2rem;
+        padding: 1.5rem 0;
+    }
+    
+    .paginacao-info {
+        margin-bottom: 1rem;
+        font-size: 0.85rem;
+    }
+    
+    .paginacao-links {
+        gap: 0.25rem;
+    }
+    
+    .paginacao-item {
+        min-width: 40px;
+        height: 40px;
+        padding: 0 0.5rem;
+        font-size: 0.85rem;
+        border-radius: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .paginacao-container {
+        margin-top: 1.5rem;
+        padding: 1rem 0;
+    }
+    
+    .paginacao-info {
+        margin-bottom: 0.75rem;
+        font-size: 0.8rem;
+    }
+    
+    .paginacao-links {
+        gap: 0.2rem;
+    }
+    
+    .paginacao-item {
+        min-width: 36px;
+        height: 36px;
+        padding: 0 0.4rem;
+        font-size: 0.8rem;
+        border-radius: 8px;
+    }
+    
+    /* Em mobile muito pequeno, esconder algumas páginas para economizar espaço */
+    .paginacao-item:not(.paginacao-ativa):not(.paginacao-prev):not(.paginacao-next) {
+        display: none;
+    }
+    
+    /* Mostrar apenas a página ativa e navegação */
+    .paginacao-item.paginacao-ativa,
+    .paginacao-item.paginacao-prev,
+    .paginacao-item.paginacao-next {
+        display: inline-flex;
+    }
+}
+
+/* Animações */
+@keyframes paginacaoFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.paginacao-container {
+    animation: paginacaoFadeIn 0.5s ease-out;
+}
+
+/* Estados de loading */
+.paginacao-container.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.paginacao-container.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f4f6;
+    border-top: 2px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Melhorias de acessibilidade */
+.paginacao-item:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+.paginacao-item:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Suporte para modo escuro (se implementado no futuro) */
+@media (prefers-color-scheme: dark) {
+    .paginacao-container {
+        background: #1f2937;
+        border-top-color: #374151;
+    }
+    
+    .paginacao-info {
+        color: #9ca3af;
+    }
+    
+    .paginacao-item:not(.paginacao-ativa):not(.paginacao-disabled) {
+        background: #374151;
+        color: #e5e7eb;
+        border-color: #4b5563;
+    }
+    
+    .paginacao-item:not(.paginacao-ativa):not(.paginacao-disabled):hover {
+        background: #4b5563;
+        border-color: #3b82f6;
+        color: #3b82f6;
+    }
+    
+    .paginacao-item.paginacao-prev,
+    .paginacao-item.paginacao-next {
+        background: linear-gradient(135deg, #374151, #4b5563);
+        color: #e5e7eb;
+        border-color: #6b7280;
+    }
+    
+    .paginacao-item.paginacao-disabled {
+        background: #1f2937;
+        color: #6b7280;
+        border-color: #374151;
+    }
+}
