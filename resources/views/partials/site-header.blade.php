@@ -15,8 +15,47 @@
         align-items: center;
         gap: .5rem;
     }
-    .sr-logo { display: flex; align-items: center; flex: 0 0 auto; }
-    .sr-logo img { height: 2.15rem; width: auto; display: block; }
+    .sr-logo {
+        position: relative;
+        display: flex;
+        align-items: center;
+        flex: 0 0 auto;
+        gap: .65rem;
+        overflow: hidden;
+        text-decoration: none;
+        border-radius: 4px;
+    }
+    .sr-logo::after {
+        content: "";
+        position: absolute;
+        inset: -20% -40%;
+        background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, .15) 46%, rgba(255, 255, 255, .85) 50%, rgba(255, 255, 255, .15) 54%, transparent 62%);
+        transform: translateX(-130%);
+        animation: sr-logo-sweep 4.2s ease-in-out infinite;
+        pointer-events: none;
+    }
+    @keyframes sr-logo-sweep {
+        0%, 58% { transform: translateX(-130%); }
+        100% { transform: translateX(130%); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .sr-logo::after { animation: none; display: none; }
+    }
+    .sr-logo-mark,
+    .sr-logo-name {
+        display: block;
+        object-fit: cover;
+    }
+    .sr-logo-mark {
+        width: 2.55rem;
+        height: 2.55rem;
+        object-position: left center;
+    }
+    .sr-logo-name {
+        height: 1.55rem;
+        width: calc(1.55rem * 856 / 132);
+        object-position: right center;
+    }
     .sr-nav {
         display: none;
         align-items: center;
@@ -171,7 +210,12 @@
         padding: 0;
     }
     @media (min-width: 1180px) {
-        .sr-logo img { height: 2.45rem; }
+        .sr-bar { min-height: 4.75rem; }
+        .sr-logo-mark { width: 2.9rem; height: 2.9rem; }
+        .sr-logo-name {
+            height: 1.8rem;
+            width: calc(1.8rem * 856 / 132);
+        }
         .sr-nav { display: flex; }
         .sr-desk { display: inline-flex; }
         .sr-burger { display: none; }
@@ -219,8 +263,9 @@
 
 <header class="sr-header">
     <div class="sr-bar">
-        <a class="sr-logo" href="{{ route('home') }}">
-            <img src="{{ asset('img/logohorizontal.png') }}" alt="Shopp Reparos">
+        <a class="sr-logo" href="{{ route('home') }}" aria-label="Shopp Reparos">
+            <img class="sr-logo-mark" src="{{ asset('img/logohorizontal.png') }}" alt="">
+            <img class="sr-logo-name" src="{{ asset('img/logohorizontal.png') }}" alt="">
         </a>
 
         <nav class="sr-nav" aria-label="Principal">

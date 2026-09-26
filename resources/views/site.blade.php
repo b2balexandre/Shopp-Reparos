@@ -243,12 +243,64 @@
         font-weight: 700;
         text-decoration: none;
     }
+    .home-partners {
+        padding: 1.6rem 0 1.85rem;
+        background: #fff;
+        border-top: 1px solid var(--line);
+        overflow: hidden;
+    }
+    .home-partners h2 {
+        margin: 0 0 .85rem;
+        text-align: center;
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: var(--muted);
+    }
+    .home-marquee {
+        overflow: hidden;
+        width: 100%;
+        -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+        mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    }
+    .home-marquee-track {
+        display: flex;
+        align-items: center;
+        gap: 2.75rem;
+        width: max-content;
+        animation: home-marquee 42s linear infinite;
+    }
+    .home-marquee:hover .home-marquee-track { animation-play-state: paused; }
+    .home-marquee img {
+        height: 3.5rem;
+        width: auto;
+        max-width: 8.5rem;
+        object-fit: contain;
+    }
+    @keyframes home-marquee {
+        from { transform: translateX(0); }
+        to { transform: translateX(-50%); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .home-marquee { mask-image: none; -webkit-mask-image: none; }
+        .home-marquee-track {
+            animation: none;
+            flex-wrap: wrap;
+            justify-content: center;
+            width: min(1120px, calc(100% - 2rem));
+            margin-inline: auto;
+            row-gap: 1.25rem;
+        }
+        .home-marquee-copy { display: none; }
+    }
     @media (min-width: 720px) {
         .home-hero { padding: 2.6rem 0 1.5rem; }
         .home-actions { grid-template-columns: auto auto; }
         .home-paths { grid-template-columns: repeat(4, minmax(0, 1fr)); }
         .home-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
         .home-stores { grid-template-columns: 1fr 1fr; }
+        .home-marquee img { height: 4.25rem; max-width: 10.5rem; }
     }
 </style>
 @endpush
@@ -391,6 +443,41 @@
                 @endforeach
             </div>
             <a class="home-more" href="/lojas">Ver endereços e como chegar</a>
+        </div>
+    </section>
+
+    @php
+        $parceiros = [
+            ['blukit.png', 'Blukit'],
+            ['bosch.png', 'Bosch'],
+            ['censi.png', 'Censi'],
+            ['dewalt.png', 'DeWalt'],
+            ['docol.png', 'Docol'],
+            ['exatron.png', 'Exatron'],
+            ['hydra.png', 'Hydra'],
+            ['imperatriz.png', 'Imperatriz'],
+            ['legrand.png', 'Legrand'],
+            ['Lorenzetti.png', 'Lorenzetti'],
+            ['osram.png', 'OSRAM'],
+            ['pado.png', 'Pado'],
+            ['siemens.png', 'Siemens'],
+            ['sil.png', 'SIL'],
+            ['stam.png', 'Stam'],
+            ['taschibra.png', 'Taschibra'],
+            ['tramontina.png', 'Tramontina'],
+            ['tigre.png', 'Tigre'],
+        ];
+    @endphp
+    <section class="home-partners" aria-label="Parceiros">
+        <h2>Parceiros</h2>
+        <div class="home-marquee">
+            <div class="home-marquee-track">
+                @foreach([false, true] as $copia)
+                    @foreach($parceiros as [$arquivo, $nome])
+                        <img class="{{ $copia ? 'home-marquee-copy' : '' }}" src="{{ asset('img/parceiros/' . $arquivo) }}" alt="{{ $nome }}">
+                    @endforeach
+                @endforeach
+            </div>
         </div>
     </section>
 </div>
