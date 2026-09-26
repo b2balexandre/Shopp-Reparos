@@ -107,3 +107,16 @@
     <input type="checkbox" name="ativo" id="ativo" class="rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500" value="1" {{ old('ativo', $servico->ativo ?? true) ? 'checked' : '' }}>
     <label for="ativo" class="font-medium text-gray-700">Ativo</label>
 </div>
+<fieldset class="mb-4">
+    <legend class="block font-medium text-gray-700 mb-2">Disponível nas lojas</legend>
+    <div class="flex flex-col gap-2">
+        <label class="inline-flex items-center gap-2">
+            <input type="checkbox" name="loja_aguas_claras" value="1" class="rounded border-gray-300" {{ old('loja_aguas_claras', $servico->loja_aguas_claras ?? true) ? 'checked' : '' }}>
+            Águas Claras
+        </label>
+        <label class="inline-flex items-center gap-2">
+            <input type="checkbox" name="loja_taguatinga" value="1" class="rounded border-gray-300" {{ old('loja_taguatinga', $servico->loja_taguatinga ?? true) ? 'checked' : '' }}>
+            Taguatinga
+        </label>
+    </div>
+</fieldset>

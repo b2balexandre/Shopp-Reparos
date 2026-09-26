@@ -113,6 +113,8 @@ class ProdutoController extends Controller
             'preco' => 'nullable|numeric',
         ]);
         $data['slug'] = null;
+        $data['loja_aguas_claras'] = $request->boolean('loja_aguas_claras');
+        $data['loja_taguatinga'] = $request->boolean('loja_taguatinga');
 
         $this->uploadImagem($request, $data);
         $data['imagem'] = $this->normalizeFilename($data['imagem'] ?? null);
@@ -142,6 +144,8 @@ class ProdutoController extends Controller
             'categoria_id' => 'required|exists:categorias,id',
             'preco' => 'nullable|numeric',
         ]);
+        $data['loja_aguas_claras'] = $request->boolean('loja_aguas_claras');
+        $data['loja_taguatinga'] = $request->boolean('loja_taguatinga');
 
         if ($data['nome'] !== $produto->nome) {
             $data['slug'] = null;

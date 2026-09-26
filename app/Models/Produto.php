@@ -9,7 +9,23 @@ use Illuminate\Support\Str;
 class Produto extends Model
 {
     use HasFactory;
-    protected $fillable = ['nome', 'descricao', 'imagem', 'categoria_id', 'preco', 'slug'];
+    protected $fillable = [
+        'nome', 'descricao', 'imagem', 'categoria_id', 'preco', 'slug',
+        'loja_aguas_claras', 'loja_taguatinga',
+    ];
+
+    protected $casts = [
+        'loja_aguas_claras' => 'boolean',
+        'loja_taguatinga' => 'boolean',
+        'preco' => 'decimal:2',
+    ];
+
+    public function scopeNaLoja($query, string $slug)
+    {
+        $coluna = $slug === 'taguatinga' ? 'loja_taguatinga' : 'loja_aguas_claras';
+
+        return $query->where($coluna, true);
+    }
 
     public function categoria()
     {

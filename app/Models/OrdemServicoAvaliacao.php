@@ -10,4 +10,9 @@ class OrdemServicoAvaliacao extends Model
     protected $table = 'ordem_servico_avaliacoes';
     protected $fillable = ['ordem_servico_id', 'nota', 'comentario'];
     public function ordemServico() { return $this->belongsTo(OrdemServico::class); }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

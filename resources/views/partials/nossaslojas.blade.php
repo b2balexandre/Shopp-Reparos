@@ -9,7 +9,7 @@
                 <div class="loja-info">
                     <div class="loja-info-item">
                         <i class="fas fa-clock"></i>
-                        <span>Seg a Sex: 8h às 18h | Sáb: 8h às 12h</span>
+                        <span>Seg a Sex: 8h às 18h | Sáb: 8h às 14h</span>
                     </div>
                     <div class="loja-info-item">
                         <i class="fas fa-phone"></i>
@@ -35,7 +35,7 @@
                 <div class="loja-info">
                     <div class="loja-info-item">
                         <i class="fas fa-clock"></i>
-                        <span>Seg a Sex: 8h às 18h | Sáb: 8h às 12h</span>
+                        <span>Seg a Sex: 8h às 18h | Sáb: 8h às 14h</span>
                     </div>
                     <div class="loja-info-item">
                         <i class="fas fa-phone"></i>

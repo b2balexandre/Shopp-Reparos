@@ -23,7 +23,23 @@ class Servico extends Model
         'instrucoes_cliente',
         'ativo',
         'slug',
+        'loja_aguas_claras',
+        'loja_taguatinga',
     ];
+
+    protected $casts = [
+        'possui_garantia' => 'boolean',
+        'ativo' => 'boolean',
+        'loja_aguas_claras' => 'boolean',
+        'loja_taguatinga' => 'boolean',
+    ];
+
+    public function scopeNaLoja($query, string $slug)
+    {
+        $coluna = $slug === 'taguatinga' ? 'loja_taguatinga' : 'loja_aguas_claras';
+
+        return $query->where($coluna, true);
+    }
 
     protected static function booted()
     {

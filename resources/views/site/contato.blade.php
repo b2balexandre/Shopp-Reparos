@@ -52,7 +52,7 @@
                     <div>
                         <h3 class="text-lg font-semibold text-gray-800">Horário de Atendimento</h3>
                         <p class="text-gray-600">Segunda a Sexta: 8h às 18h</p>
-                        <p class="text-gray-600">Sábado: 8h às 12h</p>
+                        <p class="text-gray-600">Sábado: 8h às 14h</p>
                     </div>
                 </div>
 
@@ -172,7 +172,7 @@
                     <i class="fas fa-map-marker-alt text-2xl text-green-600"></i>
                 </div>
                 <h3 class="text-2xl font-bold text-blue-700 mb-3">Taguatinga</h3>
-                <p class="text-gray-600 mb-4">St. E Sul CSE 2<br>Taguatinga Sul - DF</p>
+                <p class="text-gray-600 mb-4">CSE 02 Loja 19<br>Taguatinga Sul - DF</p>
                 <a href="https://wa.me/5561999318077" 
                    class="inline-flex items-center justify-center bg-green-500 text-white px-6 py-3 rounded-xl hover:bg-green-600 transition-all duration-300 gap-2">
                     <i class="fab fa-whatsapp"></i>

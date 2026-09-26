@@ -112,7 +112,8 @@
             align-items: center !important;
             justify-content: center !important;
             gap: 8px !important;
-            flex-wrap: nowrap !important;
+            flex-wrap: wrap !important;
+            max-width: 100% !important;
         }
         
         .menu a {
@@ -312,10 +313,33 @@
             }
         }
         
-        /* Garantir que não haja overflow horizontal */
+        /* Garantir que não haja overflow horizontal em qualquer largura */
+        html, body {
+            max-width: 100%;
+            overflow-x: clip;
+        }
+
+        header, main, footer, section {
+            max-width: 100%;
+        }
+
+        img, video, iframe {
+            max-width: 100%;
+        }
+
+        .max-w-8xl {
+            max-width: min(88rem, 100%) !important;
+            width: 100%;
+        }
+
+        .slogan-container,
+        .slogan-text {
+            max-width: 100%;
+        }
+
         @media (max-width: 768px) {
             body {
-                overflow-x: hidden !important;
+                overflow-x: clip !important;
                 width: 100% !important;
             }
             
@@ -325,9 +349,9 @@
             margin: 0 auto !important;
         }
             
-            * {
+            img, video, iframe, svg {
                 max-width: 100% !important;
-                box-sizing: border-box !important;
+                height: auto;
             }
             
             /* Correções específicas para serviços */
@@ -589,729 +613,15 @@
     @stack('styles')
 </head>
 <body class="bg-gray-50 text-gray-900 antialiased">
-    <!-- Header -->
-    <header class="bg-white shadow-lg relative z-50">
-        <!-- Top Bar -->
-        <div class="bg-blue-900 text-white py-2">
-            <div class="max-w-8xl mx-auto px-4">
-                <div class="flex justify-between items-center text-sm">
-                    <div class="flex items-center space-x-4">
-                        <span class="hidden md:inline-flex items-center">
-                            <i class="fas fa-phone mr-2"></i>
-                            (61) 99609-6296 | (61) 99931-8077
-                        </span>
-                    </div>
-                    <div class="flex items-center space-x-4">
-                        <span class="hidden lg:inline">🕒 Seg - Sex: 8h às 18h | Sáb: 8h às 12h</span>
-                    </div>
-                </div>
-                
-                <!-- Slogan Centralizado -->
-                <div class="flex justify-center items-center py-1">
-                    <div class="slogan-container">
-                        <span class="slogan-text">Shopp Reparos, para cada reparo, uma solução!</span>
-                    </div>
-                </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Main Header -->
-        <div class="max-w-8xl mx-auto px-4">
-            <!-- Desktop Layout -->
-            <div class="hidden lg:flex items-center justify-between py-2">
-                <!-- Logo -->
-                <div class="flex items-center header-logo-desktop">
-                    <a href="{{ route('home') }}" class="flex items-center">
-                        <img src="{{ asset('img/logohorizontal.png') }}" alt="Shopp Reparos" class="h-10 w-auto object-contain">
-                    </a>
-                </div>
-                
+    @include('partials.site-header')
 
-                
-                <!-- Action Buttons Desktop -->
-                <div class="flex items-center space-x-4">
-                    <!-- WhatsApp Button -->
-                    <div class="relative group">
-                        <button class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full transition-colors duration-200 flex items-center justify-center animate-pulse-slow" title="WhatsApp">
-                            <i class="fab fa-whatsapp text-lg"></i>
-                        </button>
-                        
-                        <!-- Dropdown do WhatsApp -->
-                        <div class="absolute top-full right-0 mt-2 w-72 bg-white rounded-lg shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                            <div class="p-4">
-                                <h4 class="text-lg font-semibold text-gray-800 mb-4 text-center">Fale Conosco</h4>
-                                
-                                <div class="space-y-3">
-                                    <div class="bg-green-50 p-3 rounded-lg border-l-4 border-green-500">
-                                        <h5 class="font-semibold text-green-700 mb-2">Águas Claras</h5>
-                                        <p class="text-green-600 text-sm mb-2">(61) 99609-6296</p>
-                                        <a href="https://api.whatsapp.com/send?phone=5561996096296&text=Olá! Vim pelo site!" 
-                                           class="inline-flex items-center space-x-2 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-full text-sm transition-colors">
-                                            <i class="fab fa-whatsapp"></i>
-                                            <span>Conversar</span>
-                                        </a>
-                                    </div>
-                                    
-                                    <div class="bg-blue-50 p-3 rounded-lg border-l-4 border-blue-500">
-                                        <h5 class="font-semibold text-blue-700 mb-2">Taguatinga</h5>
-                                        <p class="text-blue-600 text-sm mb-2">(61) 99931-8077</p>
-                                        <a href="https://api.whatsapp.com/send?phone=5561999318077&text=Olá! Vim pelo site!" 
-                                           class="inline-flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm transition-colors">
-                                            <i class="fab fa-whatsapp"></i>
-                                            <span>Conversar</span>
-                                        </a>
-                                    </div>
-                                    
-                                    <div class="text-center pt-2">
-                                        <p class="text-xs text-gray-500">Atendimento rápido e especializado</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Blog Button -->
-                    <a href="{{ route('blog.index') }}" 
-                       class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 p-3 rounded-full transition-colors duration-200 flex items-center justify-center" title="Blog">
-                        <i class="fas fa-blog text-lg"></i>
-                    </a>
-                    
-                    <!-- Localização Button -->
-                    <div class="relative group">
-                        <button class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full transition-colors duration-200 flex items-center justify-center" title="Localização">
-                            <i class="fas fa-map-marker-alt text-lg"></i>
-                        </button>
-                        
-                        <!-- Dropdown de localização -->
-                        <div class="absolute top-full right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                            <div class="p-4">
-                                <h4 class="text-lg font-semibold text-gray-800 mb-4 text-center">Nossas Lojas</h4>
-                                
-                                <div class="space-y-4">
-                                    <div class="bg-gray-50 p-3 rounded-lg">
-                                        <h5 class="font-semibold text-blue-600 mb-2">Águas Claras</h5>
-                                        <p class="text-gray-600 text-sm mb-3">Q 204 Alfa Mix Loja 15A - Águas Claras, Brasília</p>
-                                        <iframe src="https://www.google.com/maps?q=Q%20204%20Alfa%20Mix%20Loja%2015A%2C%20%C3%81guas%20Claras%2C%20Bras%C3%ADlia%20-%20DF%2C%2071939-540&output=embed" 
-                                                class="w-full h-24 rounded border-0" frameborder="0" allowfullscreen loading="lazy"></iframe>
-                                    </div>
-                                    
-                                    <div class="bg-gray-50 p-3 rounded-lg">
-                                        <h5 class="font-semibold text-blue-600 mb-2">Taguatinga</h5>
-                                        <p class="text-gray-600 text-sm mb-3">St. E Sul CSE 2 - Taguatinga Sul, Brasília</p>
-                                        <iframe src="https://www.google.com/maps?q=St.%20E%20Sul%20CSE%202%20-%20Taguatinga%20Sul%2C%20Bras%C3%ADlia%20-%20DF%2C2072025-025&output=embed" 
-                                                class="w-full h-24 rounded border-0" frameborder="0" allowfullscreen loading="lazy"></iframe>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Usuário/Login Button -->
-                    <div class="relative group">
-                        <button class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 p-3 rounded-full transition-colors duration-200 flex items-center justify-center" title="Usuário">
-                            <i class="fas fa-user text-lg"></i>
-                        </button>
-                        
-                        <!-- Menu do usuário -->
-                        <div class="absolute top-full right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                            <div class="p-4">
-                                @guest
-                                    <div class="space-y-2">
-                                        <a href="{{ route('login') }}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-600 transition-colors">
-                                            <i class="fas fa-sign-in-alt text-blue-500"></i>
-                                            <span>Entrar</span>
-                                        </a>
-                                        <a href="{{ route('register') }}" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-green-600 transition-colors">
-                                            <i class="fas fa-user-plus text-green-500"></i>
-                                            <span>Registrar</span>
-                                        </a>
-                                    </div>
-                                @else
-                                    <div class="space-y-2">
-                                        <div class="p-2 bg-blue-50 rounded-lg border-l-4 border-blue-500">
-                                            <span class="text-sm font-medium text-blue-800">Olá, {{ Auth::user()->name }}</span>
-                                        </div>
-                                        
-                                        @if(Auth::user()->perfil === 'admin')
-                                            <a href="/admin" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-purple-600 transition-colors">
-                                                <i class="fas fa-cog text-purple-500"></i>
-                                                <span>Painel Admin</span>
-                                            </a>
-                                            <a href="/dashboard" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-blue-600 transition-colors">
-                                                <i class="fas fa-tachometer-alt text-blue-500"></i>
-                                                <span>Dashboard</span>
-                                            </a>
-                                        @endif
-                                        
-                                        @if(Auth::user()->nivel_acesso === 'gerente')
-                                            <a href="/gerente" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-red-600 transition-colors">
-                                                <i class="fas fa-user-tie text-red-500"></i>
-                                                <span>Painel Gerente</span>
-                                            </a>
-                                        @endif
-                                        
-                                        @if(Auth::user()->nivel_acesso === 'colaborador')
-                                            <a href="/colaborador" class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-orange-600 transition-colors">
-                                                <i class="fas fa-user-friends text-orange-500"></i>
-                                                <span>Painel Colaborador</span>
-                                            </a>
-                                        @endif
-                                        
-                                        <div class="border-t border-gray-200 my-2"></div>
-                                        
-                                        <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();" 
-                                           class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 text-gray-700 hover:text-red-600 transition-colors">
-                                            <i class="fas fa-sign-out-alt text-red-500"></i>
-                                            <span>Sair</span>
-                                        </a>
-                                        
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">@csrf</form>
-                                    </div>
-                                @endguest
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Mobile Layout - Header limpo e organizado -->
-            <div class="lg:hidden py-2">
-                <!-- Logo otimizado para mobile -->
-                <div class="flex justify-center mb-2">
-                    <a href="{{ route('home') }}" class="flex items-center">
-                        <img src="{{ asset('img/logohorizontal.png') }}" alt="Shopp Reparos" class="h-10 w-auto object-contain">
-                    </a>
-                </div>
-                
-                <!-- Botões essenciais apenas - 4 botões principais -->
-                <div class="flex justify-center items-center space-x-4">
-                    <!-- WhatsApp com Dropdown -->
-                    <div class="relative">
-                        <button id="whatsappBtn" 
-                                class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full transition-colors duration-200 animate-pulse-slow shadow-lg" title="WhatsApp">
-                            <i class="fab fa-whatsapp text-xl"></i>
-                        </button>
-                        
-                        <!-- Dropdown WhatsApp -->
-                        <div id="whatsappDropdown" class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 hidden">
-                            <div class="p-4">
-                                <h4 class="text-lg font-semibold text-gray-800 mb-3 text-center">Fale Conosco</h4>
-                                
-                                <div class="space-y-3">
-                                    <div class="bg-green-50 p-3 rounded-lg border-l-4 border-green-500">
-                                        <h5 class="font-semibold text-green-700 mb-2">Águas Claras</h5>
-                                        <p class="text-green-600 text-sm mb-2">(61) 99609-6296</p>
-                                        <a href="https://api.whatsapp.com/send?phone=5561996096296&text=Olá! Vim pelo site!" 
-                                           class="inline-flex items-center space-x-2 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-full text-sm">
-                                            <i class="fab fa-whatsapp"></i>
-                                            <span>Conversar</span>
-                                        </a>
-                                    </div>
-                                    
-                                    <div class="bg-blue-50 p-3 rounded-lg border-l-4 border-blue-500">
-                                        <h5 class="font-semibold text-blue-700 mb-2">Taguatinga</h5>
-                                        <p class="text-blue-600 text-sm mb-2">(61) 99931-8077</p>
-                                        <a href="https://api.whatsapp.com/send?phone=5561999318077&text=Olá! Vim pelo site!" 
-                                           class="inline-flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm">
-                                            <i class="fab fa-whatsapp"></i>
-                                            <span>Conversar</span>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Localização com Dropdown -->
-                    <div class="relative">
-                        <button id="locationBtn" 
-                                class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full transition-colors duration-200 shadow-lg" title="Localização">
-                            <i class="fas fa-map-marker-alt text-xl"></i>
-                        </button>
-                        
-                        <!-- Dropdown Localização -->
-                        <div id="locationDropdown" class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-64 bg-white rounded-lg shadow-xl border border-gray-200 hidden">
-                            <div class="p-4">
-                                <h4 class="text-lg font-semibold text-gray-800 mb-3 text-center">Nossas Lojas</h4>
-                                
-                                <div class="space-y-3">
-                                    <div class="bg-gray-50 p-3 rounded-lg">
-                                        <h5 class="font-semibold text-blue-600 mb-2">Águas Claras</h5>
-                                        <p class="text-gray-600 text-sm mb-2">Q 204 Alfa Mix Loja 15A</p>
-                                        <p class="text-gray-500 text-xs">Águas Claras, Brasília - DF</p>
-                                        <div class="flex space-x-2 mt-2">
-                                            <a href="https://maps.google.com/?q=Q+204+Alfa+Mix+Loja+15A,+Águas+Claras,+Brasília+-+DF" 
-                                               target="_blank"
-                                               class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm text-center transition-colors">
-                                                <i class="fas fa-map-marked-alt mr-1"></i>
-                                                <span>Maps</span>
-                                            </a>
-                                            <a href="https://api.whatsapp.com/send?phone=5561996096296&text=Olá! Vim pelo site!" 
-                                               class="flex-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-full text-sm text-center transition-colors">
-                                                <i class="fab fa-whatsapp mr-1"></i>
-                                                <span>WhatsApp</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="bg-gray-50 p-3 rounded-lg">
-                                        <h5 class="font-semibold text-blue-600 mb-2">Taguatinga</h5>
-                                        <p class="text-gray-600 text-sm mb-2">St. E Sul CSE 2</p>
-                                        <p class="text-gray-500 text-xs">Taguatinga Sul, Brasília - DF</p>
-                                        <div class="flex space-x-2 mt-2">
-                                            <a href="https://share.google/vYHCBjEN96Ggz2SiY" 
-                                               target="_blank"
-                                               class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm text-center transition-colors">
-                                                <i class="fas fa-map-marked-alt mr-1"></i>
-                                                <span>Maps</span>
-                                            </a>
-                                            <a href="https://api.whatsapp.com/send?phone=5561999318077&text=Olá! Vim pelo site!" 
-                                               class="flex-1 bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded-full text-sm text-center transition-colors">
-                                                <i class="fab fa-whatsapp mr-1"></i>
-                                                <span>WhatsApp</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Blog direto -->
-                    <a href="{{ route('blog.index') }}" 
-                       class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 p-3 rounded-full transition-colors duration-200 shadow-lg" title="Blog">
-                        <i class="fas fa-blog text-xl"></i>
-                    </a>
-                    
-                    <!-- Menu principal -->
-                    <button id="mobile-menu-toggle" class="bg-primary-500 hover:bg-primary-600 text-white p-3 rounded-full transition-colors duration-200 shadow-lg">
-                        <i class="fas fa-bars text-xl"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Navegação Secundária - Apenas Desktop -->
-        <nav class="hidden md:block bg-white border-t border-gray-100 shadow-sm">
-            <div class="max-w-6xl mx-auto px-4">
-                <!-- Desktop: Navegação completa -->
-                <div class="hidden md:flex items-center justify-center space-x-8 py-3 overflow-x-auto">
-                    @php
-                        $currentPath = request()->path();
-                        $currentUrl = request()->url();
-                        $isActive = function($path) use ($currentPath, $currentUrl) {
-                            if ($path === '/') {
-                                return $currentPath === '' || $currentPath === '/';
-                            }
-                            $cleanPath = ltrim($path, '/');
-                            return $currentPath === $cleanPath || strpos($currentPath, $cleanPath . '/') === 0;
-                        };
-                    @endphp
-                    
-                    <a href="/" class="relative px-3 py-2 font-semibold text-sm uppercase tracking-wide transition-all duration-200 whitespace-nowrap {{ $isActive('/') || $currentPath === '' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600' }}">
-                        HOME
-                        @if($isActive('/') || $currentPath === '')
-                            <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-yellow-400 rounded-full"></span>
-                        @endif
-                    </a>
-                    
-                    <a href="/lojas" class="relative px-3 py-2 font-semibold text-sm uppercase tracking-wide transition-all duration-200 whitespace-nowrap {{ $isActive('lojas') ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600' }}">
-                        LOJAS
-                        @if($isActive('lojas'))
-                            <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-yellow-400 rounded-full"></span>
-                        @endif
-                    </a>
-                    
-                    <a href="/reparos-hidraulicos" class="relative px-3 py-2 font-semibold text-sm uppercase tracking-wide transition-all duration-200 whitespace-nowrap {{ $isActive('reparos-hidraulicos') ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600' }}">
-                        REPAROS HIDRÁULICOS
-                        @if($isActive('reparos-hidraulicos'))
-                            <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-yellow-400 rounded-full"></span>
-                        @endif
-                    </a>
-                    
-                    <a href="/site/produtos" class="relative px-3 py-2 font-semibold text-sm uppercase tracking-wide transition-all duration-200 whitespace-nowrap {{ $isActive('site/produtos') || $isActive('produtos') ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600' }}">
-                        PRODUTOS
-                        @if($isActive('site/produtos') || $isActive('produtos'))
-                            <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-yellow-400 rounded-full"></span>
-                        @endif
-                    </a>
-                    
-                    <a href="/site/servicos" class="relative px-3 py-2 font-semibold text-sm uppercase tracking-wide transition-all duration-200 whitespace-nowrap {{ $isActive('site/servicos') || $isActive('servicos') ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600' }}">
-                        SERVIÇOS
-                        @if($isActive('site/servicos') || $isActive('servicos'))
-                            <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-yellow-400 rounded-full"></span>
-                        @endif
-                    </a>
-                    
-                    <a href="/assistencia-tecnica" class="relative px-3 py-2 font-semibold text-sm uppercase tracking-wide transition-all duration-200 whitespace-nowrap {{ $isActive('assistencia-tecnica') ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600' }}">
-                        ASSISTÊNCIA TÉCNICA
-                        @if($isActive('assistencia-tecnica'))
-                            <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-yellow-400 rounded-full"></span>
-                        @endif
-                    </a>
-                    
-                    <a href="/blog" class="relative px-3 py-2 font-semibold text-sm uppercase tracking-wide transition-all duration-200 whitespace-nowrap {{ $isActive('blog') ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600' }}">
-                        BLOG
-                        @if($isActive('blog'))
-                            <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-blue-600 to-yellow-400 rounded-full"></span>
-                        @endif
-                    </a>
-                </div>
-            </div>
-        </nav>
-        
-        <!-- Mobile Menu - Dropdown vertical estilo aplicativo -->
-        <div id="mobile-menu" class="lg:hidden hidden fixed inset-0 bg-black bg-opacity-50 z-50">
-            <div class="absolute top-0 right-0 h-full w-80 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out">
-                <!-- Header do menu -->
-                <div class="bg-primary-600 text-white px-6 py-4">
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-lg font-semibold">Menu</h3>
-                        <button id="mobile-menu-close" class="text-white hover:text-primary-200 transition-colors">
-                            <i class="fas fa-times text-xl"></i>
-                        </button>
-                    </div>
-                </div>
-                
-                <!-- Conteúdo do menu -->
-                <div class="overflow-y-auto h-full pb-16">
-                    <nav class="py-3">
-                        <!-- Links principais -->
-                        <div class="px-4 mb-4">
-                            <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Navegação</h4>
-                            @php
-                                $currentPath = request()->path();
-                                $currentUrl = request()->url();
-                                $isActive = function($path) use ($currentPath, $currentUrl) {
-                                    if ($path === '/') {
-                                        return $currentPath === '' || $currentPath === '/';
-                                    }
-                                    $cleanPath = ltrim($path, '/');
-                                    return $currentPath === $cleanPath || strpos($currentPath, $cleanPath . '/') === 0;
-                                };
-                            @endphp
-                            
-                            <div class="space-y-0.5">
-                                <a href="/" class="flex items-center py-2 px-3 rounded-lg transition-all duration-200 group {{ ($isActive('/') || $currentPath === '') ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
-                                    <i class="fas fa-home mr-3 {{ ($isActive('/') || $currentPath === '') ? 'text-blue-600' : 'text-primary-500' }} w-4 group-hover:scale-110 transition-transform"></i>
-                                    <span class="font-medium text-sm {{ ($isActive('/') || $currentPath === '') ? 'font-semibold' : '' }}">Home</span>
-                                </a>
-                                
-                                <a href="/lojas" class="flex items-center py-2 px-3 rounded-lg transition-all duration-200 group {{ $isActive('lojas') ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
-                                    <i class="fas fa-store mr-3 {{ $isActive('lojas') ? 'text-blue-600' : 'text-blue-500' }} w-4 group-hover:scale-110 transition-transform"></i>
-                                    <span class="font-medium text-sm {{ $isActive('lojas') ? 'font-semibold' : '' }}">Nossas Lojas</span>
-                                </a>
-                                
-                                <a href="/reparos-hidraulicos" class="flex items-center py-2 px-3 rounded-lg transition-all duration-200 group {{ $isActive('reparos-hidraulicos') ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
-                                    <i class="fas fa-tint mr-3 {{ $isActive('reparos-hidraulicos') ? 'text-blue-600' : 'text-green-500' }} w-4 group-hover:scale-110 transition-transform"></i>
-                                    <span class="font-medium text-sm {{ $isActive('reparos-hidraulicos') ? 'font-semibold' : '' }}">Reparos Hidráulicos</span>
-                                </a>
-                                
-                                <a href="/site/produtos" class="flex items-center py-2 px-3 rounded-lg transition-all duration-200 group {{ ($isActive('site/produtos') || $isActive('produtos')) ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
-                                    <i class="fas fa-box mr-3 {{ ($isActive('site/produtos') || $isActive('produtos')) ? 'text-blue-600' : 'text-orange-500' }} w-4 group-hover:scale-110 transition-transform"></i>
-                                    <span class="font-medium text-sm {{ ($isActive('site/produtos') || $isActive('produtos')) ? 'font-semibold' : '' }}">Produtos</span>
-                                </a>
-                                
-                                <a href="/site/servicos" class="flex items-center py-3 px-3 rounded-lg transition-all duration-200 group {{ ($isActive('site/servicos') || $isActive('servicos')) ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
-                                    <i class="fas fa-tools mr-3 {{ ($isActive('site/servicos') || $isActive('servicos')) ? 'text-blue-600' : 'text-purple-500' }} w-4 group-hover:scale-110 transition-transform"></i>
-                                    <span class="font-medium text-sm {{ ($isActive('site/servicos') || $isActive('servicos')) ? 'font-semibold' : '' }}">Serviços</span>
-                                </a>
-                                
-                                <a href="/assistencia-tecnica" class="flex items-center py-2 px-3 rounded-lg transition-all duration-200 group {{ $isActive('assistencia-tecnica') ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
-                                    <i class="fas fa-wrench mr-3 {{ $isActive('assistencia-tecnica') ? 'text-blue-600' : 'text-red-500' }} w-4 group-hover:scale-110 transition-transform"></i>
-                                    <span class="font-medium text-sm {{ $isActive('assistencia-tecnica') ? 'font-semibold' : '' }}">Assistência Técnica</span>
-                                </a>
-                                
-                                <a href="/blog" class="flex items-center py-2 px-3 rounded-lg transition-all duration-200 group {{ $isActive('blog') ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
-                                    <i class="fas fa-blog mr-3 {{ $isActive('blog') ? 'text-blue-600' : 'text-blue-500' }} w-4 group-hover:scale-110 transition-transform"></i>
-                                    <span class="font-medium text-sm {{ $isActive('blog') ? 'font-semibold' : '' }}">Blog</span>
-                                </a>
-                                
-                                <a href="/contato" class="flex items-center py-2 px-3 rounded-lg transition-all duration-200 group {{ $isActive('contato') ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600' : 'text-gray-700 hover:bg-gray-50' }}">
-                                    <i class="fas fa-envelope mr-3 {{ $isActive('contato') ? 'text-blue-600' : 'text-gray-500' }} w-4 group-hover:scale-110 transition-transform"></i>
-                                    <span class="font-medium text-sm {{ $isActive('contato') ? 'font-semibold' : '' }}">Contato</span>
-                                </a>
-                            </div>
-                        </div>
-                    </nav>
-                </div>
-                
-                <!-- Seção de Contas - Ultra Mínima -->
-                <div class="absolute bottom-0 left-0 right-0 bg-gray-900 text-white border-t border-gray-700">
-                    <div class="px-2 py-1">
-                        @guest
-                            <!-- Usuário não logado - ultra mínimo -->
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs text-gray-400">Bem-vindo!</span>
-                                <div class="flex space-x-1">
-                                    <a href="{{ route('login') }}" class="bg-primary-500 hover:bg-primary-600 text-white px-1.5 py-0.5 rounded text-xs">
-                                        Entrar
-                                    </a>
-                                    <a href="{{ route('register') }}" class="bg-gray-600 hover:bg-gray-700 text-white px-1.5 py-0.5 rounded text-xs">
-                                        Registrar
-                                    </a>
-                                </div>
-                            </div>
-                        @else
-                            <!-- Usuário logado - ultra mínimo -->
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-1.5 min-w-0">
-                                    <div class="w-4 h-4 bg-primary-500 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <i class="fas fa-user text-xs text-white"></i>
-                                    </div>
-                                    <div class="min-w-0">
-                                        <p class="text-xs text-white font-medium truncate">{{ Auth::user()->name }}</p>
-                                        <p class="text-xs text-gray-400 truncate">{{ Auth::user()->email }}</p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center space-x-0.5 flex-shrink-0">
-                                    @if(Auth::user()->perfil === 'admin')
-                                        <a href="/admin" class="bg-gray-700 hover:bg-gray-600 text-white p-0.5 rounded text-xs" title="Admin">
-                                            <i class="fas fa-cog text-xs"></i>
-                                        </a>
-                                    @endif
-                                    <a href="/dashboard" class="bg-gray-700 hover:bg-gray-600 text-white p-0.5 rounded text-xs" title="Dashboard">
-                                        <i class="fas fa-tachometer-alt text-xs"></i>
-                                    </a>
-                                    <button onclick="event.preventDefault();document.getElementById('logout-form').submit();" 
-                                            class="bg-red-600 hover:bg-red-700 text-white p-0.5 rounded text-xs" title="Sair">
-                                        <i class="fas fa-sign-out-alt text-xs"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">@csrf</form>
-                        @endguest
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-    
     <!-- Main Content -->
     <main class="min-h-screen">
         @yield('content')
     </main>
     
-    <!-- Espaçamento antes do footer -->
-    <div class="footer-spacer"></div>
-    
-    <!-- Footer -->
-    <footer class="bg-blue-900 text-white relative overflow-hidden">
-        <!-- Elemento decorativo sutil -->
-        <div class="absolute inset-0 bg-gradient-to-r from-blue-800/20 via-transparent to-blue-700/20"></div>
-        
-        <div class="relative z-10">
-                    <!-- Conteúdo principal do footer -->
-        <div class="max-w-6xl mx-auto px-4 py-16">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-                    <!-- Logo & Info - Coluna principal -->
-                    <div class="lg:col-span-1 space-y-6">
-                        <div class="flex items-center space-x-3">
-                            <img src="{{ asset('img/logohorizontal.png') }}" alt="Shopp Reparos" class="h-12 w-auto object-contain brightness-0 invert">
-                            <div class="h-8 w-px bg-blue-300"></div>
-                        </div>
-                        <p class="text-blue-100 leading-relaxed text-sm">
-                            Especialistas em soluções completas para reparos hidráulicos, elétricos e manutenção predial com qualidade e confiança.
-                        </p>
-                        
-                        <!-- Redes sociais com cores alinhadas -->
-                        <div class="flex space-x-4">
-                            <a href="#" class="group relative">
-                                <div class="w-10 h-10 bg-blue-600 hover:bg-blue-500 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
-                                    <i class="fab fa-facebook-f text-white text-lg"></i>
-                                </div>
-                                <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                                    Facebook
-                                </span>
-                            </a>
-                            
-                            <a href="#" class="group relative">
-                                <div class="w-10 h-10 bg-blue-600 hover:bg-blue-500 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
-                                    <i class="fab fa-instagram text-white text-lg"></i>
-                                </div>
-                                <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                                    Instagram
-                                </span>
-                            </a>
-                            
-                            <a href="#" class="group relative">
-                                <div class="w-10 h-10 bg-green-600 hover:bg-green-500 rounded-lg flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">
-                                    <i class="fab fa-whatsapp text-white text-lg"></i>
-                                </div>
-                                <span class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                                    WhatsApp
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-                    
-                    <!-- Links Rápidos - Estilo card simplificado -->
-                    <div class="space-y-6">
-                        <div class="bg-blue-800/30 rounded-xl p-6 border border-blue-700/50">
-                            <h3 class="text-lg font-semibold mb-4 text-white flex items-center">
-                                <i class="fas fa-link mr-3 text-blue-300"></i>
-                                Links Rápidos
-                            </h3>
-                            <ul class="space-y-3">
-                                <li>
-                                    <a href="{{ route('home') }}" class="flex items-center text-blue-100 hover:text-white transition-all duration-200 group">
-                                        <i class="fas fa-chevron-right text-xs text-blue-300 mr-3 group-hover:translate-x-1 transition-transform"></i>
-                                        <span class="text-sm">Home</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/site/produtos" class="flex items-center text-blue-100 hover:text-white transition-all duration-200 group">
-                                        <i class="fas fa-chevron-right text-xs text-blue-300 mr-3 group-hover:translate-x-1 transition-transform"></i>
-                                        <span class="text-sm">Produtos</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/site/servicos" class="flex items-center text-blue-100 hover:text-white transition-all duration-200 group">
-                                        <i class="fas fa-chevron-right text-xs text-blue-300 mr-3 group-hover:translate-x-1 transition-transform"></i>
-                                        <span class="text-sm">Serviços</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('blog.index') }}" class="flex items-center text-blue-100 hover:text-white transition-all duration-200 group">
-                                        <i class="fas fa-chevron-right text-xs text-blue-300 mr-3 group-hover:translate-x-1 transition-transform"></i>
-                                        <span class="text-sm">Blog</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/contato" class="flex items-center text-blue-100 hover:text-white transition-all duration-200 group">
-                                        <i class="fas fa-chevron-right text-xs text-blue-300 mr-3 group-hover:translate-x-1 transition-transform"></i>
-                                        <span class="text-sm">Contato</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <!-- Serviços - Estilo card simplificado -->
-                    <div class="space-y-6">
-                        <div class="bg-blue-800/30 rounded-xl p-6 border border-blue-700/50">
-                            <h3 class="text-lg font-semibold mb-4 text-white flex items-center">
-                                <i class="fas fa-tools mr-3 text-blue-300"></i>
-                                Nossos Serviços
-                            </h3>
-                            <ul class="space-y-3">
-                                <li>
-                                    <a href="/reparos-hidraulicos" class="flex items-center text-blue-100 hover:text-white transition-all duration-200 group">
-                                        <i class="fas fa-tint text-xs text-blue-300 mr-3 group-hover:scale-110 transition-transform"></i>
-                                        <span class="text-sm">Reparos Hidráulicos</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="/assistencia-tecnica" class="flex items-center text-blue-100 hover:text-white transition-all duration-200 group">
-                                        <i class="fas fa-wrench text-xs text-blue-300 mr-3 group-hover:scale-110 transition-transform"></i>
-                                        <span class="text-sm">Assistência Técnica</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="flex items-center text-blue-100 hover:text-white transition-all duration-200 group">
-                                        <i class="fas fa-building text-xs text-blue-300 mr-3 group-hover:scale-110 transition-transform"></i>
-                                        <span class="text-sm">Manutenção Predial</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" class="flex items-center text-blue-100 hover:text-white transition-all duration-200 group">
-                                        <i class="fas fa-bolt text-xs text-blue-300 mr-3 group-hover:scale-110 transition-transform"></i>
-                                        <span class="text-sm">Instalações Elétricas</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <!-- Contato - Estilo card simplificado -->
-                    <div class="space-y-6">
-                        <div class="bg-blue-800/30 rounded-xl p-6 border border-blue-700/50">
-                            <h3 class="text-lg font-semibold mb-4 text-white flex items-center">
-                                <i class="fas fa-phone mr-3 text-blue-300"></i>
-                                Contato
-                            </h3>
-                            <div class="space-y-4">
-                                <!-- Águas Claras -->
-                                <div class="bg-blue-700/40 rounded-lg p-3 border border-blue-600/50">
-                                    <div class="flex items-start space-x-3">
-                                        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                                            <i class="fas fa-map-marker-alt text-white text-sm"></i>
-                                        </div>
-                                        <div class="flex-1 min-w-0">
-                                            <p class="font-semibold text-blue-200 text-sm">Águas Claras</p>
-                                            <p class="text-blue-100 text-xs leading-tight">Q 204 Alfa Mix Loja 15A</p>
-                                            <a href="https://api.whatsapp.com/send?phone=5561996096296&text=Olá! Vim pelo site!" 
-                                               class="inline-flex items-center mt-2 text-xs text-blue-200 hover:text-white transition-colors">
-                                                <i class="fab fa-whatsapp mr-1"></i>
-                                                WhatsApp
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Taguatinga -->
-                                <div class="bg-blue-700/40 rounded-lg p-3 border border-blue-600/50">
-                                    <div class="flex items-start space-x-3">
-                                        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                                            <i class="fas fa-map-marker-alt text-white text-sm"></i>
-                                        </div>
-                                        <div class="flex-1 min-w-0">
-                                            <p class="font-semibold text-blue-200 text-sm">Taguatinga</p>
-                                            <p class="text-blue-100 text-xs leading-tight">St. E Sul CSE 2</p>
-                                            <a href="https://api.whatsapp.com/send?phone=5561999318077&text=Olá! Vim pelo site!" 
-                                               class="inline-flex items-center mt-2 text-xs text-blue-200 hover:text-white transition-colors">
-                                                <i class="fab fa-whatsapp mr-1"></i>
-                                                WhatsApp
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Telefones -->
-                                <div class="flex items-center space-x-3 pt-2">
-                                    <div class="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
-                                        <i class="fas fa-phone text-white text-sm"></i>
-                                    </div>
-                                    <div class="text-sm">
-                                        <p class="text-blue-100">(61) 99609-6296</p>
-                                        <p class="text-blue-100">(61) 99931-8077</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Linha separadora simplificada -->
-            <div class="border-t border-blue-700">
-                <div class="max-w-6xl mx-auto px-4 py-6">
-                    <div class="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
-                        <!-- Copyright -->
-                        <div class="text-center sm:text-left">
-                            <p class="text-blue-200 text-sm">
-                                &copy; {{ date('Y') }} <span class="font-semibold text-white">Shopp Reparos</span>. Todos os direitos reservados.
-                            </p>
-                        </div>
-                        
-                        <!-- Links legais -->
-                        <div class="flex items-center space-x-6 text-sm">
-                            <a href="#" class="text-blue-200 hover:text-white transition-colors">Política de Privacidade</a>
-                            <a href="#" class="text-blue-200 hover:text-white transition-colors">Termos de Uso</a>
-                            <a href="#" class="text-blue-200 hover:text-white transition-colors">Cookies</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Elementos decorativos sutis -->
-        <div class="absolute top-0 left-0 w-32 h-32 bg-blue-800/20 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 right-0 w-40 h-40 bg-blue-700/20 rounded-full blur-3xl"></div>
-    </footer>
-    
+    @include('partials.site-footer')
+
     <!-- Floating WhatsApp -->
     <div class="fixed bottom-6 right-6 z-50">
         <a href="https://api.whatsapp.com/send?phone=5561996096296&text=Olá! Vim pelo site!" 
@@ -1335,34 +645,21 @@
             // Função para abrir menu mobile com animação
             function openMobileMenu() {
                 mobileMenu.classList.remove('hidden');
-                // Pequeno delay para garantir que o elemento está visível antes da animação
-                setTimeout(() => {
-                    mobileMenu.querySelector('.absolute').classList.add('translate-x-0');
-                    mobileMenu.querySelector('.absolute').classList.remove('translate-x-full');
-                }, 10);
+                requestAnimationFrame(function () {
+                    mobileMenu.querySelector('.sr-drawer').classList.add('is-open');
+                });
                 body.classList.add('mobile-menu-open');
-                
-                // Prevenir scroll no body quando menu estiver aberto
-                if (window.innerWidth <= 768) {
-                    body.style.overflow = 'hidden';
-                }
+                body.style.overflow = 'hidden';
             }
             
-            // Função para fechar menu mobile com animação
             function closeMobileMenu() {
-                mobileMenu.querySelector('.absolute').classList.remove('translate-x-0');
-                mobileMenu.querySelector('.absolute').classList.add('translate-x-full');
-                
-                // Aguardar a animação terminar antes de esconder
-                setTimeout(() => {
+                if (mobileMenu.classList.contains('hidden')) return;
+                mobileMenu.querySelector('.sr-drawer').classList.remove('is-open');
+                setTimeout(function () {
                     mobileMenu.classList.add('hidden');
                     body.classList.remove('mobile-menu-open');
-                    
-                    // Restaurar scroll
-                    if (window.innerWidth <= 768) {
-                        body.style.overflow = '';
-                    }
-                }, 300);
+                    body.style.overflow = '';
+                }, 250);
             }
             
             // Toggle do menu
@@ -1378,15 +675,18 @@
             mobileMenuClose.addEventListener('click', closeMobileMenu);
             
             // Fechar menu ao clicar fora
+            mobileMenu.addEventListener('click', function (e) {
+                if (e.target === mobileMenu) closeMobileMenu();
+            });
+
             document.addEventListener('click', function(e) {
                 if (!mobileMenuToggle.contains(e.target) && !mobileMenu.contains(e.target) && (!mobileMenuClose || !mobileMenuClose.contains(e.target))) {
                     closeMobileMenu();
                 }
             });
             
-            // Fechar menu ao redimensionar para desktop
             window.addEventListener('resize', function() {
-                if (window.innerWidth > 768) {
+                if (window.innerWidth >= 1180) {
                     closeMobileMenu();
                 }
             });

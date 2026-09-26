@@ -65,6 +65,8 @@ class ServicoController extends Controller
 
         $data['possui_garantia'] = $request->has('possui_garantia') ? 1 : 0;
         $data['ativo'] = $request->has('ativo') ? 1 : 0;
+        $data['loja_aguas_claras'] = $request->boolean('loja_aguas_claras');
+        $data['loja_taguatinga'] = $request->boolean('loja_taguatinga');
 
         Servico::create($data);
 
@@ -127,6 +129,8 @@ class ServicoController extends Controller
 
         $data['possui_garantia'] = $request->has('possui_garantia') ? 1 : 0;
         $data['ativo'] = $request->has('ativo') ? 1 : 0;
+        $data['loja_aguas_claras'] = $request->boolean('loja_aguas_claras');
+        $data['loja_taguatinga'] = $request->boolean('loja_taguatinga');
 
         $servico->update($data);
 

@@ -1,729 +1,944 @@
 @extends('layouts.site')
 
+@section('title', 'Lojas Shopp Reparos em Brasília | Águas Claras e Taguatinga')
+@section('description', 'Encontre as lojas Shopp Reparos em Águas Claras e Taguatinga, Brasília. Veja endereço, horário, telefone, WhatsApp, produtos, serviços e como chegar.')
+@section('keywords', 'loja de ferragens águas claras, loja de material hidráulico águas claras, loja de material elétrico águas claras, loja de ferramentas taguatinga, shopp reparos águas claras, shopp reparos taguatinga, material hidráulico taguatinga sul')
+
 @push('meta')
-    <title>Lojas Shopp Reparos em Águas Claras e Taguatinga | {{ config('app.name', 'ShopPreparos') }}</title>
-    <meta name="description" content="Conheça nossas lojas físicas em Águas Claras e Taguatinga. Veja endereço, mapa, fotos e encontre produtos e serviços com filtro por loja.">
-    <meta property="og:title" content="Lojas Shopp Reparos em Águas Claras e Taguatinga" />
-    <meta property="og:description" content="Endereços, mapas, produtos e serviços das lojas Shopp Reparos. Filtre por loja e encontre tudo para sua necessidade!" />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="{{ url()->current() }}" />
     <meta name="robots" content="index, follow">
+    <script type="application/ld+json">
+    {!! json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'BreadcrumbList',
+        'itemListElement' => [
+            ['@type' => 'ListItem', 'position' => 1, 'name' => 'Início', 'item' => url('/')],
+            ['@type' => 'ListItem', 'position' => 2, 'name' => 'Lojas', 'item' => url('/lojas')],
+        ],
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+    </script>
+    <script type="application/ld+json">
+    {!! json_encode([
+        '@context' => 'https://schema.org',
+        '@type' => 'ItemList',
+        'name' => 'Lojas Shopp Reparos',
+        'itemListElement' => collect($lojas)->values()->map(function ($loja, $index) {
+            return [
+                '@type' => 'ListItem',
+                'position' => $index + 1,
+                'item' => [
+                    '@type' => 'HardwareStore',
+                    'name' => $loja['nome_completo'],
+                    'url' => url('/lojas/' . $loja['slug']),
+                    'telephone' => $loja['telefone_e164'],
+                    'image' => asset($loja['imagem']),
+                    'address' => [
+                        '@type' => 'PostalAddress',
+                        'streetAddress' => $loja['endereco'],
+                        'addressLocality' => $loja['bairro'],
+                        'addressRegion' => $loja['uf'],
+                        'postalCode' => $loja['cep'],
+                        'addressCountry' => 'BR',
+                    ],
+                    'openingHoursSpecification' => [
+                        [
+                            '@type' => 'OpeningHoursSpecification',
+                            'dayOfWeek' => ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+                            'opens' => '08:00',
+                            'closes' => '18:00',
+                        ],
+                        [
+                            '@type' => 'OpeningHoursSpecification',
+                            'dayOfWeek' => 'Saturday',
+                            'opens' => '08:00',
+                            'closes' => '14:00',
+                        ],
+                    ],
+                ],
+            ];
+        })->all(),
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+    </script>
+@endpush
+
+@push('styles')
+<style>
+    .lojas-page {
+        --sr-blue: #0b3a82;
+        --sr-blue-deep: #072a5e;
+        --sr-yellow: #f5c518;
+        --sr-ink: #10233f;
+        --sr-muted: #5b6b82;
+        --sr-line: rgba(11, 58, 130, 0.12);
+        --sr-soft: #f3f7fc;
+        color: var(--sr-ink);
+        width: 100%;
+        max-width: 100%;
+        overflow-x: clip;
+    }
+
+    .lojas-page * { box-sizing: border-box; }
+
+    .lojas-shell {
+        width: 100%;
+        max-width: 1120px;
+        margin-inline: auto;
+        padding-inline: 1rem;
+    }
+
+    .lojas-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: .5rem;
+        font-size: .72rem;
+        font-weight: 700;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        color: var(--sr-blue);
+        max-width: 100%;
+    }
+
+    .lojas-kicker::before {
+        content: "";
+        width: 1.5rem;
+        height: 2px;
+        flex: 0 0 auto;
+        background: var(--sr-yellow);
+    }
+
+    .lojas-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 1.25rem 0 2.5rem;
+        background:
+            radial-gradient(circle at 12% 18%, rgba(245, 197, 24, .18), transparent 32%),
+            radial-gradient(circle at 88% 8%, rgba(11, 58, 130, .12), transparent 28%),
+            linear-gradient(180deg, #eef4fb 0%, #ffffff 72%);
+    }
+
+    .lojas-hero::after {
+        content: "";
+        position: absolute;
+        inset: auto 0 -40% auto;
+        width: min(18rem, 50vw);
+        height: min(18rem, 50vw);
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(11, 58, 130, .08), transparent 70%);
+        pointer-events: none;
+    }
+
+    .lojas-breadcrumb {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .5rem;
+        align-items: center;
+        font-size: .84rem;
+        color: var(--sr-muted);
+        margin-bottom: 1.5rem;
+    }
+
+    .lojas-breadcrumb a { color: var(--sr-blue); text-decoration: none; font-weight: 600; }
+    .lojas-breadcrumb a:hover { text-decoration: underline; }
+
+    .lojas-hero h1 {
+        width: 100%;
+        max-width: 100%;
+        font-family: Poppins, sans-serif;
+        font-size: clamp(1.55rem, 4.8vw + .6rem, 3.2rem);
+        line-height: 1.12;
+        letter-spacing: -.03em;
+        font-weight: 800;
+        color: var(--sr-blue-deep);
+        margin: .85rem 0 1rem;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        hyphens: auto;
+    }
+
+    .lojas-hero-lead {
+        width: 100%;
+        max-width: 38rem;
+        font-size: clamp(.95rem, 2.2vw, 1.05rem);
+        line-height: 1.65;
+        color: var(--sr-muted);
+        margin-bottom: 1.5rem;
+        overflow-wrap: anywhere;
+    }
+
+    .lojas-hero-meta {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: .65rem;
+        width: 100%;
+        max-width: min(28rem, 100%);
+    }
+
+    .lojas-hero-meta div {
+        min-width: 0;
+        padding: .85rem .75rem;
+        border: 1px solid var(--sr-line);
+        background: rgba(255,255,255,.78);
+        backdrop-filter: blur(6px);
+    }
+
+    .lojas-hero-meta strong {
+        display: block;
+        font-size: clamp(1.1rem, 4vw, 1.35rem);
+        font-family: Poppins, sans-serif;
+        color: var(--sr-blue);
+        line-height: 1;
+        margin-bottom: .25rem;
+    }
+
+    .lojas-hero-meta span {
+        display: block;
+        font-size: .72rem;
+        color: var(--sr-muted);
+        font-weight: 600;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+    }
+
+    .lojas-section {
+        padding: 2.75rem 0;
+    }
+
+    .lojas-section + .lojas-section {
+        border-top: 1px solid var(--sr-line);
+    }
+
+    .lojas-section-head {
+        margin-bottom: 1.5rem;
+    }
+
+    .lojas-section-head h2 {
+        font-family: Poppins, sans-serif;
+        font-size: clamp(1.45rem, 4vw, 2rem);
+        line-height: 1.15;
+        font-weight: 800;
+        color: var(--sr-blue-deep);
+        margin: .4rem 0 .55rem;
+    }
+
+    .lojas-section-head p {
+        max-width: 36rem;
+        color: var(--sr-muted);
+        line-height: 1.6;
+    }
+
+    .lojas-store-stack {
+        display: grid;
+        gap: 1.25rem;
+    }
+
+    .lojas-store {
+        display: grid;
+        gap: 0;
+        overflow: hidden;
+        border: 1px solid var(--sr-line);
+        background: #fff;
+        box-shadow: 0 18px 40px rgba(7, 42, 94, .06);
+        transition: transform .35s ease, box-shadow .35s ease;
+    }
+
+    .lojas-store:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 24px 48px rgba(7, 42, 94, .1);
+    }
+
+    .lojas-store-media {
+        position: relative;
+        min-height: 15rem;
+        overflow: hidden;
+    }
+
+    .lojas-store-media img {
+        width: 100%;
+        height: 100%;
+        min-height: 15rem;
+        object-fit: cover;
+        display: block;
+        transition: transform .6s ease;
+    }
+
+    .lojas-store:hover .lojas-store-media img {
+        transform: scale(1.04);
+    }
+
+    .lojas-store-badge {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        z-index: 1;
+        background: var(--sr-yellow);
+        color: var(--sr-blue-deep);
+        font-size: .72rem;
+        font-weight: 800;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        padding: .45rem .7rem;
+    }
+
+    .lojas-store-body {
+        padding: 1.25rem 1.15rem 1.35rem;
+        display: grid;
+        gap: 1rem;
+    }
+
+    .lojas-store-body h2 {
+        font-family: Poppins, sans-serif;
+        font-size: 1.55rem;
+        font-weight: 800;
+        color: var(--sr-blue-deep);
+        margin: 0;
+    }
+
+    .lojas-store-body h2 a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .lojas-store-body h2 a:hover { color: var(--sr-blue); }
+
+    .lojas-store-body > p {
+        margin: -.35rem 0 0;
+        color: var(--sr-muted);
+        font-size: .95rem;
+    }
+
+    .lojas-facts {
+        display: grid;
+        gap: .7rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .lojas-facts li {
+        display: grid;
+        grid-template-columns: 1.1rem 1fr;
+        gap: .7rem;
+        align-items: start;
+        font-size: .95rem;
+        line-height: 1.45;
+        color: var(--sr-ink);
+    }
+
+    .lojas-facts i {
+        margin-top: .18rem;
+        color: var(--sr-blue);
+        font-size: .85rem;
+    }
+
+    .lojas-cta-row {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: .65rem;
+    }
+
+    .lojas-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: .55rem;
+        min-height: 3.1rem;
+        padding: .85rem 1.1rem;
+        font-weight: 700;
+        font-size: .95rem;
+        text-decoration: none;
+        border: 0;
+        cursor: pointer;
+        transition: transform .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+    }
+
+    .lojas-btn:active { transform: scale(.98); }
+
+    .lojas-btn-primary {
+        background: var(--sr-blue);
+        color: #fff;
+    }
+
+    .lojas-btn-primary:hover { background: var(--sr-blue-deep); color: #fff; }
+
+    .lojas-btn-whatsapp {
+        background: #1f9d57;
+        color: #fff;
+    }
+
+    .lojas-btn-whatsapp:hover { background: #178a4a; color: #fff; }
+
+    .lojas-btn-ghost {
+        background: transparent;
+        color: var(--sr-blue);
+        border: 1px solid var(--sr-line);
+    }
+
+    .lojas-btn-ghost:hover {
+        border-color: var(--sr-blue);
+        background: #f5f9ff;
+        color: var(--sr-blue-deep);
+    }
+
+    .lojas-link {
+        display: inline-flex;
+        align-items: center;
+        gap: .45rem;
+        color: var(--sr-blue);
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .lojas-link:hover { text-decoration: underline; }
+
+    .lojas-compare {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .lojas-compare-card {
+        background: var(--sr-soft);
+        border: 1px solid var(--sr-line);
+        padding: 1.15rem;
+    }
+
+    .lojas-compare-card h3 {
+        font-family: Poppins, sans-serif;
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: var(--sr-blue-deep);
+        margin: 0 0 1rem;
+    }
+
+    .lojas-compare-rows {
+        display: grid;
+        gap: .75rem;
+    }
+
+    .lojas-compare-rows div {
+        display: grid;
+        gap: .2rem;
+        padding-bottom: .75rem;
+        border-bottom: 1px solid var(--sr-line);
+    }
+
+    .lojas-compare-rows div:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .lojas-compare-rows dt {
+        font-size: .72rem;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        font-weight: 700;
+        color: var(--sr-muted);
+    }
+
+    .lojas-compare-rows dd {
+        margin: 0;
+        font-size: .95rem;
+        font-weight: 600;
+        color: var(--sr-ink);
+    }
+
+    .lojas-compare-rows a {
+        color: var(--sr-blue);
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    .lojas-search-box {
+        display: grid;
+        gap: .75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .lojas-search-box input {
+        width: 100%;
+        min-height: 3.2rem;
+        border: 1.5px solid var(--sr-line);
+        background: #fff;
+        padding: .9rem 1.1rem;
+        font-size: 1rem;
+        color: var(--sr-ink);
+        outline: none;
+    }
+
+    .lojas-search-box input:focus {
+        border-color: var(--sr-blue);
+        box-shadow: 0 0 0 4px rgba(11, 58, 130, .08);
+    }
+
+    .lojas-results {
+        display: grid;
+        gap: 1rem;
+        margin-bottom: 1.75rem;
+    }
+
+    .lojas-result {
+        display: grid;
+        gap: .9rem;
+        padding: 1rem;
+        background: #fff;
+        border: 1px solid var(--sr-line);
+    }
+
+    .lojas-result-top {
+        display: grid;
+        grid-template-columns: 4rem 1fr;
+        gap: .85rem;
+        align-items: center;
+    }
+
+    .lojas-result-top img {
+        width: 4rem;
+        height: 4rem;
+        object-fit: contain;
+        background: var(--sr-soft);
+        padding: .35rem;
+    }
+
+    .lojas-result-top small {
+        display: block;
+        font-size: .7rem;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        color: var(--sr-muted);
+        font-weight: 700;
+        margin-bottom: .2rem;
+    }
+
+    .lojas-result-top h3 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--sr-ink);
+        line-height: 1.3;
+    }
+
+    .lojas-result p {
+        margin: 0;
+        color: var(--sr-muted);
+        font-size: .9rem;
+        line-height: 1.5;
+    }
+
+    .lojas-availability {
+        display: grid;
+        gap: .35rem;
+        font-size: .85rem;
+        font-weight: 600;
+    }
+
+    .lojas-empty {
+        padding: 1.2rem;
+        background: #fff8e8;
+        border: 1px solid rgba(245, 197, 24, .45);
+    }
+
+    .lojas-empty h3 {
+        margin: 0 0 .4rem;
+        font-size: 1.05rem;
+        color: var(--sr-blue-deep);
+    }
+
+    .lojas-empty p {
+        margin: 0 0 1rem;
+        color: var(--sr-muted);
+    }
+
+    .lojas-cats {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: .65rem;
+    }
+
+    .lojas-cat {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 3.4rem;
+        padding: .8rem .7rem;
+        text-align: center;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: .9rem;
+        color: var(--sr-blue-deep);
+        background: var(--sr-soft);
+        border: 1px solid var(--sr-line);
+        transition: background .2s ease, border-color .2s ease, transform .2s ease;
+    }
+
+    .lojas-cat:hover {
+        background: #e7effb;
+        border-color: rgba(11, 58, 130, .28);
+        transform: translateY(-1px);
+    }
+
+    .lojas-faq details {
+        border-bottom: 1px solid var(--sr-line);
+        padding: 1rem 0;
+    }
+
+    .lojas-faq summary {
+        list-style: none;
+        cursor: pointer;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        font-weight: 700;
+        color: var(--sr-blue-deep);
+        font-size: 1rem;
+        line-height: 1.35;
+    }
+
+    .lojas-faq summary::-webkit-details-marker { display: none; }
+
+    .lojas-faq summary i {
+        color: var(--sr-blue);
+        margin-top: .2rem;
+        transition: transform .25s ease;
+    }
+
+    .lojas-faq details[open] summary i {
+        transform: rotate(180deg);
+    }
+
+    .lojas-faq p {
+        margin: .75rem 0 0;
+        color: var(--sr-muted);
+        line-height: 1.6;
+        max-width: 42rem;
+    }
+
+    .lojas-reveal {
+        animation: lojasRise .7s ease both;
+    }
+
+    .lojas-reveal:nth-child(2) { animation-delay: .08s; }
+    .lojas-reveal:nth-child(3) { animation-delay: .16s; }
+
+    @keyframes lojasRise {
+        from {
+            opacity: 0;
+            transform: translateY(18px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .lojas-reveal {
+            animation: none;
+        }
+    }
+
+    @media (min-width: 640px) {
+        .lojas-cta-row { grid-template-columns: 1fr 1fr; }
+        .lojas-search-box {
+            grid-template-columns: 1fr auto;
+            align-items: stretch;
+        }
+        .lojas-cats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .lojas-compare { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (min-width: 900px) {
+        .lojas-hero { padding: 2rem 0 3.5rem; }
+        .lojas-hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr);
+            gap: 2rem;
+            align-items: end;
+        }
+        .lojas-store-stack {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.5rem;
+        }
+        .lojas-store-body { padding: 1.5rem; }
+        .lojas-section { padding: 3.5rem 0; }
+        .lojas-cats { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+        .lojas-results { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (min-width: 1100px) {
+        .lojas-results { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+</style>
 @endpush
 
 @section('content')
-<!-- Hero Section Premium -->
-<div class="relative w-full min-h-[300px] flex flex-col items-center justify-center mb-12 lojas-hero overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-br from-blue-600 via-cyan-500 to-blue-800 opacity-95 z-0"></div>
-    <div class="absolute inset-0 bg-black opacity-20 z-1"></div>
-    
-    <!-- Animated background elements -->
-    <div class="absolute inset-0 overflow-hidden z-2">
-        <div class="absolute top-20 left-10 w-72 h-72 bg-white opacity-5 rounded-full animate-float"></div>
-        <div class="absolute bottom-20 right-10 w-96 h-96 bg-cyan-300 opacity-10 rounded-full animate-float" style="animation-delay: 1s;"></div>
-        <div class="absolute top-1/2 left-1/3 w-48 h-48 bg-blue-300 opacity-5 rounded-full animate-float" style="animation-delay: 2s;"></div>
-    </div>
-    
-    <div class="relative z-10 flex flex-col items-center justify-center py-12 px-4 text-center max-w-6xl mx-auto">
-        <!-- Badge de destaque -->
-        <div class="badge-premium text-black px-6 py-2 rounded-full text-sm font-bold mb-4 shadow-lg">
-            🏪 NOSSAS LOJAS FÍSICAS
-        </div>
-        
-        <img src="{{ asset('img/logohorizontal.png') }}" alt="Shopp Reparos" class="w-32 h-16 mb-6 drop-shadow-2xl animate-scale-in object-contain">
-        
-        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-4 drop-shadow-lg font-display tracking-tight">
-            Nossas Lojas
-        </h1>
-        
-        <p class="text-xl sm:text-2xl text-cyan-100 font-medium mb-6 max-w-4xl mx-auto drop-shadow leading-relaxed">
-            Visite nossas <span class="text-yellow-300 font-bold">lojas físicas</span> em <span class="text-yellow-300 font-bold">Águas Claras e Taguatinga</span> para conhecer nossos produtos, serviços e equipe especializada.
-        </p>
-        
-        <!-- CTAs principais -->
-        <div class="flex flex-col sm:flex-row gap-4 items-center">
-            <a href="#nossas-lojas" class="inline-block bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-4 px-8 rounded-full shadow-xl text-lg transition-all duration-300 transform hover:scale-105 animate-scale-in flex items-center gap-2">
-                <i class="fas fa-map-marker-alt"></i>
-                Ver Nossas Lojas
-            </a>
-            <a href="/contato" 
-               class="inline-block bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-4 px-8 rounded-full shadow-xl text-lg transition-all duration-300 transform hover:scale-105 animate-scale-in flex items-center gap-2">
-                <i class="fas fa-phone-alt"></i>
-                Falar Conosco
-            </a>
-        </div>
-    </div>
-</div>
+<div class="lojas-page">
+    <section class="lojas-hero">
+        <div class="lojas-shell">
+            <nav class="lojas-breadcrumb" aria-label="Breadcrumb">
+                <a href="{{ url('/') }}">Início</a>
+                <span aria-hidden="true">/</span>
+                <span>Lojas</span>
+            </nav>
 
-<!-- Seção das Lojas -->
-<div id="nossas-lojas" class="bg-white py-16 shadow-lg relative overflow-hidden">
-    <div class="max-w-6xl mx-auto px-4 relative z-10">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl lg:text-4xl font-bold text-gray-800 mb-4 font-display">
-                🏪 Nossas Lojas Físicas
-            </h2>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                Visite nossas lojas para conhecer pessoalmente nossos produtos, serviços e equipe especializada
-            </p>
-        </div>
-        
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
-            <!-- Loja Águas Claras -->
-            <div class="loja-card group bg-gradient-to-br from-blue-50 to-cyan-50 rounded-3xl shadow-2xl p-8 border-2 border-blue-100 hover:border-blue-300 transition-all duration-500 transform hover:-translate-y-4">
-                <div class="text-center mb-6">
-                    <div class="relative mb-4">
-                        <div class="absolute inset-0 bg-blue-400 rounded-full opacity-20 blur-xl transform group-hover:scale-110 transition-transform duration-500"></div>
-                        <img src="{{ asset('img/Lojas/aguasclaras.webp') }}" alt="Loja Águas Claras" class="loja-imagem relative w-full h-64 object-cover rounded-2xl shadow-xl">
-                    </div>
-                    <h3 class="text-3xl font-extrabold text-blue-800 mb-2">Águas Claras</h3>
-                    <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-bold mb-3 inline-block">
-                        🏆 LOJA PRINCIPAL
-                    </div>
+            <div class="lojas-hero-grid">
+                <div class="lojas-reveal">
+                    <p class="lojas-kicker">Lojas Shopp Reparos</p>
+                    <h1>Ferragens, hidráulica, elétrica e ferramentas em Brasília</h1>
+                    <p class="lojas-hero-lead">
+                        Encontre a Shopp Reparos em Águas Claras e Taguatinga. Consulte endereço, horário, telefone, WhatsApp e como chegar em cada unidade.
+                    </p>
                 </div>
-                
-                <div class="space-y-4 mb-6">
-                    <div class="flex items-center gap-3 text-gray-700">
-                        <i class="fas fa-map-marker-alt text-blue-600 text-lg w-5"></i>
-                        <span class="font-medium">Q 204 Alfa Mix Loja 15A - Águas Claras, Brasília</span>
-                    </div>
-                    <div class="flex items-center gap-3 text-gray-700">
-                        <i class="fas fa-clock text-blue-600 text-lg w-5"></i>
-                        <span class="font-medium">Segunda a Sexta: 8h às 18h | Sábado: 8h às 12h</span>
-                    </div>
-                    <div class="flex items-center gap-3 text-gray-700">
-                        <i class="fas fa-phone text-blue-600 text-lg w-5"></i>
-                        <span class="font-medium">(61) 99609-6296</span>
-                    </div>
-                </div>
-                
-                <!-- Mapa -->
-                <div class="mb-6">
-                    <iframe 
-                        src="https://www.google.com/maps?q=Q%20204%20Alfa%20Mix%20Loja%2015A%2C%20%C3%81guas%20Claras%2C%20Bras%C3%ADlia%20-%20DF%2C%2071939-540&output=embed" 
-                        width="100%" 
-                        height="200" 
-                        style="border:0;border-radius:16px;" 
-                        allowfullscreen="" 
-                        loading="lazy"
-                        class="shadow-lg">
-                    </iframe>
-                </div>
-                
-                <!-- CTA da loja -->
-                <div class="text-center">
-                    <a href="https://api.whatsapp.com/send?phone=5561996096296&text=Olá! Gostaria de visitar a loja de Águas Claras!" 
-                       class="inline-flex items-center justify-center bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-6 rounded-full shadow-lg text-lg transition-all duration-300 transform hover:scale-105 gap-2 mx-auto">
-                        <i class="fab fa-whatsapp"></i>
-                        <span>Falar com Águas Claras</span>
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Loja Taguatinga -->
-            <div class="loja-card group bg-gradient-to-br from-green-50 to-emerald-50 rounded-3xl shadow-2xl p-8 border-2 border-green-100 hover:border-green-300 transition-all duration-500 transform hover:-translate-y-4">
-                <div class="text-center mb-6">
-                    <div class="relative mb-4">
-                        <div class="absolute inset-0 bg-green-400 rounded-full opacity-20 blur-xl transform group-hover:scale-110 transition-transform duration-500"></div>
-                        <img src="{{ asset('img/Lojas/taguatinga.webp') }}" alt="Loja Taguatinga" class="loja-imagem relative w-full h-64 object-cover rounded-2xl shadow-xl">
-                    </div>
-                    <h3 class="text-3xl font-extrabold text-green-800 mb-2">Taguatinga</h3>
-                    <div class="bg-green-100 text-green-800 px-4 py-2 rounded-full text-sm font-bold mb-3 inline-block">
-                        🚀 LOJA EXPANSÃO
-                    </div>
-                </div>
-                
-                <div class="space-y-4 mb-6">
-                    <div class="flex items-center gap-3 text-gray-700">
-                        <i class="fas fa-map-marker-alt text-green-600 text-lg w-5"></i>
-                        <span class="font-medium">St. E Sul CSE 2 - Taguatinga Sul, Brasília</span>
-                    </div>
-                    <div class="flex items-center gap-3 text-gray-700">
-                        <i class="fas fa-clock text-green-600 text-lg w-5"></i>
-                        <span class="font-medium">Segunda a Sexta: 8h às 18h | Sábado: 8h às 12h</span>
-                    </div>
-                    <div class="flex items-center gap-3 text-gray-700">
-                        <i class="fas fa-phone text-green-600 text-lg w-5"></i>
-                        <span class="font-medium">(61) 99931-8077</span>
-                    </div>
-                </div>
-                
-                <!-- Mapa -->
-                <div class="mb-6">
-                    <iframe 
-                        src="https://www.google.com/maps?q=St.%20E%20Sul%20CSE%202%20-%20Taguatinga%20Sul%2C%20Bras%C3%ADlia%20-%20DF%2C%2072025-025&output=embed" 
-                        width="100%" 
-                        height="200" 
-                        style="border:0;border-radius:16px;" 
-                        allowfullscreen="" 
-                        loading="lazy"
-                        class="shadow-lg">
-                    </iframe>
-                </div>
-                
-                <!-- CTA da loja -->
-                <div class="text-center">
-                    <a href="https://api.whatsapp.com/send?phone=5561996096296&text=Olá! Gostaria de visitar a loja de Taguatinga!" 
-                       class="inline-flex items-center justify-center bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-6 rounded-full shadow-lg text-lg transition-all duration-300 transform hover:scale-105 gap-2 mx-auto">
-                        <i class="fab fa-whatsapp"></i>
-                        <span>Falar com Taguatinga</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Badge de diferencial -->
-        <div class="text-center mt-12">
-            <div class="inline-flex items-center gap-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-black px-8 py-4 rounded-full font-bold shadow-lg">
-                <i class="fas fa-star text-lg"></i>
-                <span>Atendimento Personalizado • Produtos de Qualidade • Serviços Especializados</span>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- Seção de Filtros e Produtos/Serviços -->
-<div class="bg-gradient-to-r from-gray-50 to-blue-50 py-16">
-    <div class="max-w-6xl mx-auto px-4">
-        <div class="text-center mb-12">
-            <h2 class="text-3xl lg:text-4xl font-bold text-gray-800 mb-4 font-display">
-                Produtos e Serviços por Loja
-            </h2>
-            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-                Filtre por loja e tipo para encontrar exatamente o que você precisa
-            </p>
-        </div>
-        
-        <!-- Filtros -->
-        <div class="flex flex-col md:flex-row gap-6 justify-center mb-8">
-            <div class="filtro-container">
-                <label for="filtro-loja" class="block text-sm font-semibold text-gray-700 mb-2">Selecione a Loja</label>
-                <select id="filtro-loja" class="filtro-select">
-                    <option value="">Todas as Lojas</option>
-                    <option value="aguas">Águas Claras</option>
-                    <option value="tagua">Taguatinga</option>
-                </select>
-            </div>
-            
-            <div class="filtro-container">
-                <label for="filtro-tipo" class="block text-sm font-semibold text-gray-700 mb-2">Tipo de Item</label>
-                <select id="filtro-tipo" class="filtro-select">
-                    <option value="">Produtos e Serviços</option>
-                    <option value="produto">Produtos</option>
-                    <option value="servico">Serviços</option>
-                </select>
+                <div class="lojas-hero-meta lojas-reveal">
+                    <div>
+                        <strong>2</strong>
+                        <span>Lojas físicas</span>
+                    </div>
+                    <div>
+                        <strong>8–18h</strong>
+                        <span>Seg a sex · Sáb até 14h</span>
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <!-- Grid de Produtos e Serviços -->
-        <div id="loja-lista" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            @foreach(App\Models\Produto::all() as $produto)
-                <div class="loja-card" data-loja="aguas" data-tipo="produto">
-                    <div class="produto-card bg-white rounded-2xl shadow-xl p-6 border border-gray-100 hover:border-blue-200 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl">
-                        <div class="text-center mb-4">
-                            <div class="relative mb-4">
-                                <img src="{{ $produto->imagem ? asset('storage/produtos/' . $produto->imagem) : asset('img/logo.png') }}" 
-                                     alt="{{ $produto->nome }}" 
-                                     class="w-24 h-24 object-contain mx-auto rounded-xl shadow-lg">
+    </section>
+
+    <section id="nossas-lojas" class="lojas-section" style="background:#fff;">
+        <div class="lojas-shell">
+            <div class="lojas-section-head">
+                <p class="lojas-kicker">Escolha sua unidade</p>
+                <h2>Nossas lojas</h2>
+                <p>Cada loja com rota, atendimento e WhatsApp prontos para uso no celular.</p>
+            </div>
+
+            <div class="lojas-store-stack">
+                @foreach($lojas as $loja)
+                    <article class="lojas-store lojas-reveal">
+                        <a href="{{ url('/lojas/' . $loja['slug']) }}" class="lojas-store-media" aria-label="Ver página {{ $loja['nome_completo'] }}">
+                            <span class="lojas-store-badge">{{ $loja['destaque'] }}</span>
+                            <img src="{{ asset($loja['imagem']) }}" alt="{{ $loja['nome_completo'] }}">
+                        </a>
+
+                        <div class="lojas-store-body">
+                            <div>
+                                <h2><a href="{{ url('/lojas/' . $loja['slug']) }}">{{ $loja['nome'] }}</a></h2>
+                                <p>Ferragens, hidráulica, elétrica e ferramentas</p>
                             </div>
-                            <h3 class="font-bold text-gray-800 text-lg mb-2">{{ $produto->nome }}</h3>
-                            <p class="text-gray-600 text-sm mb-4 leading-relaxed">{{ Str::limit($produto->descricao, 80) }}</p>
-                        </div>
-                        
-                        <div class="text-center">
-                            <a href="/site/produtos/{{ $produto->id }}-{{ $produto->slug }}" 
-                               class="inline-block bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 w-full">
-                                Ver Produto
+
+                            <ul class="lojas-facts">
+                                <li><i class="fas fa-map-marker-alt"></i><span>{{ $loja['endereco'] }} — {{ $loja['bairro'] }}, {{ $loja['cidade'] }}/{{ $loja['uf'] }}</span></li>
+                                <li><i class="fas fa-clock"></i><span>{{ $loja['horario_resumo'] }}</span></li>
+                                <li><i class="fas fa-phone"></i><a href="tel:{{ $loja['telefone_e164'] }}" style="color:inherit;text-decoration:none;">{{ $loja['telefone'] }}</a></li>
+                            </ul>
+
+                            <div class="lojas-cta-row">
+                                <a class="lojas-btn lojas-btn-primary" href="{{ $loja['maps_url'] }}" target="_blank" rel="noopener">
+                                    <i class="fas fa-route"></i> Como chegar
+                                </a>
+                                <a class="lojas-btn lojas-btn-whatsapp" href="https://api.whatsapp.com/send?phone={{ $loja['whatsapp'] }}&text={{ urlencode('Olá! Gostaria de falar com a loja de ' . $loja['nome'] . '.') }}" target="_blank" rel="noopener">
+                                    <i class="fab fa-whatsapp"></i> WhatsApp
+                                </a>
+                            </div>
+
+                            <a class="lojas-link" href="{{ url('/lojas/' . $loja['slug']) }}">
+                                Ver página da loja <i class="fas fa-arrow-right"></i>
                             </a>
                         </div>
-                    </div>
-                </div>
-            @endforeach
-            
-            @foreach(App\Models\Servico::where('ativo', 1)->get() as $servico)
-                <div class="loja-card" data-loja="tagua" data-tipo="servico">
-                    <div class="servico-card bg-white rounded-2xl shadow-xl p-6 border border-gray-100 hover:border-blue-200 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl">
-                        <div class="text-center mb-4">
-                            <div class="relative mb-4">
-                                <img src="{{ $servico->imagem ? asset('storage/servicos/' . $servico->imagem) : asset('img/logo.png') }}" 
-                                     alt="{{ $servico->titulo }}" 
-                                     class="w-24 h-24 object-contain mx-auto rounded-xl shadow-lg">
-                            </div>
-                            <h3 class="font-bold text-gray-800 text-lg mb-2">{{ $servico->titulo }}</h3>
-                            <p class="text-gray-600 text-sm mb-4 leading-relaxed">{{ Str::limit($servico->descricao, 80) }}</p>
-                        </div>
-                        
-                        <div class="text-center">
-                            <a href="/site/servicos/{{ $servico->id }}-{{ $servico->slug }}" 
-                               class="inline-block bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 w-full">
-                                Ver Serviço
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
+                    </article>
+                @endforeach
+            </div>
         </div>
-        
-        <!-- Mensagem quando não há resultados -->
-        <div id="sem-resultados" class="hidden text-center py-12">
-            <div class="bg-white rounded-2xl shadow-xl p-8 max-w-md mx-auto">
-                <i class="fas fa-search text-4xl text-gray-400 mb-4"></i>
-                <h3 class="text-xl font-semibold text-gray-700 mb-2">Nenhum resultado encontrado</h3>
-                <p class="text-gray-600 mb-4">Tente ajustar os filtros para encontrar o que procura</p>
-                <button onclick="limparFiltros()" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-300">
-                    Limpar Filtros
+    </section>
+
+    <section class="lojas-section" style="background:var(--sr-soft);">
+        <div class="lojas-shell">
+            <div class="lojas-section-head">
+                <p class="lojas-kicker">Comparativo rápido</p>
+                <h2>Qual loja fica melhor para você?</h2>
+                <p>Compare localização, telefone, horário e rota das duas unidades.</p>
+            </div>
+
+            <div class="lojas-compare">
+                @foreach($lojas as $loja)
+                    <article class="lojas-compare-card">
+                        <h3>{{ $loja['nome'] }}</h3>
+                        <dl class="lojas-compare-rows">
+                            <div>
+                                <dt>Localização</dt>
+                                <dd>{{ $loja['bairro'] }}</dd>
+                            </div>
+                            <div>
+                                <dt>Telefone</dt>
+                                <dd><a href="tel:{{ $loja['telefone_e164'] }}">{{ $loja['telefone'] }}</a></dd>
+                            </div>
+                            <div>
+                                <dt>Horário</dt>
+                                <dd>{{ $loja['horario_resumo'] }}</dd>
+                            </div>
+                            <div>
+                                <dt>WhatsApp</dt>
+                                <dd><a href="https://api.whatsapp.com/send?phone={{ $loja['whatsapp'] }}&text={{ urlencode('Olá! Vim pela página de lojas.') }}" target="_blank" rel="noopener">Falar agora</a></dd>
+                            </div>
+                            <div>
+                                <dt>Rota</dt>
+                                <dd><a href="{{ $loja['maps_url'] }}" target="_blank" rel="noopener">Como chegar</a></dd>
+                            </div>
+                            <div>
+                                <dt>Página</dt>
+                                <dd><a href="{{ url('/lojas/' . $loja['slug']) }}">Ver loja</a></dd>
+                            </div>
+                        </dl>
+                    </article>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <section id="busca" class="lojas-section" style="background:#fff;">
+        <div class="lojas-shell">
+            <div class="lojas-section-head">
+                <p class="lojas-kicker">Busca rápida</p>
+                <h2>Encontre o que precisa</h2>
+                <p>Digite produto, marca ou o que você precisa resolver. Exemplos: torneira, disjuntor, silicone, chuveiro.</p>
+            </div>
+
+            <form action="{{ url('/lojas') }}#busca" method="GET" class="lojas-search-box">
+                <label for="busca-loja" class="sr-only">O que você está procurando?</label>
+                <input id="busca-loja" type="search" name="q" value="{{ $busca }}" placeholder="O que você está procurando?">
+                <button type="submit" class="lojas-btn lojas-btn-primary">
+                    <i class="fas fa-search"></i> Buscar
                 </button>
+            </form>
+
+            @if($busca !== '' || $problema)
+                @if($resultados->isEmpty())
+                    <div class="lojas-empty">
+                        <h3>Não encontramos “{{ $problema['titulo'] ?? $busca }}” no catálogo</h3>
+                        <p>Consulte a disponibilidade diretamente pelo WhatsApp da loja.</p>
+                        <div class="lojas-cta-row">
+                            @foreach($lojas as $loja)
+                                <a class="lojas-btn lojas-btn-whatsapp" href="https://api.whatsapp.com/send?phone={{ $loja['whatsapp'] }}&text={{ urlencode('Olá! Estou procurando: ' . ($problema['titulo'] ?? $busca)) }}" target="_blank" rel="noopener">
+                                    Consultar em {{ $loja['nome'] }}
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                @else
+                    <div class="lojas-results">
+                        @foreach($resultados as $item)
+                            <article class="lojas-result">
+                                <div class="lojas-result-top">
+                                    <img src="{{ $item['imagem'] }}" alt="{{ $item['titulo'] }}">
+                                    <div>
+                                        <small>{{ $item['tipo'] === 'produto' ? 'Produto' : 'Serviço' }}@if($item['categoria']) · {{ $item['categoria'] }}@endif</small>
+                                        <h3>{{ $item['titulo'] }}</h3>
+                                    </div>
+                                </div>
+                                <p>{{ \Illuminate\Support\Str::limit(strip_tags($item['descricao'] ?? ''), 90) }}</p>
+                                <div class="lojas-availability">
+                                    <span>{{ $item['aguas_claras'] ? 'Disponível em Águas Claras' : 'Indisponível em Águas Claras' }}</span>
+                                    <span>{{ $item['taguatinga'] ? 'Disponível em Taguatinga' : 'Indisponível em Taguatinga' }}</span>
+                                </div>
+                                <div class="lojas-cta-row">
+                                    <a class="lojas-btn lojas-btn-primary" href="{{ $item['url'] }}">Ver detalhes</a>
+                                    @php
+                                        $lojaWhats = $item['aguas_claras'] ? $lojas['aguas-claras'] : $lojas['taguatinga'];
+                                    @endphp
+                                    <a class="lojas-btn lojas-btn-ghost" href="https://api.whatsapp.com/send?phone={{ $lojaWhats['whatsapp'] }}&text={{ urlencode('Olá! Quero consultar: ' . $item['titulo']) }}" target="_blank" rel="noopener">WhatsApp</a>
+                                </div>
+                            </article>
+                        @endforeach
+                    </div>
+                @endif
+            @endif
+
+            <div class="lojas-section-head" style="margin-top:2rem;">
+                <h2 style="font-size:1.25rem;">O que você está tentando resolver?</h2>
+            </div>
+            <div class="lojas-cats">
+                @foreach($problemas as $itemProblema)
+                    <a class="lojas-cat" href="{{ url('/lojas') }}?problema={{ $itemProblema['id'] }}#busca">{{ $itemProblema['titulo'] }}</a>
+                @endforeach
+            </div>
+
+            <div class="lojas-section-head" style="margin-top:2rem;">
+                <h2 style="font-size:1.25rem;">Categorias do catálogo</h2>
+            </div>
+            <div class="lojas-cats">
+                @forelse($categorias as $categoria)
+                    <a class="lojas-cat" href="{{ url('/lojas/aguas-claras') }}?categoria={{ $categoria->id }}">{{ $categoria->nome }}</a>
+                @empty
+                    <p>As categorias criadas no admin aparecem aqui.</p>
+                @endforelse
+            </div>
+            @if($marcas->isNotEmpty())
+                <p style="margin-top:1rem;color:#5b6b82;">Marcas nos serviços: {{ $marcas->join(', ') }}.</p>
+            @endif
+            <div style="margin-top:1rem;">
+                <a class="lojas-link" href="/site/produtos">Ver produtos <i class="fas fa-arrow-right"></i></a>
             </div>
         </div>
-    </div>
+    </section>
+
+    <section class="lojas-section" style="background:#fff;">
+        <div class="lojas-shell">
+            <div class="lojas-section-head">
+                <p class="lojas-kicker">Avaliações</p>
+                <h2>Depoimentos das ordens de serviço</h2>
+            </div>
+            @if($avaliacoes->isEmpty())
+                <p style="color:#5b6b82;">Quando uma ordem de serviço receber comentário, ele aparece nesta página.</p>
+            @else
+                <div class="lojas-compare">
+                    @foreach($avaliacoes as $avaliacao)
+                        <article class="lojas-compare-card">
+                            <h3>{{ str_repeat('★', (int) $avaliacao->nota) }}</h3>
+                            <p>{{ $avaliacao->comentario }}</p>
+                            <p style="margin:0;color:#5b6b82;">{{ $avaliacao->user->name ?? 'Cliente' }}</p>
+                        </article>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+    </section>
+
+    <section class="lojas-section lojas-faq" style="background:var(--sr-soft);">
+        <div class="lojas-shell">
+            <div class="lojas-section-head">
+                <p class="lojas-kicker">Dúvidas frequentes</p>
+                <h2>Perguntas frequentes</h2>
+            </div>
+
+            @foreach([
+                ['A Shopp Reparos tem loja em Águas Claras?', 'Sim. A Shopp Reparos possui loja física em Águas Claras, Brasília/DF. Confira endereço, horário e WhatsApp na página da loja.'],
+                ['A Shopp Reparos tem loja em Taguatinga?', 'Sim. A empresa possui loja em Taguatinga Sul, Brasília/DF, com atendimento em ferragens, hidráulica, elétrica e ferramentas.'],
+                ['Qual o horário de funcionamento?', 'Nas duas lojas: segunda a sexta, das 8h às 18h; sábado, das 8h às 14h.'],
+                ['Posso consultar um produto antes de ir à loja?', 'Sim. A busca desta página mostra se o item está marcado como disponível em Águas Claras, em Taguatinga ou nas duas, conforme o cadastro do admin.'],
+                ['A Shopp Reparos faz entrega?', 'Sim, fazemos entrega local em Águas Claras, Taguatinga e Brasília. Prazo e valor são confirmados no WhatsApp da loja, conforme o produto.'],
+                ['Posso solicitar um reparo pelo WhatsApp?', 'Sim. Você pode solicitar orçamento de reparos hidráulicos, serviços elétricos, assistência técnica e manutenção predial pelo WhatsApp.'],
+            ] as [$pergunta, $resposta])
+                <details>
+                    <summary>
+                        <span>{{ $pergunta }}</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </summary>
+                    <p>{{ $resposta }}</p>
+                </details>
+            @endforeach
+        </div>
+    </section>
 </div>
 
-<!-- Call to Action Final -->
-<div class="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-3xl p-8 md:p-12 text-center text-white shadow-2xl mx-4 mb-8">
-    <h2 class="text-3xl lg:text-4xl font-bold mb-4 font-display">
-        Visite Nossas Lojas!
-    </h2>
-    <p class="text-xl mb-8 opacity-90">
-        Conheça pessoalmente nossos produtos, serviços e equipe especializada
-    </p>
-    
-    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <a href="#nossas-lojas" class="bg-white text-blue-600 hover:bg-gray-100 font-bold py-4 px-8 rounded-full shadow-lg text-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
-            <i class="fas fa-map-marker-alt"></i>
-            Ver Nossas Lojas
-        </a>
-        <a href="/contato" class="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-full shadow-lg text-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-2">
-            <i class="fas fa-phone-alt"></i>
-            Falar Conosco
-        </a>
-    </div>
-    
-    <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
-        <div class="flex items-center justify-center gap-2 opacity-90">
-            <i class="fas fa-clock"></i>
-            <span>Horário flexível</span>
-        </div>
-        <div class="flex items-center justify-center gap-2 opacity-90">
-            <i class="fas fa-users"></i>
-            <span>Equipe especializada</span>
-        </div>
-        <div class="flex items-center justify-center gap-2 opacity-90">
-            <i class="fas fa-truck"></i>
-            <span>Entrega local</span>
-        </div>
-    </div>
-</div>
-@endsection
-
-@push('styles')
-    <style>
-        .lojas-hero { 
-            min-height: 320px; 
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .lojas-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(34, 211, 238, 0.1) 50%, rgba(59, 130, 246, 0.1) 100%);
-            animation: shimmer 3s ease-in-out infinite;
-            z-index: 1;
-        }
-        
-        @keyframes shimmer {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.1; }
-        }
-        
-        .lojas-hero img { 
-            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.3);
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
-        }
-        
-        /* Animações personalizadas */
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            33% { transform: translateY(-10px) rotate(1deg); }
-            66% { transform: translateY(-5px) rotate(-1deg); }
-        }
-        
-        .animate-float {
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        /* Cards de loja */
-        .loja-card {
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .loja-card:hover {
-            transform: translateY(-8px) scale(1.02);
-        }
-        
-        /* Imagens das lojas */
-        .loja-imagem {
-            transition: all 0.5s ease;
-            object-fit: cover;
-            object-position: center;
-            width: 100%;
-            height: 24rem;
-            border-radius: 1rem;
-        }
-        
-        .loja-card:hover .loja-imagem {
-            transform: scale(1.05);
-        }
-        
-        /* Correção para logo horizontal */
-        .lojas-hero img {
-            width: 8rem;
-            height: 4rem;
-            object-fit: contain;
-            object-position: center;
-        }
-        
-        /* Filtros */
-        .filtro-container {
-            min-width: 200px;
-        }
-        
-        .filtro-select {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 500;
-            color: #374151;
-            background: white;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-        
-        .filtro-select:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-        
-        .filtro-select:hover {
-            border-color: #d1d5db;
-        }
-        
-        /* Cards de produtos e serviços */
-        .produto-card, .servico-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .produto-card:hover, .servico-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        /* Correção para imagens de produtos e serviços */
-        .produto-card img, .servico-card img {
-            width: 6rem;
-            height: 6rem;
-            object-fit: contain;
-            object-position: center;
-            border-radius: 0.75rem;
-        }
-        
-        /* Badge premium styling */
-        .badge-premium {
-            background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
-            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
-            animation: pulse-gold 2s ease-in-out infinite;
-        }
-        
-        @keyframes pulse-gold {
-            0%, 100% { transform: scale(1); box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4); }
-            50% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(251, 191, 36, 0.6); }
-        }
-        
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .lojas-hero { 
-                min-height: 250px !important; 
-                padding: 1rem !important;
-            }
-            
-            .lojas-hero h1 { 
-                font-size: 2rem !important; 
-                line-height: 1.1 !important;
-                margin-bottom: 1rem !important;
-            }
-            
-            .lojas-hero p { 
-                font-size: 1rem !important; 
-                line-height: 1.4 !important;
-                margin-bottom: 1.5rem !important;
-            }
-            
-            .lojas-hero img {
-                width: 6rem !important;
-                height: 3rem !important;
-                margin-bottom: 1rem !important;
-            }
-            
-            .filtro-container {
-                min-width: 100% !important;
-                margin-bottom: 1rem !important;
-            }
-            
-            .flex-col.md\\:flex-row {
-                gap: 1rem !important;
-            }
-            
-            .loja-card {
-                padding: 1.5rem !important;
-                margin-bottom: 1rem !important;
-            }
-            
-            .loja-imagem {
-                height: 8rem !important;
-            }
-            
-            .grid.grid-cols-1.lg\\:grid-cols-2 {
-                grid-template-columns: 1fr !important;
-                gap: 1rem !important;
-            }
-            
-            .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-3.xl\\:grid-cols-4 {
-                grid-template-columns: 1fr !important;
-                gap: 1rem !important;
-            }
-            
-            .py-16 {
-                padding-top: 2rem !important;
-                padding-bottom: 2rem !important;
-            }
-            
-            .px-4 {
-                padding-left: 1rem !important;
-                padding-right: 1rem !important;
-            }
-            
-            .mb-12 {
-                margin-bottom: 2rem !important;
-            }
-            
-            .gap-12 {
-                gap: 1rem !important;
-            }
-            
-            .gap-6 {
-                gap: 1rem !important;
-            }
-            
-            .space-y-4 > * + * {
-                margin-top: 1rem !important;
-            }
-            
-            .space-y-3 > * + * {
-                margin-top: 0.75rem !important;
-            }
-            
-            .space-y-8 > * + * {
-                margin-top: 2rem !important;
-            }
-            
-            .space-y-6 > * + * {
-                margin-top: 1.5rem !important;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .lojas-hero h1 { 
-                font-size: 1.75rem !important; 
-            }
-            
-            .lojas-hero p { 
-                font-size: 0.9rem !important; 
-            }
-            
-            .loja-card {
-                padding: 1rem !important;
-            }
-            
-            .loja-imagem {
-                height: 10rem !important;
-            }
-            
-            .text-3xl {
-                font-size: 1.5rem !important;
-            }
-            
-            .text-xl {
-                font-size: 1rem !important;
-            }
-            
-            .text-lg {
-                font-size: 0.9rem !important;
-            }
-        }
-        
-        /* Prevenir scroll horizontal */
-        @media (max-width: 768px) {
-            .lojas-hero,
-            .loja-card,
-            .produto-card,
-            .servico-card {
-                max-width: 100% !important;
-                overflow-x: hidden !important;
-            }
-            
-            iframe {
-                max-width: 100% !important;
-                height: 150px !important;
-            }
-        }
-        
-        /* Loading states */
-        .loading-shimmer {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-        }
-        
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-        }
-        
-        /* Animações de entrada */
-        .animate-fade-in {
-            animation: fadeInUp 0.8s ease-out forwards;
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        /* Animação de escala para o hero */
-        .animate-scale-in {
-            animation: scaleIn 0.8s ease-out forwards;
-        }
-        
-        @keyframes scaleIn {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-    </style>
-@endpush
-
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const filtroLoja = document.getElementById('filtro-loja');
-        const filtroTipo = document.getElementById('filtro-tipo');
-        const cards = document.querySelectorAll('.loja-card');
-        const semResultados = document.getElementById('sem-resultados');
-        
-        function filtrar() {
-            const loja = filtroLoja.value;
-            const tipo = filtroTipo.value;
-            let resultadosEncontrados = 0;
-            
-            cards.forEach(card => {
-                const cardLoja = card.getAttribute('data-loja');
-                const cardTipo = card.getAttribute('data-tipo');
-                let show = true;
-                
-                if (loja && cardLoja !== loja) show = false;
-                if (tipo && cardTipo !== tipo) show = false;
-                
-                if (show) {
-                    card.style.display = '';
-                    resultadosEncontrados++;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-            
-            // Mostra/esconde mensagem de sem resultados
-            if (resultadosEncontrados === 0) {
-                semResultados.classList.remove('hidden');
-            } else {
-                semResultados.classList.add('hidden');
-            }
-        }
-        
-        function limparFiltros() {
-            filtroLoja.value = '';
-            filtroTipo.value = '';
-            filtrar();
-        }
-        
-        // Event listeners
-        filtroLoja.addEventListener('change', filtrar);
-        filtroTipo.addEventListener('change', filtrar);
-        
-        // Smooth scroll para links internos
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-        
-        // Animações on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate-fade-in');
-                }
-            });
-        }, observerOptions);
-
-        // Observa elementos para animação
-        document.querySelectorAll('.loja-card, .produto-card, .servico-card').forEach(el => {
-            observer.observe(el);
-        });
-        
-        // Analytics para CTAs (opcional)
-        document.querySelectorAll('a[href*="whatsapp"], a[href*="contato"]').forEach(link => {
-            link.addEventListener('click', function() {
-                console.log('CTA clicked:', this.href);
-            });
-        });
-    });
-    
-    // Função global para limpar filtros
-    function limparFiltros() {
-        document.getElementById('filtro-loja').value = '';
-        document.getElementById('filtro-tipo').value = '';
-        document.querySelectorAll('.loja-card').forEach(card => {
-            card.style.display = '';
-        });
-        document.getElementById('sem-resultados').classList.add('hidden');
-    }
+<script type="application/ld+json">
+{!! json_encode([
+    '@context' => 'https://schema.org',
+    '@type' => 'FAQPage',
+    'mainEntity' => [
+        ['@type' => 'Question', 'name' => 'A Shopp Reparos tem loja em Águas Claras?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Sim. A Shopp Reparos possui loja física em Águas Claras, Brasília/DF.']],
+        ['@type' => 'Question', 'name' => 'A Shopp Reparos tem loja em Taguatinga?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Sim. A empresa possui loja em Taguatinga Sul, Brasília/DF.']],
+        ['@type' => 'Question', 'name' => 'Qual o horário de funcionamento?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Segunda a sexta, das 8h às 18h; sábado, das 8h às 14h.']],
+        ['@type' => 'Question', 'name' => 'Posso consultar um produto antes de ir à loja?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Sim. Entre em contato pelo WhatsApp da loja desejada.']],
+        ['@type' => 'Question', 'name' => 'Posso solicitar um reparo pelo WhatsApp?', 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Sim. Você pode solicitar orçamento de reparos e assistência técnica pelo WhatsApp.']],
+    ],
+], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
 </script>
-@endpush
+@endsection

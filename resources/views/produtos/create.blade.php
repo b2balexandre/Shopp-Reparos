@@ -114,6 +114,19 @@
             <label for="preco" class="block font-medium text-gray-700 mb-1">Preço</label>
             <input type="number" step="0.01" name="preco" id="preco" class="w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 p-3">
         </div>
+        <fieldset class="mb-4">
+            <legend class="block font-medium text-gray-700 mb-2">Disponível nas lojas</legend>
+            <div class="flex flex-col gap-2">
+                <label class="inline-flex items-center gap-2">
+                    <input type="checkbox" name="loja_aguas_claras" value="1" class="rounded border-gray-300" checked>
+                    Águas Claras
+                </label>
+                <label class="inline-flex items-center gap-2">
+                    <input type="checkbox" name="loja_taguatinga" value="1" class="rounded border-gray-300" checked>
+                    Taguatinga
+                </label>
+            </div>
+        </fieldset>
                 <div class="flex items-center justify-between pt-6 border-t border-gray-200">
                     <a href="{{ route('admin.produtos.index') }}" 
                        class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded transition-colors">

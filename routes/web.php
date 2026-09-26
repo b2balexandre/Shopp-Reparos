@@ -19,7 +19,10 @@ Route::get('/', function () {
 
 // Páginas institucionais públicas
 Route::view('/assistencia-tecnica', 'site.assistencia-tecnica');
-Route::view('/lojas', 'site.lojas');
+Route::get('/lojas', [App\Http\Controllers\LojaController::class, 'index'])->name('lojas.index');
+Route::get('/lojas/{slug}', [App\Http\Controllers\LojaController::class, 'show'])
+    ->whereIn('slug', ['aguas-claras', 'taguatinga'])
+    ->name('lojas.show');
 Route::view('/reparos-hidraulicos', 'site.reparos-hidraulicos');
 Route::view('/contato', 'site.contato');
 

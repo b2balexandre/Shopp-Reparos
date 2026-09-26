@@ -43,29 +43,35 @@ class Banner extends Model
     // Método para obter o caminho completo da imagem desktop
     public function getDesktopImagePathAttribute()
     {
-        if (!$this->desktop_image) return null;
-        
-        // Se o caminho já começa com 'img/', é um banner antigo
-        if (str_starts_with($this->desktop_image, 'img/')) {
-            return asset($this->desktop_image);
-        }
-        
-        // Caso contrário, é um banner novo no storage
-        return asset('storage/banners/desktop/' . $this->desktop_image);
+        return $this->resolverImagem($this->desktop_image, 'desktop');
     }
 
-    // Método para obter o caminho completo da imagem mobile
     public function getMobileImagePathAttribute()
     {
-        if (!$this->mobile_image) return null;
-        
-        // Se o caminho já começa com 'img/', é um banner antigo
-        if (str_starts_with($this->mobile_image, 'img/')) {
-            return asset($this->mobile_image);
+        return $this->resolverImagem($this->mobile_image, 'mobile');
+    }
+
+    private function resolverImagem(?string $arquivo, string $tipo): ?string
+    {
+        if (!$arquivo) {
+            return null;
         }
-        
-        // Caso contrário, é um banner novo no storage
-        return asset('storage/banners/mobile/' . $this->mobile_image);
+
+        if (str_starts_with($arquivo, 'img/') || str_starts_with($arquivo, 'storage/')) {
+            return asset($arquivo);
+        }
+
+        $storage = "storage/banners/{$tipo}/{$arquivo}";
+        if (is_file(public_path($storage))) {
+            return asset($storage);
+        }
+
+        $hero = "img/bannershero/{$arquivo}";
+        if (is_file(public_path($hero))) {
+            return asset($hero);
+        }
+
+        return asset($storage);
     }
 
     // Método para obter o caminho completo da imagem desktop antiga
