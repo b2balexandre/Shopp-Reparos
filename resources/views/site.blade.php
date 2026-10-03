@@ -163,6 +163,13 @@
         line-height: 1.3;
         font-weight: 700;
     }
+    .home-card em {
+        display: block;
+        margin-top: .15rem;
+        font-style: normal;
+        font-size: .78rem;
+        color: var(--muted);
+    }
     .home-stores {
         display: grid;
         gap: .75rem;
@@ -385,6 +392,9 @@
                                     <small>{{ $produto->categoria->nome }}</small>
                                 @endif
                                 <h3>{{ $produto->nome }}</h3>
+                                @if($produto->marca)
+                                    <em>{{ $produto->marca }}</em>
+                                @endif
                             </div>
                         </a>
                     @endforeach

@@ -108,6 +108,8 @@ Route::middleware('auth')->group(function () {
         Route::patch('usuarios/{user}/nivel', [App\Http\Controllers\Admin\UsuarioController::class, 'atualizarNivel'])->name('usuarios.nivel');
         // Categorias
         Route::resource('categorias', App\Http\Controllers\CategoriaController::class);
+        Route::post('marcas/rapida', [App\Http\Controllers\MarcaController::class, 'rapida'])->name('marcas.rapida');
+        Route::resource('marcas', App\Http\Controllers\MarcaController::class);
         // Responsáveis
         Route::resource('responsaveis', App\Http\Controllers\ResponsavelController::class);
         // Serviços (CRUD completo)

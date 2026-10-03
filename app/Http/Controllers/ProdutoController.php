@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Produto;
 use App\Models\Categoria;
+use App\Models\Marca;
 use App\Services\ProdutoPlanilhaImporter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -28,7 +29,15 @@ class ProdutoController extends Controller
     public function create()
     {
         $categorias = Categoria::orderBy('nome')->get();
-        return view('produtos.create', compact('categorias'));
+        $marcas = Marca::orderBy('nome')->get();
+        return view('produtos.create', compact('categorias', 'marcas'));
+    }
+
+    private function aplicarMarca(array &$data): void
+    {
+        $marca = ! empty($data['marca_id']) ? Marca::find($data['marca_id']) : null;
+        $data['marca_id'] = $marca?->id;
+        $data['marca'] = $marca?->nome;
     }
 
     private function normalizeFilename(?string $value): ?string
@@ -109,11 +118,12 @@ class ProdutoController extends Controller
         $data = $request->validate([
             'nome' => 'required|string|max:255',
             'descricao' => 'nullable|string',
-            'marca' => 'nullable|string|max:255',
+            'marca_id' => 'nullable|exists:marcas,id',
             'imagem' => 'nullable|image|max:2048',
             'categoria_id' => 'required|exists:categorias,id',
             'preco' => 'nullable|numeric',
         ]);
+        $this->aplicarMarca($data);
         $data['slug'] = null;
         $data['loja_aguas_claras'] = $request->boolean('loja_aguas_claras');
         $data['loja_taguatinga'] = $request->boolean('loja_taguatinga');
@@ -133,8 +143,9 @@ class ProdutoController extends Controller
     public function edit(Produto $produto)
     {
         $categorias = Categoria::orderBy('nome')->get();
+        $marcas = Marca::orderBy('nome')->get();
         $produto->imagem = $this->normalizeFilename($produto->imagem); // normaliza antes da view
-        return view('produtos.edit', compact('produto', 'categorias'));
+        return view('produtos.edit', compact('produto', 'categorias', 'marcas'));
     }
 
     public function update(Request $request, Produto $produto)
@@ -142,11 +153,12 @@ class ProdutoController extends Controller
         $data = $request->validate([
             'nome' => 'required|string|max:255',
             'descricao' => 'nullable|string',
-            'marca' => 'nullable|string|max:255',
+            'marca_id' => 'nullable|exists:marcas,id',
             'imagem' => 'nullable|image|max:2048',
             'categoria_id' => 'required|exists:categorias,id',
             'preco' => 'nullable|numeric',
         ]);
+        $this->aplicarMarca($data);
         $data['loja_aguas_claras'] = $request->boolean('loja_aguas_claras');
         $data['loja_taguatinga'] = $request->boolean('loja_taguatinga');
 

@@ -124,6 +124,10 @@
                                 <i class="fas fa-tags w-5"></i>
                                 Categorias
                             </a>
+                            <a href="{{ route('admin.marcas.index') }}" class="sidebar-link {{ request()->routeIs('admin.marcas.*') ? 'active' : '' }}">
+                                <i class="fas fa-copyright w-5"></i>
+                                Marcas
+                            </a>
                             <a href="{{ route('admin.ordem_servicos.index') }}" class="sidebar-link {{ request()->routeIs('admin.ordem_servicos.*') ? 'active' : '' }}">
                                 <i class="fas fa-clipboard-list w-5"></i>
                                 Ordens de Serviço
@@ -240,6 +244,11 @@
             <a href="{{ route('admin.categorias.index') }}" class="sidebar-link flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg mb-2 {{ request()->routeIs('admin.categorias.*') ? 'active' : '' }}">
                 <i class="fas fa-tags w-5 h-5 mr-3"></i>
                 Categorias
+            </a>
+
+            <a href="{{ route('admin.marcas.index') }}" class="sidebar-link flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg mb-2 {{ request()->routeIs('admin.marcas.*') ? 'active' : '' }}">
+                <i class="fas fa-copyright w-5 h-5 mr-3"></i>
+                Marcas
             </a>
 
             <a href="{{ route('admin.ordem_servicos.index') }}" class="sidebar-link flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg mb-2 {{ request()->routeIs('admin.ordem_servicos.*') ? 'active' : '' }}">

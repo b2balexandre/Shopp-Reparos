@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Categoria;
+use App\Models\Marca;
 use App\Models\Produto;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -16,7 +17,7 @@ class ProdutoPlanilhaImporter
     /**
      * Cria produtos a partir da planilha. Título já cadastrado não é alterado.
      *
-     * @return array{criados: array<int, string>, ignorados: array<int, string>, sem_categoria: array<int, string>, erros: array<int, string>, imagens: int}
+     * @return array{criados: array<int, string>, ignorados: array<int, string>, sem_categoria: array<int, string>, erros: array<int, string>, imagens: int, marcas: int}
      */
     public function import(string $path, ?int $categoriaPadraoId = null): array
     {
@@ -30,6 +31,7 @@ class ProdutoPlanilhaImporter
             $sheets = $this->worksheets($zip);
             $existentes = $this->titulosExistentes();
             $categorias = $this->categoriasPorNome();
+            $marcas = $this->marcasPorNome();
 
             $resultado = [
                 'criados' => [],
@@ -37,6 +39,7 @@ class ProdutoPlanilhaImporter
                 'sem_categoria' => [],
                 'erros' => [],
                 'imagens' => 0,
+                'marcas' => 0,
             ];
 
             $houveAbaDeProduto = false;
@@ -62,10 +65,19 @@ class ProdutoPlanilhaImporter
                     }
 
                     $chave = $this->chaveTitulo($nome);
+                    $marca = $this->marca($this->celula($cells, $header['colunas'], 'marca'));
                     if (isset($existentes[$chave])) {
-                        if ($this->anexarImagemSeFaltar($existentes[$chave], $imagens[$numero] ?? null)) {
+                        $produto = $existentes[$chave];
+                        $completou = false;
+                        if ($this->anexarImagemSeFaltar($produto, $imagens[$numero] ?? null)) {
                             $resultado['imagens']++;
-                        } else {
+                            $completou = true;
+                        }
+                        if ($this->anexarMarcaSeFaltar($produto, $marca, $marcas)) {
+                            $resultado['marcas']++;
+                            $completou = true;
+                        }
+                        if (! $completou) {
                             $resultado['ignorados'][] = $nome;
                         }
                         continue;
@@ -82,17 +94,18 @@ class ProdutoPlanilhaImporter
                         continue;
                     }
 
-                    $marca = $this->marca($this->celula($cells, $header['colunas'], 'marca'));
                     $descricao = $this->descricao(
                         $this->celula($cells, $header['colunas'], 'especificacao'),
                         $this->celula($cells, $header['colunas'], 'observacoes'),
                         $this->celula($cells, $header['colunas'], 'link')
                     );
 
+                    $marcaId = $this->resolverMarca($marca, $marcas);
                     $produto = Produto::create([
                         'nome' => $nome,
                         'descricao' => $descricao !== '' ? $descricao : null,
-                        'marca' => $marca,
+                        'marca' => $marcaId ? $marcas[$this->chaveTitulo($marca)]['nome'] : null,
+                        'marca_id' => $marcaId,
                         'categoria_id' => $categoriaId,
                         'loja_aguas_claras' => true,
                         'loja_taguatinga' => true,
@@ -129,6 +142,10 @@ class ProdutoPlanilhaImporter
 
         if ($resultado['imagens'] > 0) {
             $partes[] = $resultado['imagens'].' '.($this->plural($resultado['imagens'], 'imagem salva', 'imagens salvas'));
+        }
+
+        if (($resultado['marcas'] ?? 0) > 0) {
+            $partes[] = $resultado['marcas'].' '.($this->plural($resultado['marcas'], 'marca completada', 'marcas completadas'));
         }
 
         if ($resultado['ignorados'] !== []) {
@@ -362,7 +379,7 @@ class ProdutoPlanilhaImporter
     private function titulosExistentes(): array
     {
         $mapa = [];
-        foreach (Produto::query()->get(['id', 'nome', 'imagem']) as $produto) {
+        foreach (Produto::query()->get(['id', 'nome', 'imagem', 'marca', 'marca_id']) as $produto) {
             $mapa[$this->chaveTitulo($produto->nome)] = $produto;
         }
 
@@ -387,6 +404,60 @@ class ProdutoPlanilhaImporter
         $produto->save();
 
         return true;
+    }
+
+    /**
+     * @param  array<string, array{id: int, nome: string}>  $marcas
+     */
+    private function anexarMarcaSeFaltar(Produto $produto, ?string $nome, array &$marcas): bool
+    {
+        if ($nome === null || $nome === '' || filled($produto->marca) || $produto->marca_id) {
+            return false;
+        }
+
+        $marcaId = $this->resolverMarca($nome, $marcas);
+        if (! $marcaId) {
+            return false;
+        }
+
+        $produto->marca = $marcas[$this->chaveTitulo($nome)]['nome'];
+        $produto->marca_id = $marcaId;
+        $produto->save();
+
+        return true;
+    }
+
+    /**
+     * @param  array<string, array{id: int, nome: string}>  $marcas
+     */
+    private function resolverMarca(?string $nome, array &$marcas): ?int
+    {
+        if ($nome === null || trim($nome) === '') {
+            return null;
+        }
+
+        $chave = $this->chaveTitulo($nome);
+        if (isset($marcas[$chave])) {
+            return $marcas[$chave]['id'];
+        }
+
+        $marca = Marca::create(['nome' => trim($nome)]);
+        $marcas[$chave] = ['id' => $marca->id, 'nome' => $marca->nome];
+
+        return $marca->id;
+    }
+
+    /**
+     * @return array<string, array{id: int, nome: string}>
+     */
+    private function marcasPorNome(): array
+    {
+        $mapa = [];
+        foreach (Marca::query()->get(['id', 'nome']) as $marca) {
+            $mapa[$this->chaveTitulo($marca->nome)] = ['id' => $marca->id, 'nome' => $marca->nome];
+        }
+
+        return $mapa;
     }
 
     /**

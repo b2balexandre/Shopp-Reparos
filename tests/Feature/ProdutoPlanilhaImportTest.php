@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Categoria;
+use App\Models\Marca;
 use App\Models\Produto;
 use App\Models\User;
 use App\Services\ProdutoPlanilhaImporter;
@@ -41,6 +42,7 @@ class ProdutoPlanilhaImportTest extends TestCase
 
         $tomada = Produto::query()->where('nome', 'Tomada 2P+T')->first();
         $this->assertSame('Tramontina', $tomada->marca);
+        $this->assertSame('Tramontina', Marca::query()->find($tomada->marca_id)?->nome);
         $this->assertSame('Hidráulica', $tomada->categoria->nome);
 
         $existente->refresh();
@@ -68,6 +70,25 @@ class ProdutoPlanilhaImportTest extends TestCase
         $this->assertSame('Steck', $existente->marca);
         $this->assertNotNull($existente->imagem);
         $this->assertFileExists(storage_path('app/public/produtos/'.$existente->imagem));
+    }
+
+    public function test_planilha_completa_marca_que_faltava_sem_trocar_o_texto(): void
+    {
+        $categoria = Categoria::create(['nome' => 'Elétrica']);
+        $existente = Produto::create([
+            'nome' => 'Tomada 2P+T',
+            'descricao' => 'Descrição que deve permanecer',
+            'categoria_id' => $categoria->id,
+        ]);
+
+        $resultado = app(ProdutoPlanilhaImporter::class)->import($this->planilhaComImagem(), $categoria->id);
+
+        $existente->refresh();
+        $this->assertSame(1, $resultado['marcas']);
+        $this->assertSame('Descrição que deve permanecer', $existente->descricao);
+        $this->assertSame('Tramontina', $existente->marca);
+        $this->assertNotNull($existente->marca_id);
+        $this->assertDatabaseHas('marcas', ['nome' => 'Tramontina']);
     }
 
     public function test_admin_envia_a_planilha_pela_tela(): void

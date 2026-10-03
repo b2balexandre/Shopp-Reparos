@@ -73,6 +73,21 @@
                 </a>
             </div>
         </div>
+
+        <div class="bg-indigo-50 rounded-lg p-4 lg:p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex items-center mb-3">
+                <i class="fas fa-copyright text-indigo-600 text-xl mr-3"></i>
+                <h2 class="text-lg lg:text-xl font-semibold text-indigo-800">Marcas</h2>
+            </div>
+            <div class="space-y-2">
+                <a href="{{ route('admin.marcas.index') }}" class="block text-indigo-700 hover:text-indigo-900 hover:underline text-sm lg:text-base">
+                    <i class="fas fa-cog mr-2"></i>Gerenciar Marcas
+                </a>
+                <a href="{{ route('admin.marcas.create') }}" class="block text-indigo-600 hover:text-indigo-800 hover:underline text-sm lg:text-base">
+                    <i class="fas fa-plus mr-2"></i>Cadastrar Nova
+                </a>
+            </div>
+        </div>
         
         <!-- Banners -->
         <div class="bg-orange-50 rounded-lg p-4 lg:p-6 shadow-sm hover:shadow-md transition-shadow">

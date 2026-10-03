@@ -660,6 +660,9 @@
                         <a class="loja-cat" href="{{ url('/site/produtos/' . $produto->id . '-' . ($produto->slug ?: \Illuminate\Support\Str::slug($produto->nome))) }}" style="flex-direction:column;gap:.4rem;min-height:7rem;">
                             <img src="{{ $produto->imagem ? asset('storage/produtos/' . basename($produto->imagem)) : asset('img/logo.png') }}" alt="" style="width:3rem;height:3rem;object-fit:contain;">
                             <span>{{ $produto->nome }}</span>
+                            @if($produto->marca)
+                                <small>{{ $produto->marca }}</small>
+                            @endif
                         </a>
                     @endforeach
                 </div>

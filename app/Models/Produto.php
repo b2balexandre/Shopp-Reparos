@@ -10,7 +10,7 @@ class Produto extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'nome', 'descricao', 'marca', 'imagem', 'categoria_id', 'preco', 'slug',
+        'nome', 'descricao', 'marca', 'marca_id', 'imagem', 'categoria_id', 'preco', 'slug',
         'loja_aguas_claras', 'loja_taguatinga',
     ];
 
@@ -30,6 +30,11 @@ class Produto extends Model
     public function categoria()
     {
         return $this->belongsTo(Categoria::class);
+    }
+
+    public function marcaCadastrada()
+    {
+        return $this->belongsTo(Marca::class, 'marca_id');
     }
 
     protected static function booted()
