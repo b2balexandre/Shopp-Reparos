@@ -71,7 +71,7 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $produto->categoria->nome ?? '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             @if($produto->imagem)
-                                <img src="{{ asset('storage/produtos/' . $produto->imagem) }}" alt="Imagem" class="w-12 h-12 object-cover rounded-lg">
+                                <img src="{{ asset('storage/produtos/' . basename($produto->imagem)) }}" alt="Imagem" class="w-12 h-12 object-cover rounded-lg">
                             @else
                                 <div class="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
                                     <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

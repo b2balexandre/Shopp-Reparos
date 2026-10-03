@@ -24,7 +24,7 @@
                         <option value="{{ $categoria->id }}" @selected(old('categoria_id') == $categoria->id)>{{ $categoria->nome }}</option>
                     @endforeach
                 </select>
-                <p class="text-sm text-gray-500 mt-2">Quando a coluna Categoria existe, ela vale para a linha e a categoria é criada se ainda não houver. Um produto cujo título já está cadastrado não é substituído.</p>
+                <p class="text-sm text-gray-500 mt-2">Quando a coluna Categoria existe, ela vale para a linha e a categoria é criada se ainda não houver. Um produto cujo título já está cadastrado não é substituído. Se ele estiver sem foto e a planilha tiver imagem, só a foto é acrescentada. Pode enviar a mesma planilha de novo para completar as fotos que faltaram.</p>
             </div>
             <div class="flex items-center justify-between pt-4 border-t border-gray-200">
                 <a href="{{ route('admin.produtos.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">Cancelar</a>

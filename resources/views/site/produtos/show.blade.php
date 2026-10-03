@@ -18,7 +18,7 @@
             <div style="flex:0 0 320px;max-width:320px;display:flex;align-items:center;justify-content:center;">
                 <div style="background:#f3f4f6;border-radius:16px;box-shadow:0 2px 8px rgba(0,0,0,0.04);padding:18px 12px;width:100%;display:flex;align-items:center;justify-content:center;">
                     @if($produto->imagem)
-                        <img src="{{ asset('storage/produtos/' . $produto->imagem) }}" alt="Imagem do Produto" style="max-width:260px;max-height:320px;object-fit:contain;border-radius:12px;">
+                        <img src="{{ asset('storage/produtos/' . basename($produto->imagem)) }}" alt="Imagem do Produto" style="max-width:260px;max-height:320px;object-fit:contain;border-radius:12px;">
                     @else
                         <span style="color:#888;">Imagem não disponível</span>
                     @endif
@@ -76,7 +76,7 @@
     <meta name="description" content="{{ $produto->nome }}: {{ Str::limit(strip_tags($produto->descricao), 140) }}. Disponível em Águas Claras, Taguatinga Sul e Norte. Confira preço, categoria e detalhes!">
     <meta property="og:title" content="{{ $produto->nome }} em Águas Claras, Taguatinga Sul e Norte" />
     <meta property="og:description" content="{{ $produto->nome }}: {{ Str::limit(strip_tags($produto->descricao), 140) }}. Categoria: {{ $produto->categoria->nome ?? '-' }}. Atendemos Águas Claras, Taguatinga Sul e Norte." />
-    <meta property="og:image" content="{{ $produto->imagem ? asset('storage/produtos/' . $produto->imagem) : asset('img/logo.png') }}" />
+    <meta property="og:image" content="{{ $produto->imagem ? asset('storage/produtos/' . basename($produto->imagem)) : asset('img/logo.png') }}" />
     <meta property="og:type" content="product" />
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta name="robots" content="index, follow">
@@ -86,7 +86,7 @@
       "@type": "Product",
       "name": "{{ $produto->nome }}",
       "image": [
-        @if($produto->imagem) "{{ asset('storage/produtos/' . $produto->imagem) }}" @endif
+        @if($produto->imagem) "{{ asset('storage/produtos/' . basename($produto->imagem)) }}" @endif
       ],
       "description": "{{ Str::limit(strip_tags($produto->descricao), 200) }}",
       "brand": {

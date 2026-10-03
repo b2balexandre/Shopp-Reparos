@@ -49,6 +49,27 @@ class ProdutoPlanilhaImportTest extends TestCase
         $this->assertNull($existente->imagem);
     }
 
+    public function test_planilha_so_acrescenta_foto_em_produto_que_ja_existe(): void
+    {
+        $categoria = Categoria::create(['nome' => 'Elétrica']);
+        $existente = Produto::create([
+            'nome' => 'Tomada 2P+T',
+            'descricao' => 'Descrição que deve permanecer',
+            'marca' => 'Steck',
+            'categoria_id' => $categoria->id,
+        ]);
+
+        $resultado = app(ProdutoPlanilhaImporter::class)->import($this->planilhaComFotoNaCelula());
+
+        $this->assertSame([], $resultado['criados']);
+        $this->assertSame(1, $resultado['imagens']);
+        $existente->refresh();
+        $this->assertSame('Descrição que deve permanecer', $existente->descricao);
+        $this->assertSame('Steck', $existente->marca);
+        $this->assertNotNull($existente->imagem);
+        $this->assertFileExists(storage_path('app/public/produtos/'.$existente->imagem));
+    }
+
     public function test_admin_envia_a_planilha_pela_tela(): void
     {
         $admin = User::factory()->create(['perfil' => 'admin']);
@@ -148,6 +169,57 @@ XML;
         $zip->addFromString('xl/drawings/drawing1.xml', $drawing);
         $zip->addFromString('xl/drawings/_rels/drawing1.xml.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="../media/image1.png"/></Relationships>');
         $zip->addFromString('xl/media/image1.png', $png);
+        $zip->close();
+
+        return $path;
+    }
+
+    private function planilhaComFotoNaCelula(): string
+    {
+        $path = storage_path('app/planilha-celula-'.uniqid().'.xlsx');
+        $png = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==');
+        $shared = <<<'XML'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<si><t>Produto</t></si>
+<si><t>Tomada 2P+T</t></si>
+<si><t>Descrição nova que não pode substituir</t></si>
+</sst>
+XML;
+        $sheet = <<<'XML'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<sheetData>
+<row r="1"><c r="B1" t="s"><v>0</v></c></row>
+<row r="2">
+<c r="B2" t="s"><v>1</v></c>
+<c r="C2" t="s"><v>2</v></c>
+<c r="F2"><f>_xlfn.DISPIMG(&quot;ID_TOMADA&quot;,1)</f></c>
+</row>
+</sheetData>
+</worksheet>
+XML;
+        $cellImages = <<<'XML'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<etc:cellImages xmlns:etc="http://www.wps.cn/officeDocument/2017/etCustomData" xmlns:xdr="http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+<etc:cellImage>
+<xdr:pic>
+<xdr:nvPicPr><xdr:cNvPr id="2" name="ID_TOMADA"/></xdr:nvPicPr>
+<xdr:blipFill><a:blip r:embed="rId1"/></xdr:blipFill>
+</xdr:pic>
+</etc:cellImage>
+</etc:cellImages>
+XML;
+
+        $zip = new ZipArchive();
+        $zip->open($path, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+        $zip->addFromString('xl/sharedStrings.xml', $shared);
+        $zip->addFromString('xl/worksheets/sheet1.xml', $sheet);
+        $zip->addFromString('xl/workbook.xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="Catalogo" sheetId="1" r:id="rId1"/></sheets></workbook>');
+        $zip->addFromString('xl/_rels/workbook.xml.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/></Relationships>');
+        $zip->addFromString('xl/cellimages.xml', $cellImages);
+        $zip->addFromString('xl/_rels/cellimages.xml.rels', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/tomada.png"/></Relationships>');
+        $zip->addFromString('xl/media/tomada.png', $png);
         $zip->close();
 
         return $path;

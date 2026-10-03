@@ -49,7 +49,7 @@ class ProdutoPlanilhaImporter
                 }
 
                 $houveAbaDeProduto = true;
-                $imagens = $this->imagensPorLinha($zip, $sheet['path']);
+                $imagens = $this->imagensPorLinha($zip, $sheet['path'], $zip->getFromName($sheet['path']) ?: '', $shared);
 
                 foreach ($rows as $numero => $cells) {
                     if ($numero <= $header['linha']) {
@@ -63,7 +63,11 @@ class ProdutoPlanilhaImporter
 
                     $chave = $this->chaveTitulo($nome);
                     if (isset($existentes[$chave])) {
-                        $resultado['ignorados'][] = $nome;
+                        if ($this->anexarImagemSeFaltar($existentes[$chave], $imagens[$numero] ?? null)) {
+                            $resultado['imagens']++;
+                        } else {
+                            $resultado['ignorados'][] = $nome;
+                        }
                         continue;
                     }
 
@@ -103,7 +107,7 @@ class ProdutoPlanilhaImporter
                         }
                     }
 
-                    $existentes[$chave] = true;
+                    $existentes[$chave] = $produto;
                     $resultado['criados'][] = $nome;
                 }
             }
@@ -353,16 +357,36 @@ class ProdutoPlanilhaImporter
     }
 
     /**
-     * @return array<string, true>
+     * @return array<string, Produto>
      */
     private function titulosExistentes(): array
     {
         $mapa = [];
-        foreach (Produto::query()->pluck('nome') as $nome) {
-            $mapa[$this->chaveTitulo((string) $nome)] = true;
+        foreach (Produto::query()->get(['id', 'nome', 'imagem']) as $produto) {
+            $mapa[$this->chaveTitulo($produto->nome)] = $produto;
         }
 
         return $mapa;
+    }
+
+    /**
+     * @param  array{bytes: string, ext: string}|null  $imagem
+     */
+    private function anexarImagemSeFaltar(Produto $produto, ?array $imagem): bool
+    {
+        if ($produto->imagem || $imagem === null) {
+            return false;
+        }
+
+        $arquivo = $this->salvarImagem($imagem['bytes'], $imagem['ext']);
+        if (! $arquivo) {
+            return false;
+        }
+
+        $produto->imagem = $arquivo;
+        $produto->save();
+
+        return true;
     }
 
     /**
@@ -395,49 +419,43 @@ class ProdutoPlanilhaImporter
     }
 
     /**
+     * @param  array<int, string>  $shared
      * @return array<int, array{bytes: string, ext: string}>
      */
-    private function imagensPorLinha(ZipArchive $zip, string $sheetPath): array
+    private function imagensPorLinha(ZipArchive $zip, string $sheetPath, string $sheetXml, array $shared): array
     {
-        $relsPath = $this->relsPath($sheetPath);
-        $relsXml = $zip->getFromName($relsPath);
-        if ($relsXml === false) {
-            return [];
-        }
-
+        $imagens = [];
+        $relsXml = $zip->getFromName($this->relsPath($sheetPath));
         $drawingPath = null;
-        $rels = simplexml_load_string($relsXml);
-        foreach ($rels->Relationship as $rel) {
-            $type = $this->atributo($rel, 'Type');
-            if (str_contains($type, '/drawing')) {
-                $drawingPath = $this->resolveTarget(dirname($sheetPath), $this->atributo($rel, 'Target'));
-                break;
+        if ($relsXml !== false) {
+            $rels = simplexml_load_string($relsXml);
+            foreach ($rels->Relationship as $rel) {
+                $type = $this->atributo($rel, 'Type');
+                if (str_contains($type, '/drawing')) {
+                    $drawingPath = $this->resolveTarget(dirname($sheetPath), $this->atributo($rel, 'Target'));
+                    break;
+                }
             }
         }
-        if (! $drawingPath) {
-            return [];
-        }
 
-        $drawingRels = $zip->getFromName($this->relsPath($drawingPath));
         $midias = [];
-        if ($drawingRels !== false) {
-            $relDoc = simplexml_load_string($drawingRels);
-            foreach ($relDoc->Relationship as $rel) {
-                $midias[$this->atributo($rel, 'Id')] = $this->resolveTarget(dirname($drawingPath), $this->atributo($rel, 'Target'));
+        $drawingXml = $drawingPath ? $zip->getFromName($drawingPath) : false;
+        if ($drawingPath && $drawingXml !== false) {
+            $drawingRels = $zip->getFromName($this->relsPath($drawingPath));
+            if ($drawingRels !== false) {
+                $relDoc = simplexml_load_string($drawingRels);
+                foreach ($relDoc->Relationship as $rel) {
+                    $midias[$this->atributo($rel, 'Id')] = $this->resolveTarget(dirname($drawingPath), $this->atributo($rel, 'Target'));
+                }
             }
         }
 
-        $drawingXml = $zip->getFromName($drawingPath);
-        if ($drawingXml === false) {
-            return [];
-        }
-
+        if ($drawingXml !== false) {
         $drawing = simplexml_load_string($drawingXml);
         $drawing->registerXPathNamespace('xdr', 'http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing');
         $drawing->registerXPathNamespace('a', 'http://schemas.openxmlformats.org/drawingml/2006/main');
         $drawing->registerXPathNamespace('r', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships');
 
-        $imagens = [];
         foreach ($drawing->xpath('//xdr:twoCellAnchor|//xdr:oneCellAnchor') ?: [] as $anchor) {
             $from = $anchor->xpath('xdr:from/xdr:row');
             $blip = $anchor->xpath('.//a:blip');
@@ -457,14 +475,138 @@ class ProdutoPlanilhaImporter
             if ($bytes === false) {
                 continue;
             }
-            $ext = strtolower(pathinfo($media, PATHINFO_EXTENSION));
-            if (! in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp'], true)) {
+            $ext = $this->extensaoImagem($bytes, strtolower(pathinfo($media, PATHINFO_EXTENSION)));
+            if ($ext === '') {
                 continue;
             }
-            $imagens[$linha] = ['bytes' => $bytes, 'ext' => $ext === 'jpeg' ? 'jpg' : $ext];
+            $imagens[$linha] = ['bytes' => $bytes, 'ext' => $ext];
+        }
+        }
+
+        foreach ($this->imagensDentroDaCelula($zip, $sheetXml, $shared) as $linha => $imagem) {
+            $imagens[$linha] ??= $imagem;
         }
 
         return $imagens;
+    }
+
+    /**
+     * Fotos colocadas dentro da célula, no formato DISPIMG do Excel.
+     *
+     * @param  array<int, string>  $shared
+     * @return array<int, array{bytes: string, ext: string}>
+     */
+    private function imagensDentroDaCelula(ZipArchive $zip, string $sheetXml, array $shared): array
+    {
+        $porId = $this->fotosPorIdentificador($zip);
+        if ($porId === [] || $sheetXml === '') {
+            return [];
+        }
+
+        $imagens = [];
+        if (! preg_match_all('/<c\b([^>]*)>(.*?)<\/c>/s', $sheetXml, $celulas, PREG_SET_ORDER)) {
+            return [];
+        }
+
+        foreach ($celulas as $celula) {
+            if (! preg_match('/\br="[A-Z]+(\d+)"/', $celula[1], $ref)) {
+                continue;
+            }
+            $linha = (int) $ref[1];
+            if (isset($imagens[$linha])) {
+                continue;
+            }
+
+            $texto = html_entity_decode($celula[2], ENT_QUOTES | ENT_XML1);
+            if (preg_match('/\bt="s"/', $celula[1]) && preg_match('/<v>(\d+)<\/v>/', $celula[2], $indice)) {
+                $texto .= ' '.($shared[(int) $indice[1]] ?? '');
+            }
+            if (! preg_match('/DISPIMG\(\s*"([^"]+)"/', $texto, $id) || ! isset($porId[$id[1]])) {
+                continue;
+            }
+            $imagens[$linha] = $porId[$id[1]];
+        }
+
+        return $imagens;
+    }
+
+    /**
+     * @return array<string, array{bytes: string, ext: string}>
+     */
+    private function fotosPorIdentificador(ZipArchive $zip): array
+    {
+        $xml = $zip->getFromName('xl/cellimages.xml');
+        $relsXml = $zip->getFromName('xl/_rels/cellimages.xml.rels');
+        if ($xml === false || $relsXml === false) {
+            return [];
+        }
+
+        $alvos = [];
+        $rels = simplexml_load_string($relsXml);
+        foreach ($rels->Relationship as $rel) {
+            $alvos[$this->atributo($rel, 'Id')] = $this->resolveTarget('xl', $this->atributo($rel, 'Target'));
+        }
+
+        $doc = new \DOMDocument();
+        if (! @$doc->loadXML($xml)) {
+            return [];
+        }
+        $xpath = new \DOMXPath($doc);
+        $fotos = [];
+        foreach ($xpath->query('//*[local-name()="cellImage"]') ?: [] as $item) {
+            $nome = '';
+            $embed = '';
+            foreach ($xpath->query('.//*[local-name()="cNvPr"]', $item) ?: [] as $no) {
+                $nome = $no->getAttribute('name');
+            }
+            foreach ($xpath->query('.//*[local-name()="blip"]', $item) ?: [] as $no) {
+                $embed = $no->getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships', 'embed');
+                if ($embed === '' && $no->attributes) {
+                    foreach ($no->attributes as $attr) {
+                        if ($attr->localName === 'embed') {
+                            $embed = $attr->value;
+                        }
+                    }
+                }
+            }
+            $media = $alvos[$embed] ?? null;
+            if ($nome === '' || ! $media) {
+                continue;
+            }
+            $bytes = $zip->getFromName($media);
+            if ($bytes === false) {
+                continue;
+            }
+            $ext = $this->extensaoImagem($bytes, strtolower(pathinfo($media, PATHINFO_EXTENSION)));
+            if ($ext === '') {
+                continue;
+            }
+            $fotos[$nome] = ['bytes' => $bytes, 'ext' => $ext];
+        }
+
+        return $fotos;
+    }
+
+    private function extensaoImagem(string $bytes, string $ext): string
+    {
+        $ext = $ext === 'jpeg' ? 'jpg' : $ext;
+        if (in_array($ext, ['jpg', 'png', 'gif', 'webp'], true)) {
+            return $ext;
+        }
+        if (str_starts_with($bytes, "\x89PNG")) {
+            return 'png';
+        }
+        if (str_starts_with($bytes, "\xFF\xD8")) {
+            return 'jpg';
+        }
+        if (str_starts_with($bytes, 'GIF8')) {
+            return 'gif';
+        }
+        if (str_starts_with($bytes, 'RIFF') && str_contains(substr($bytes, 0, 16), 'WEBP')) {
+            return 'webp';
+        }
+
+        return '';
     }
 
     private function atributo(\SimpleXMLElement $element, string $nome): string
