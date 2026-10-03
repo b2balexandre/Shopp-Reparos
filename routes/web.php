@@ -92,6 +92,8 @@ Route::middleware('auth')->group(function () {
         Route::patch('posts/{post}/toggle-published', [App\Http\Controllers\Admin\PostController::class, 'togglePublished'])->name('posts.toggle-published');
         
         // Produtos
+        Route::get('produtos/importar', [App\Http\Controllers\ProdutoController::class, 'importar'])->name('produtos.importar');
+        Route::post('produtos/importar', [App\Http\Controllers\ProdutoController::class, 'importarPlanilha'])->name('produtos.importar.store');
         Route::resource('produtos', App\Http\Controllers\ProdutoController::class);
         Route::post('produtos/{produto}/duplicate', [App\Http\Controllers\ProdutoController::class, 'duplicate'])->name('produtos.duplicate');
         

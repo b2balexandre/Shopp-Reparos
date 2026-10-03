@@ -10,6 +10,10 @@
             <input type="text" name="nome" id="nome" class="w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 p-3" value="{{ old('nome', $produto->nome) }}" required>
         </div>
         <div class="mb-4">
+            <label for="marca" class="block font-medium text-gray-700 mb-1">Marca</label>
+            <input type="text" name="marca" id="marca" value="{{ old('marca', $produto->marca) }}" class="w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 p-3">
+        </div>
+        <div class="mb-4">
             <label for="descricao" class="block font-medium text-gray-700 mb-1">Descrição</label>
             <textarea name="descricao" id="descricao" class="w-full rounded border-gray-300 focus:ring-blue-500 focus:border-blue-500 p-3">{{ old('descricao', $produto->descricao) }}</textarea>
         </div>

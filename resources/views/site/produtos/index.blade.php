@@ -126,6 +126,13 @@
         letter-spacing: .04em;
         text-transform: uppercase;
     }
+    .catalogo-body em {
+        display: block;
+        margin-top: 2px;
+        font-style: normal;
+        font-size: 0.82rem;
+        color: #64748b;
+    }
     .catalogo-body h2 {
         margin: 0;
         font-size: .92rem;
@@ -217,6 +224,9 @@
                             <small>{{ $produto->categoria->nome }}</small>
                         @endif
                         <h2>{{ $produto->nome }}</h2>
+                        @if($produto->marca)
+                            <em>{{ $produto->marca }}</em>
+                        @endif
                         @if($produto->preco)
                             <strong>R$ {{ number_format((float) $produto->preco, 2, ',', '.') }}</strong>
                         @endif

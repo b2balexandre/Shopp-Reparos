@@ -35,6 +35,9 @@
                     <span>Categoria:</span>
                     <span style="font-weight:600;color:#222;">{{ $produto->categoria->nome ?? '-' }}</span>
                 </div>
+                @if($produto->marca)
+                <div style="font-size:1rem;color:#555;">Marca: <span style="font-weight:600;color:#222;">{{ $produto->marca }}</span></div>
+                @endif
                 <div style="color:#444;font-size:1.08rem;line-height:1.6;margin-top:8px;">{{ $produto->descricao }}</div>
                 @if($produto->preco)
                     <div style="margin-top:18px;display:flex;flex-direction:column;align-items:flex-start;">

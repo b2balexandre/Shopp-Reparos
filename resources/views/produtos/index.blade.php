@@ -9,6 +9,11 @@
             <h1 class="text-3xl font-bold text-gray-800">Gerenciar Produtos</h1>
             <p class="text-gray-600 mt-2">Gerencie todo o catálogo de produtos da Shopp Reparos</p>
         </div>
+        <div class="flex items-center gap-3">
+        <a href="{{ route('admin.produtos.importar') }}"
+           class="bg-white border border-blue-600 text-blue-700 hover:bg-blue-50 font-bold py-3 px-6 rounded-lg transition-colors">
+            Importar planilha
+        </a>
         <a href="{{ route('admin.produtos.create') }}" 
            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg flex items-center gap-2 transition-colors">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -16,12 +21,36 @@
             </svg>
             Novo Produto
         </a>
+        </div>
     </div>
 
     @if(session('success'))
     <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-6">
         {{ session('success') }}
     </div>
+    @endif
+    @if(session('error'))
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+        {{ session('error') }}
+    </div>
+    @endif
+    @if(session('importacao'))
+        @php($importacao = session('importacao'))
+        @if($importacao['ignorados'] || $importacao['sem_categoria'] || $importacao['erros'])
+        <div class="bg-amber-50 border border-amber-300 text-amber-900 px-4 py-3 rounded mb-6 text-sm">
+            @if($importacao['ignorados'])
+                <p class="font-semibold">Mantidos, porque o título já existia:</p>
+                <p class="mb-2">{{ implode(', ', $importacao['ignorados']) }}</p>
+            @endif
+            @if($importacao['sem_categoria'])
+                <p class="font-semibold">Não criados, sem categoria na planilha:</p>
+                <p class="mb-2">{{ implode(', ', $importacao['sem_categoria']) }}</p>
+            @endif
+            @foreach($importacao['erros'] as $erro)
+                <p>{{ $erro }}</p>
+            @endforeach
+        </div>
+        @endif
     @endif
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
         <div class="overflow-x-auto">

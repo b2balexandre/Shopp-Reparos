@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Produto;
 use App\Models\Categoria;
+use App\Services\ProdutoPlanilhaImporter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -108,6 +109,7 @@ class ProdutoController extends Controller
         $data = $request->validate([
             'nome' => 'required|string|max:255',
             'descricao' => 'nullable|string',
+            'marca' => 'nullable|string|max:255',
             'imagem' => 'nullable|image|max:2048',
             'categoria_id' => 'required|exists:categorias,id',
             'preco' => 'nullable|numeric',
@@ -140,6 +142,7 @@ class ProdutoController extends Controller
         $data = $request->validate([
             'nome' => 'required|string|max:255',
             'descricao' => 'nullable|string',
+            'marca' => 'nullable|string|max:255',
             'imagem' => 'nullable|image|max:2048',
             'categoria_id' => 'required|exists:categorias,id',
             'preco' => 'nullable|numeric',
@@ -196,6 +199,41 @@ class ProdutoController extends Controller
 
         $produtoDuplicado->save();
         return redirect()->route('admin.produtos.index')->with('success', 'Produto duplicado com sucesso!');
+    }
+
+    public function importar()
+    {
+        $categorias = Categoria::orderBy('nome')->get();
+
+        return view('produtos.importar', compact('categorias'));
+    }
+
+    public function importarPlanilha(Request $request, ProdutoPlanilhaImporter $importer)
+    {
+        $request->validate([
+            'planilha' => ['required', 'file', 'max:20480', function ($attribute, $file, $fail) {
+                if (strtolower($file->getClientOriginalExtension()) !== 'xlsx') {
+                    $fail('Envie a planilha no formato .xlsx.');
+                }
+            }],
+            'categoria_id' => 'nullable|exists:categorias,id',
+        ]);
+
+        try {
+            $resultado = $importer->import(
+                $request->file('planilha')->getRealPath(),
+                $request->filled('categoria_id') ? $request->integer('categoria_id') : null
+            );
+        } catch (\Throwable $e) {
+            Log::error('Erro ao importar planilha de produtos: '.$e->getMessage());
+
+            return back()->with('error', $e->getMessage());
+        }
+
+        return redirect()
+            ->route('admin.produtos.index')
+            ->with('success', $importer->mensagem($resultado))
+            ->with('importacao', $resultado);
     }
 
     public function destroy(Produto $produto)

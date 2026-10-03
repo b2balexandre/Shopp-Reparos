@@ -39,6 +39,9 @@
                         {{ $produto->categoria->nome ?? '-' }}
                     </span>
                 </p>
+                @if($produto->marca)
+                <p class="text-sm text-gray-500">Marca: <span class="font-semibold text-gray-800">{{ $produto->marca }}</span></p>
+                @endif
                 <p class="text-gray-700 mt-4 leading-relaxed">
                     {{ $produto->descricao }}
                 </p>
