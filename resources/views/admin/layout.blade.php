@@ -108,6 +108,13 @@
                                 <i class="fas fa-images w-5"></i>
                                 Banners
                             </a>
+                            <a href="{{ route('admin.promocoes.index') }}" class="sidebar-link {{ request()->routeIs('admin.promocoes.*') ? 'active' : '' }}">
+                                <i class="fas fa-tags w-5"></i>
+                                Promoções
+                                <span class="ml-auto rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-700" title="No ar agora">
+                                    {{ \App\Models\Promocao::vigentes()->count() }}
+                                </span>
+                            </a>
                             <a href="{{ route('admin.usuarios.index') }}" class="sidebar-link {{ request()->routeIs('admin.usuarios.*') ? 'active' : '' }}">
                                 <i class="fas fa-users w-5"></i>
                                 Usuários
@@ -224,6 +231,11 @@
             <a href="{{ route('admin.banners.index') }}" class="sidebar-link flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg mb-2 {{ request()->routeIs('admin.banners.*') ? 'active' : '' }}">
                 <i class="fas fa-images w-5 h-5 mr-3"></i>
                 Banners
+            </a>
+
+            <a href="{{ route('admin.promocoes.index') }}" class="sidebar-link flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg mb-2 {{ request()->routeIs('admin.promocoes.*') ? 'active' : '' }}">
+                <i class="fas fa-tags w-5 h-5 mr-3"></i>
+                Promoções
             </a>
             
             <a href="{{ route('admin.usuarios.index') }}" class="sidebar-link flex items-center px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg mb-2 {{ request()->routeIs('admin.usuarios.*') ? 'active' : '' }}">

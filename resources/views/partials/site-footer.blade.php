@@ -131,6 +131,7 @@
             <div>
                 <h2>Páginas</h2>
                 <a href="{{ route('home') }}">Home</a>
+                <a href="{{ route('promocoes.index') }}">Promoções</a>
                 <a href="/site/produtos">Produtos</a>
                 <a href="/site/servicos">Serviços</a>
                 <a href="{{ route('blog.index') }}">Blog</a>

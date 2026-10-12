@@ -251,6 +251,7 @@
     };
     $itens = [
         ['/', 'Home', 'Home'],
+        ['/promocoes', 'Promoções', 'Promoções'],
         ['/lojas', 'Lojas', 'Lojas'],
         ['/site/produtos', 'Produtos', 'Produtos'],
         ['/site/servicos', 'Serviços', 'Serviços'],

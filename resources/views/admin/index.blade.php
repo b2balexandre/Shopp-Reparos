@@ -105,6 +105,28 @@
             </div>
         </div>
         
+        <!-- Promoções -->
+        <div class="bg-emerald-50 rounded-lg p-4 lg:p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex items-center mb-3">
+                <i class="fas fa-tags text-emerald-600 text-xl mr-3"></i>
+                <h2 class="text-lg lg:text-xl font-semibold text-emerald-800">Promoções</h2>
+                <span class="ml-auto bg-emerald-200 text-emerald-800 text-xs px-2 py-1 rounded-full" title="No ar agora">
+                    {{ \App\Models\Promocao::vigentes()->count() }} no ar
+                </span>
+            </div>
+            <div class="space-y-2">
+                <a href="{{ route('admin.promocoes.index') }}" class="block text-emerald-700 hover:text-emerald-900 hover:underline text-sm lg:text-base">
+                    <i class="fas fa-cog mr-2"></i>Gerenciar Promoções
+                </a>
+                <a href="{{ route('admin.promocoes.create') }}" class="block text-emerald-600 hover:text-emerald-800 hover:underline text-sm lg:text-base">
+                    <i class="fas fa-plus mr-2"></i>Nova Promoção
+                </a>
+                <a href="{{ route('promocoes.index') }}" target="_blank" class="block text-blue-600 hover:text-blue-800 hover:underline text-sm lg:text-base">
+                    <i class="fas fa-external-link-alt mr-2"></i>Ver no Site
+                </a>
+            </div>
+        </div>
+
         <!-- Blog -->
         <div class="bg-indigo-50 rounded-lg p-4 lg:p-6 shadow-sm hover:shadow-md transition-shadow">
             <div class="flex items-center mb-3">

@@ -23,6 +23,7 @@ Route::get('/lojas', [App\Http\Controllers\LojaController::class, 'index'])->nam
 Route::get('/lojas/{slug}', [App\Http\Controllers\LojaController::class, 'show'])
     ->whereIn('slug', ['aguas-claras', 'taguatinga'])
     ->name('lojas.show');
+Route::get('/promocoes', [App\Http\Controllers\PromocaoController::class, 'vitrine'])->name('promocoes.index');
 Route::view('/reparos-hidraulicos', 'site.reparos-hidraulicos');
 Route::view('/contato', 'site.contato');
 
@@ -115,6 +116,13 @@ Route::middleware('auth')->group(function () {
         // Serviços (CRUD completo)
         Route::resource('servicos', App\Http\Controllers\ServicoController::class);
         Route::post('servicos/{servico}/duplicate', [App\Http\Controllers\ServicoController::class, 'duplicate'])->name('servicos.duplicate');
+
+        // Promoções
+        Route::resource('promocoes', App\Http\Controllers\PromocaoController::class)
+            ->except('show')
+            ->parameters(['promocoes' => 'promocao']);
+        Route::patch('promocoes/{promocao}/toggle', [App\Http\Controllers\PromocaoController::class, 'toggle'])->name('promocoes.toggle');
+        Route::post('promocoes/{promocao}/duplicate', [App\Http\Controllers\PromocaoController::class, 'duplicate'])->name('promocoes.duplicate');
 
         // Banners
         Route::get('banners', [App\Http\Controllers\BannerController::class, 'index'])->name('banners.index');
