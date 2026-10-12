@@ -5,7 +5,7 @@
 @section('keywords', 'promoção ferragens brasília, ofertas hidráulica águas claras, promoção material elétrico taguatinga, shopp reparos ofertas')
 
 @php
-    $todas = $destaques->concat($paineis)->concat($promocoes);
+    $todas = $destaques->concat($promocoes)->concat($paineis);
     $contar = fn (string $slug) => $todas->filter(fn ($p) => collect($p->lojas())->contains('slug', $slug))->count();
     $acabando = $todas->filter(fn ($p) => $p->dias_restantes !== null && $p->dias_restantes <= 3)->count();
     $whatsappPadrao = config('lojas.aguas-claras.whatsapp');
@@ -21,103 +21,59 @@
         --linha: rgba(16, 35, 63, .1);
         --amarelo: #f5c518;
         --verde: #16a34a;
-        --urgente: #e11d48;
+        --oferta: #e11d48;
         color: var(--tinta);
         overflow-x: clip;
     }
     .promos-shell {
-        width: min(1120px, calc(100% - 2rem));
+        width: min(1180px, calc(100% - 1.5rem));
         margin-inline: auto;
     }
 
     .promos-hero {
         position: relative;
         overflow: hidden;
-        color: #fff;
-        padding: 1.9rem 0 2.1rem;
-        background:
-            radial-gradient(110% 140% at 100% 0%, rgba(56, 132, 255, .55) 0%, transparent 55%),
-            linear-gradient(135deg, #061f47 0%, #0b3a82 100%);
+        padding: 1.15rem 0 1.25rem;
+        background: linear-gradient(100deg, #f5c518 0%, #ffd94d 55%, #f5c518 100%);
+        color: var(--azul-escuro);
     }
     .promos-hero::after {
         content: "%";
         position: absolute;
-        right: -1.5rem;
-        bottom: -4.5rem;
-        font: 800 15rem/1 Poppins, sans-serif;
-        color: var(--amarelo);
-        opacity: .12;
-        transform: rotate(-12deg);
+        right: -.25rem;
+        top: 50%;
+        font: 800 8.5rem/1 Poppins, sans-serif;
+        color: var(--azul);
+        opacity: .1;
+        transform: translateY(-50%) rotate(-10deg);
         pointer-events: none;
     }
-    .promos-hero .promos-kicker {
-        display: inline-flex;
-        align-items: center;
-        gap: .5rem;
-        margin: 0;
-        font-size: .74rem;
-        font-weight: 800;
-        letter-spacing: .14em;
-        text-transform: uppercase;
-        color: var(--amarelo);
-    }
-    .promos-kicker::before {
-        content: "";
-        width: 1.4rem;
-        height: 2px;
-        background: currentColor;
-    }
     .promos-hero h1 {
-        margin: .6rem 0 .5rem;
-        max-width: 40rem;
-        font: 800 clamp(1.75rem, 5.2vw, 2.9rem)/1.1 Poppins, sans-serif;
+        margin: 0;
+        font: 800 clamp(1.55rem, 5vw, 2.4rem)/1.1 Poppins, sans-serif;
         letter-spacing: -.02em;
     }
     .promos-hero p {
-        margin: 0;
-        max-width: 34rem;
-        color: rgba(255, 255, 255, .82);
-        font-size: 1rem;
-        line-height: 1.55;
-    }
-    .promos-resumo {
-        display: flex;
-        flex-wrap: wrap;
-        gap: .5rem;
-        margin-top: 1.1rem;
-    }
-    .promos-resumo span {
-        display: inline-flex;
-        align-items: center;
-        gap: .45rem;
-        padding: .42rem .8rem;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, .1);
-        border: 1px solid rgba(255, 255, 255, .16);
-        font-size: .83rem;
+        margin: .35rem 0 0;
+        font-size: .9rem;
         font-weight: 600;
-    }
-    .promos-resumo span:first-child {
-        background: var(--amarelo);
-        border-color: var(--amarelo);
-        color: #1b1b1b;
-        font-weight: 800;
+        color: rgba(7, 42, 94, .82);
     }
 
     .promos-filtros {
         position: sticky;
         top: calc(4.25rem + 1px);
         z-index: 30;
-        background: rgba(255, 255, 255, .92);
+        background: rgba(255, 255, 255, .94);
         backdrop-filter: saturate(160%) blur(10px);
         -webkit-backdrop-filter: saturate(160%) blur(10px);
         border-bottom: 1px solid var(--linha);
     }
     .promos-filtros .promos-shell {
         display: flex;
-        gap: .5rem;
+        gap: .45rem;
         overflow-x: auto;
-        padding: .7rem 0;
+        padding: .6rem 0;
         scrollbar-width: none;
     }
     .promos-filtros .promos-shell::-webkit-scrollbar { display: none; }
@@ -125,69 +81,66 @@
         flex: 0 0 auto;
         display: inline-flex;
         align-items: center;
-        gap: .45rem;
-        min-height: 2.5rem;
-        padding: 0 .95rem;
+        gap: .4rem;
+        min-height: 2.3rem;
+        padding: 0 .85rem;
         border: 1px solid var(--linha);
         border-radius: 999px;
         background: #fff;
         color: var(--tinta);
-        font-size: .86rem;
+        font-size: .84rem;
         font-weight: 700;
         cursor: pointer;
         transition: background .15s, color .15s, border-color .15s;
     }
     .promos-chip small {
-        min-width: 1.35rem;
+        min-width: 1.3rem;
         padding: 0 .35rem;
         border-radius: 999px;
         background: #eef3fa;
         color: var(--azul);
-        font-size: .72rem;
-        line-height: 1.35rem;
+        font-size: .7rem;
+        line-height: 1.3rem;
         text-align: center;
     }
     .promos-chip:hover { border-color: var(--azul); }
-    .promos-chip.is-ativo {
-        background: var(--azul);
-        border-color: var(--azul);
-        color: #fff;
-    }
+    .promos-chip.is-ativo { background: var(--azul); border-color: var(--azul); color: #fff; }
     .promos-chip.is-ativo small { background: rgba(255, 255, 255, .18); color: #fff; }
-    .promos-chip--urgente i { color: var(--urgente); }
-    .promos-chip--urgente.is-ativo { background: var(--urgente); border-color: var(--urgente); }
+    .promos-chip--urgente i { color: var(--oferta); }
+    .promos-chip--urgente.is-ativo { background: var(--oferta); border-color: var(--oferta); }
     .promos-chip--urgente.is-ativo i { color: #fff; }
 
     .promo[hidden], .promos-secao[hidden] { display: none; }
-    .promos-secao { padding: 1.6rem 0 .4rem; }
+    .promos-secao { padding: 1.25rem 0 .25rem; }
     .promos-secao h2 {
         display: flex;
         align-items: center;
-        gap: .55rem;
-        margin: 0 0 .9rem;
-        font: 700 1.15rem/1.2 Poppins, sans-serif;
+        gap: .5rem;
+        margin: 0 0 .75rem;
+        font: 700 1.05rem/1.2 Poppins, sans-serif;
         color: var(--azul-escuro);
     }
-    .promos-secao h2 i { color: var(--amarelo); }
+    .promos-secao h2 i { color: var(--oferta); font-size: .95em; }
 
     .promos-destaques {
         display: grid;
         grid-auto-flow: column;
-        grid-auto-columns: 88%;
-        gap: 1rem;
+        grid-auto-columns: 86%;
+        gap: .75rem;
         overflow-x: auto;
         scroll-snap-type: x mandatory;
-        padding-bottom: .75rem;
+        padding-bottom: .5rem;
         scrollbar-width: none;
     }
     .promos-destaques::-webkit-scrollbar { display: none; }
     .promos-destaques.is-unico { grid-auto-columns: 100%; }
     .promos-destaques > .promo { scroll-snap-align: start; }
 
-    .promos-grade {
+    .promos-grade,
+    .promos-paineis {
         display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        gap: .85rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: .6rem;
     }
 
     .promo {
@@ -197,41 +150,34 @@
         min-width: 0;
         background: #fff;
         border: 1px solid var(--linha);
-        border-radius: 18px;
-        box-shadow: 0 1px 2px rgba(16, 35, 63, .04);
+        border-radius: 14px;
         scroll-margin-top: 9rem;
         transition: transform .2s ease, box-shadow .2s ease;
-        animation: promo-entra .5s ease backwards;
-        animation-delay: calc(var(--i, 0) * 60ms);
+        animation: promo-entra .45s ease backwards;
+        animation-delay: calc(var(--i, 0) * 50ms);
     }
     .promo:hover {
         transform: translateY(-3px);
-        box-shadow: 0 20px 40px -22px rgba(11, 58, 130, .45);
+        box-shadow: 0 18px 36px -22px rgba(11, 58, 130, .45);
     }
-    .promo:target {
-        box-shadow: 0 0 0 3px var(--amarelo), 0 20px 40px -22px rgba(11, 58, 130, .45);
-    }
-    .promo--destaque {
-        border-color: rgba(245, 197, 24, .6);
-        box-shadow: 0 22px 45px -28px rgba(11, 58, 130, .55);
-    }
+    .promo:target { box-shadow: 0 0 0 3px var(--amarelo), 0 18px 36px -22px rgba(11, 58, 130, .45); }
     @keyframes promo-entra {
-        from { opacity: 0; transform: translateY(14px); }
+        from { opacity: 0; transform: translateY(12px); }
     }
 
     .promo-media {
         position: relative;
-        aspect-ratio: 4 / 3;
+        aspect-ratio: 1 / 1;
         overflow: hidden;
-        border-radius: 17px 17px 0 0;
-        background: linear-gradient(180deg, #f5f8fd 0%, #e8eff9 100%);
+        border-radius: 13px 13px 0 0;
+        background: #fff;
+        border-bottom: 1px solid var(--linha);
     }
-    .promo--destaque .promo-media { aspect-ratio: 16 / 10; }
     .promo-media img {
         width: 100%;
         height: 100%;
         object-fit: contain;
-        padding: 1rem;
+        padding: .75rem;
         transition: transform .4s ease;
     }
     .promo-media.is-arte img { object-fit: cover; padding: 0; }
@@ -242,26 +188,26 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        background: #f3f6fb;
         color: #a9bcd6;
-        font-size: 2.4rem;
+        font-size: 2.2rem;
     }
     .promo-off {
         position: absolute;
-        top: .75rem;
-        left: .75rem;
-        padding: .28rem .6rem;
-        border-radius: 10px;
-        background: var(--amarelo);
-        color: #1b1b1b;
-        font: 800 1rem/1.2 Poppins, sans-serif;
-        box-shadow: 0 6px 16px -6px rgba(0, 0, 0, .35);
+        top: .5rem;
+        left: .5rem;
+        padding: .2rem .45rem;
+        border-radius: 8px;
+        background: var(--oferta);
+        color: #fff;
+        font: 800 .82rem/1.2 Poppins, sans-serif;
     }
     .promo-share {
         position: absolute;
-        top: .6rem;
-        right: .6rem;
-        width: 2.4rem;
-        height: 2.4rem;
+        top: .45rem;
+        right: .45rem;
+        width: 2.1rem;
+        height: 2.1rem;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -269,7 +215,8 @@
         border-radius: 999px;
         background: rgba(255, 255, 255, .94);
         color: var(--tinta);
-        box-shadow: 0 4px 12px -4px rgba(16, 35, 63, .35);
+        font-size: .85rem;
+        box-shadow: 0 3px 10px -3px rgba(16, 35, 63, .35);
         cursor: pointer;
     }
     .promo-share:hover { color: var(--azul); }
@@ -278,81 +225,104 @@
         flex: 1;
         display: flex;
         flex-direction: column;
-        gap: .55rem;
+        gap: .35rem;
         min-width: 0;
-        padding: 1rem 1.1rem 1.1rem;
+        padding: .7rem .75rem .8rem;
     }
-    .promo-tags { display: flex; flex-wrap: wrap; gap: .35rem; }
+    .promo-tags {
+        position: absolute;
+        left: .5rem;
+        right: .5rem;
+        bottom: .5rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: .3rem;
+    }
+    .promo--destaque .promo-tags { left: .75rem; bottom: .75rem; }
     .promo-selo,
     .promo-urgente {
         display: inline-flex;
         align-items: center;
-        gap: .3rem;
-        padding: .22rem .55rem;
-        border-radius: 999px;
-        font-size: .7rem;
+        gap: .25rem;
+        padding: .15rem .45rem;
+        border-radius: 6px;
+        font-size: .65rem;
         font-weight: 800;
-        letter-spacing: .05em;
+        letter-spacing: .04em;
         text-transform: uppercase;
     }
-    .promo-selo { background: #eef3fa; color: var(--azul); }
-    .promo-urgente { background: #fff1f2; color: var(--urgente); }
+    .promo-selo { background: var(--azul); color: #fff; }
+    .promo-urgente { background: var(--oferta); color: #fff; }
     .promo-titulo {
         margin: 0;
-        font: 700 1.05rem/1.3 Poppins, sans-serif;
+        min-height: 2.6em;
+        font-size: .9rem;
+        font-weight: 600;
+        line-height: 1.3;
         color: var(--tinta);
         overflow-wrap: anywhere;
-    }
-    .promo-desc {
-        margin: 0;
-        color: var(--suave);
-        font-size: .9rem;
-        line-height: 1.5;
         display: -webkit-box;
-        -webkit-line-clamp: 3;
+        -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
-    .promo-preco { display: flex; flex-direction: column; gap: .1rem; }
-    .promo-preco s { color: var(--suave); font-size: .85rem; }
-    .promo-preco strong {
-        font: 800 1.6rem/1.1 Poppins, sans-serif;
-        letter-spacing: -.02em;
-        color: var(--azul-escuro);
-    }
-    .promo-preco strong span { font-size: .85rem; font-weight: 600; color: var(--suave); letter-spacing: 0; }
-    .promo-preco em { font-style: normal; font-size: .82rem; font-weight: 700; color: var(--verde); }
-    .promo-info {
-        display: grid;
-        gap: .2rem;
+    .promo-titulo a { color: inherit; text-decoration: none; }
+    .promo-titulo a:hover { color: var(--azul); text-decoration: underline; }
+    .promo-desc {
         margin: 0;
-        padding: 0;
-        list-style: none;
         color: var(--suave);
-        font-size: .82rem;
+        font-size: .88rem;
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
-    .promo-info i { width: 1rem; color: var(--azul); text-align: center; }
+    .promo-preco { display: flex; flex-direction: column; gap: .05rem; }
+    .promo-preco s { color: var(--suave); font-size: .78rem; }
+    .promo-preco-linha { display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem .4rem; }
+    .promo-preco strong {
+        font: 800 1.25rem/1.1 Poppins, sans-serif;
+        letter-spacing: -.02em;
+        color: var(--tinta);
+    }
+    .promo-preco em { font-style: normal; font-size: .78rem; font-weight: 800; color: var(--verde); }
+    .promo-economia { color: var(--verde); font-size: .82rem; font-weight: 700; }
+    .promo-meta {
+        display: flex;
+        align-items: baseline;
+        gap: .3rem;
+        margin: 0;
+        color: var(--suave);
+        font-size: .75rem;
+        font-weight: 600;
+        line-height: 1.35;
+    }
+    .promo-meta i { color: var(--azul); }
+    .promo-meta.is-urgente,
+    .promo-meta.is-urgente i { color: var(--oferta); }
 
     .promo-acoes {
         display: flex;
         flex-direction: column;
-        gap: .55rem;
+        gap: .45rem;
         margin-top: auto;
-        padding-top: .35rem;
+        padding-top: .4rem;
     }
     .promo-btn {
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: .5rem;
-        min-height: 2.9rem;
-        padding: 0 1rem;
-        border-radius: 12px;
+        gap: .4rem;
+        min-height: 2.5rem;
+        padding: 0 .5rem;
+        border-radius: 10px;
         background: var(--verde);
         color: #fff;
+        font-size: .86rem;
         font-weight: 700;
-        font-size: .95rem;
         text-decoration: none;
+        white-space: nowrap;
         list-style: none;
         cursor: pointer;
         user-select: none;
@@ -360,23 +330,23 @@
     }
     .promo-btn::-webkit-details-marker { display: none; }
     .promo-btn:hover { background: #15803d; color: #fff; }
-    .promo-btn i { font-size: 1.15rem; }
+    .promo-btn i { font-size: 1.05rem; }
     .promo-escolha { position: relative; }
     .promo-escolha-lista {
         position: absolute;
         left: 0;
         right: 0;
-        bottom: calc(100% + .5rem);
+        bottom: calc(100% + .45rem);
         z-index: 5;
-        padding: .4rem;
+        padding: .35rem;
         background: #fff;
         border: 1px solid var(--linha);
-        border-radius: 14px;
+        border-radius: 12px;
         box-shadow: 0 20px 40px -14px rgba(16, 35, 63, .35);
     }
     .promo-escolha-lista p {
-        margin: .2rem .55rem .35rem;
-        font-size: .7rem;
+        margin: .2rem .5rem .3rem;
+        font-size: .68rem;
         font-weight: 800;
         letter-spacing: .08em;
         text-transform: uppercase;
@@ -384,36 +354,32 @@
     }
     .promo-escolha-lista a {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: .5rem;
-        padding: .7rem .65rem;
-        border-radius: 10px;
+        flex-direction: column;
+        gap: .1rem;
+        padding: .55rem .55rem;
+        border-radius: 9px;
         color: var(--tinta);
         text-decoration: none;
-        font-size: .9rem;
+        font-size: .86rem;
     }
     .promo-escolha-lista a:hover { background: #f0fdf4; }
-    .promo-escolha-lista span { color: var(--suave); font-size: .8rem; white-space: nowrap; }
-    .promo-link {
-        align-self: center;
-        color: var(--azul);
-        font-size: .85rem;
-        font-weight: 700;
-        text-decoration: none;
-    }
-    .promo-link:hover { text-decoration: underline; }
+    .promo-escolha-lista span { color: var(--suave); font-size: .78rem; white-space: nowrap; }
 
-    .promos-paineis {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: .75rem;
-    }
+    .promo--destaque { border-color: rgba(245, 197, 24, .75); box-shadow: 0 18px 40px -28px rgba(11, 58, 130, .5); }
+    .promo--destaque .promo-media { aspect-ratio: 4 / 3; }
+    .promo--destaque .promo-off { top: .75rem; left: .75rem; padding: .3rem .6rem; font-size: 1rem; }
+    .promo--destaque .promo-body { gap: .5rem; padding: 1rem 1.05rem 1.1rem; }
+    .promo--destaque .promo-titulo { min-height: 0; font: 700 1.1rem/1.25 Poppins, sans-serif; }
+    .promo--destaque .promo-preco strong { font-size: 1.75rem; }
+    .promo--destaque .promo-preco s { font-size: .85rem; }
+    .promo--destaque .promo-btn { min-height: 2.9rem; font-size: .95rem; }
+    .promo--destaque .promo-meta { font-size: .8rem; }
+
     .promo-painel {
         position: relative;
         overflow: hidden;
-        border-radius: 17px 17px 0 0;
-        background: linear-gradient(180deg, #f5f8fd 0%, #e8eff9 100%);
+        border-radius: 13px 13px 0 0;
+        background: #f3f6fb;
     }
     .promo-painel-abrir {
         display: block;
@@ -433,32 +399,19 @@
     .promo--painel:hover .promo-painel-abrir img { transform: scale(1.03); }
     .promo-painel-lupa {
         position: absolute;
-        left: .6rem;
-        bottom: .6rem;
-        width: 2.2rem;
-        height: 2.2rem;
+        left: .5rem;
+        bottom: .5rem;
+        width: 2.1rem;
+        height: 2.1rem;
         display: flex;
         align-items: center;
         justify-content: center;
         border-radius: 999px;
         background: rgba(16, 35, 63, .75);
         color: #fff;
-        font-size: .9rem;
+        font-size: .85rem;
     }
-    .promo--painel .promo-body { padding: .75rem .8rem .85rem; gap: .6rem; }
-    .promo-painel-validade {
-        margin: 0;
-        color: var(--suave);
-        font-size: .8rem;
-        font-weight: 600;
-        line-height: 1.4;
-    }
-    .promo-painel-validade i { margin-right: .2rem; color: var(--azul); }
-    .promo-painel-validade span { font-weight: 500; }
-    .promo-painel-validade.is-urgente,
-    .promo-painel-validade.is-urgente i { color: var(--urgente); }
-    .promos-paineis .promo-btn { min-height: 2.6rem; padding: 0 .5rem; gap: .4rem; font-size: .86rem; }
-    .promos-paineis .promo-escolha-lista a { flex-direction: column; align-items: flex-start; gap: .1rem; }
+    .promo--painel .promo-body { gap: .4rem; }
 
     .promos-zoom {
         max-width: min(92vw, 900px) !important;
@@ -502,7 +455,7 @@
 
     .promos-vazio {
         max-width: 32rem;
-        margin: 2.5rem auto 1rem;
+        margin: 2rem auto 1rem;
         padding: 2rem 1.5rem;
         text-align: center;
         background: #fff;
@@ -539,14 +492,12 @@
     .promos-vazio-acoes a:first-child { background: var(--verde); border-color: var(--verde); color: #fff; }
 
     .promos-nota {
-        display: flex;
-        gap: .55rem;
-        margin: 1.75rem 0 1rem;
+        margin: 1.5rem 0 1rem;
         color: var(--suave);
-        font-size: .8rem;
+        font-size: .75rem;
         line-height: 1.5;
+        text-align: center;
     }
-    .promos-nota i { margin-top: .2rem; color: var(--azul); }
 
     .promos-toast {
         position: fixed;
@@ -566,62 +517,51 @@
     }
     .promos-toast.is-visivel { opacity: 1; transform: translate(-50%, 0); }
 
-    @media (max-width: 599px) {
-        .promos-grade .promo { flex-direction: row; border-radius: 16px; }
-        .promos-grade .promo-media {
-            flex: 0 0 38%;
-            aspect-ratio: auto;
-            min-height: 11rem;
-            border-radius: 15px 0 0 15px;
-        }
-        .promos-grade .promo-media img { position: absolute; inset: 0; padding: .55rem; }
-        .promos-grade .promo-media.is-arte img { padding: 0; }
-        .promos-grade .promo-off { top: .5rem; left: .5rem; font-size: .85rem; padding: .2rem .45rem; }
-        .promos-grade .promo-share { top: auto; bottom: .5rem; right: .5rem; width: 2.15rem; height: 2.15rem; }
-        .promos-grade .promo-body { padding: .8rem .85rem .9rem; gap: .4rem; }
-        .promos-grade .promo-titulo { font-size: .98rem; }
-        .promos-grade .promo-desc { -webkit-line-clamp: 2; font-size: .85rem; }
-        .promos-grade .promo-preco strong { font-size: 1.3rem; }
-        .promos-grade .promo-btn { min-height: 2.6rem; font-size: .88rem; padding: 0 .6rem; }
-        .promos-grade .promo-escolha-lista { left: auto; width: min(14rem, 75vw); }
-        .promos-grade .promo-escolha-lista a { flex-direction: column; align-items: flex-start; gap: .1rem; }
-    }
     @media (min-width: 600px) {
-        .promos-grade { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+        .promos-shell { width: min(1180px, calc(100% - 2rem)); }
+        .promos-grade, .promos-paineis { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .9rem; }
     }
     @media (min-width: 900px) {
-        .promos-hero { padding: 3rem 0 3.2rem; }
-        .promos-hero::after { font-size: 22rem; bottom: -7rem; right: 2rem; }
-        .promos-secao { padding-top: 2.2rem; }
-        .promos-secao h2 { font-size: 1.35rem; }
+        .promos-hero { padding: 1.75rem 0 1.85rem; }
+        .promos-hero::after { font-size: 13rem; right: 3rem; }
+        .promos-hero p { font-size: 1rem; }
+        .promos-secao { padding-top: 1.75rem; }
+        .promos-secao h2 { font-size: 1.25rem; margin-bottom: 1rem; }
         .promos-destaques {
             grid-auto-flow: row;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 1.25rem;
+            gap: 1rem;
             overflow: visible;
         }
         .promos-destaques.is-unico { grid-template-columns: minmax(0, 1fr); }
-        .promos-destaques.is-unico .promo { flex-direction: row; }
-        .promos-destaques.is-unico .promo-media {
-            flex: 0 0 50%;
+        .promo--destaque { flex-direction: row; }
+        .promo--destaque .promo-media {
+            flex: 0 0 46%;
             aspect-ratio: auto;
-            min-height: 22rem;
-            border-radius: 17px 0 0 17px;
+            min-height: 17rem;
+            border-bottom: 0;
+            border-right: 1px solid var(--linha);
+            border-radius: 13px 0 0 13px;
         }
-        .promos-destaques.is-unico .promo-media img { position: absolute; inset: 0; }
-        .promo--destaque .promo-body { padding: 1.4rem 1.5rem 1.5rem; gap: .7rem; }
-        .promo--destaque .promo-titulo { font-size: 1.35rem; }
-        .promo--destaque .promo-preco strong { font-size: 2rem; }
-        .promo--destaque .promo-desc { -webkit-line-clamp: 5; }
-        .promos-grade { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
-        .promos-paineis { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
-        .promo--painel .promo-body { padding: .9rem 1rem 1rem; }
+        .promos-destaques.is-unico .promo-media { flex-basis: 50%; min-height: 21rem; }
+        .promo--destaque .promo-media img { position: absolute; inset: 0; }
+        .promo--destaque .promo-body { justify-content: center; padding: 1.4rem 1.5rem; }
+        .promo--destaque .promo-acoes { margin-top: .5rem; }
+        .promos-destaques.is-unico .promo-titulo { font-size: 1.45rem; }
+        .promos-destaques.is-unico .promo-preco strong { font-size: 2.2rem; }
+        .promos-destaques.is-unico .promo-acoes { max-width: 20rem; }
+    }
+    @media (min-width: 1000px) {
+        .promos-grade, .promos-paineis { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+        .promo-body { padding: .85rem .9rem .95rem; }
+        .promo-titulo { font-size: .95rem; }
+        .promo-preco strong { font-size: 1.4rem; }
     }
     @media (min-width: 1180px) {
         .promos-filtros { top: calc(4.75rem + 1px); }
     }
     @media (prefers-reduced-motion: reduce) {
-        .promo, .promo-media img, .promos-toast { animation: none; transition: none; }
+        .promo, .promo-media img, .promo-painel-abrir img, .promos-toast { animation: none; transition: none; }
         .promo:hover { transform: none; }
     }
 </style>
@@ -631,13 +571,14 @@
 <div class="promos">
     <section class="promos-hero">
         <div class="promos-shell">
-            <p class="promos-kicker">Ofertas Shopp Reparos</p>
-            <h1>Promoções para sua obra e manutenção</h1>
-            <p>Preços especiais em ferragens, hidráulica e elétrica nas nossas lojas de Águas Claras e Taguatinga. Escolha a oferta e peça direto pelo WhatsApp.</p>
-            <div class="promos-resumo">
-                <span><i class="fas fa-tags"></i> {{ $total }} {{ $total === 1 ? 'oferta no ar' : 'ofertas no ar' }}</span>
-                <span><i class="fas fa-store"></i> Águas Claras e Taguatinga</span>
-            </div>
+            <h1>Promoções</h1>
+            <p>
+                @if($total)
+                    {{ $total }} {{ $total === 1 ? 'oferta' : 'ofertas' }} nas lojas de Águas Claras e Taguatinga · peça pelo WhatsApp
+                @else
+                    Ofertas das lojas de Águas Claras e Taguatinga
+                @endif
+            </p>
         </div>
     </section>
 
@@ -673,10 +614,21 @@
         <div class="promos-shell">
             @if($destaques->isNotEmpty())
                 <section class="promos-secao" aria-labelledby="titulo-destaques">
-                    <h2 id="titulo-destaques"><i class="fas fa-star"></i> Ofertas em destaque</h2>
+                    <h2 id="titulo-destaques"><i class="fas fa-fire"></i> Destaques</h2>
                     <div class="promos-destaques {{ $destaques->count() === 1 ? 'is-unico' : '' }}">
                         @foreach($destaques as $promo)
                             @include('site.promocoes._card', ['promo' => $promo, 'destaque' => true, 'indice' => $loop->index])
+                        @endforeach
+                    </div>
+                </section>
+            @endif
+
+            @if($promocoes->isNotEmpty())
+                <section class="promos-secao" aria-labelledby="titulo-ofertas">
+                    <h2 id="titulo-ofertas"><i class="fas fa-tags"></i> {{ $destaques->isNotEmpty() ? 'Mais ofertas' : 'Ofertas' }}</h2>
+                    <div class="promos-grade">
+                        @foreach($promocoes as $promo)
+                            @include('site.promocoes._card', ['promo' => $promo, 'destaque' => false, 'indice' => $loop->index])
                         @endforeach
                     </div>
                 </section>
@@ -693,23 +645,9 @@
                 </section>
             @endif
 
-            @if($promocoes->isNotEmpty())
-                <section class="promos-secao" aria-labelledby="titulo-ofertas">
-                    <h2 id="titulo-ofertas"><i class="fas fa-bolt"></i> {{ $destaques->isNotEmpty() || $paineis->isNotEmpty() ? 'Mais ofertas' : 'Todas as ofertas' }}</h2>
-                    <div class="promos-grade">
-                        @foreach($promocoes as $promo)
-                            @include('site.promocoes._card', ['promo' => $promo, 'destaque' => false, 'indice' => $loop->index])
-                        @endforeach
-                    </div>
-                </section>
-            @endif
-
             <p id="promos-sem-resultado" class="promos-sem-resultado">Nenhuma promoção com esse filtro.</p>
 
-            <p class="promos-nota">
-                <i class="fas fa-circle-info"></i>
-                <span>Ofertas válidas nas lojas físicas e pelo WhatsApp, dentro do período informado e enquanto durarem os estoques. Imagens ilustrativas.</span>
-            </p>
+            <p class="promos-nota">Ofertas válidas nas lojas e pelo WhatsApp, no período informado ou enquanto durar o estoque. Imagens ilustrativas.</p>
         </div>
     @endif
 

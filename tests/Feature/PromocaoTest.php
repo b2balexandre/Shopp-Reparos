@@ -78,7 +78,7 @@ class PromocaoTest extends TestCase
             ->assertOk()
             ->assertSee('Disjuntor C16 em oferta')
             ->assertSee('Queima de estoque')
-            ->assertSee('Ofertas em destaque')
+            ->assertSee('titulo-destaques', false)
             ->assertSee('5561999318077')
             ->assertDontSee('5561996096296&amp;text=Ol%C3%A1%21%20Vi', false);
     }
@@ -114,7 +114,17 @@ class PromocaoTest extends TestCase
             ->assertSee('Panfletos de ofertas')
             ->assertSee('Ampliar panfleto')
             ->assertSee('storage/promocoes/' . $panfleto->imagem)
-            ->assertDontSee('Ofertas em destaque');
+            ->assertDontSee('titulo-destaques', false);
+    }
+
+    public function test_ofertas_completas_aparecem_antes_dos_panfletos(): void
+    {
+        Promocao::create(['modo' => 'imagem', 'titulo' => 'Encarte', 'imagem' => 'encarte.png']);
+        Promocao::create(['titulo' => 'Fita veda-rosca', 'preco_de' => 6.9, 'preco_por' => 4.5]);
+
+        $this->get('/promocoes')
+            ->assertOk()
+            ->assertSeeInOrder(['titulo-ofertas', 'Fita veda-rosca', 'titulo-paineis', 'encarte.png'], false);
     }
 
     public function test_modo_so_imagem_exige_imagem(): void

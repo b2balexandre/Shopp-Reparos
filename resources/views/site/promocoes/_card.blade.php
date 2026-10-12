@@ -10,6 +10,10 @@
     $precoPrincipal = $promo->preco_por ?? $promo->preco_de;
     $temDe = $promo->preco_por && $promo->preco_de && $promo->desconto;
     $linkProduto = $promo->produto ? '/site/produtos/' . $promo->produto->id . '-' . $promo->produto->slug : null;
+    $meta = array_filter([
+        count($lojasPromo) === 1 ? 'Só em ' . $lojasPromo[0]['nome'] : null,
+        ! $urgencia && $promo->termina_em ? 'Até ' . $promo->termina_em->format('d/m') : null,
+    ]);
 @endphp
 <article class="promo {{ $destaque ? 'promo--destaque' : '' }}"
          id="promo-{{ $promo->id }}"
@@ -28,45 +32,46 @@
         <button type="button" class="promo-share" data-url="{{ route('promocoes.index') }}#promo-{{ $promo->id }}" data-titulo="{{ $promo->titulo }}" aria-label="Compartilhar promoção">
             <i class="fas fa-share-nodes"></i>
         </button>
+        @if($promo->selo || $urgencia)
+            <div class="promo-tags">
+                @if($urgencia)<span class="promo-urgente"><i class="fas fa-clock"></i> {{ $urgencia }}</span>@endif
+                @if($promo->selo)<span class="promo-selo">{{ $promo->selo }}</span>@endif
+            </div>
+        @endif
     </div>
 
     <div class="promo-body">
-        @if($promo->selo || $urgencia)
-            <div class="promo-tags">
-                @if($promo->selo)<span class="promo-selo">{{ $promo->selo }}</span>@endif
-                @if($urgencia)<span class="promo-urgente"><i class="fas fa-clock"></i> {{ $urgencia }}</span>@endif
-            </div>
-        @endif
 
-        <h3 class="promo-titulo">{{ $promo->titulo }}</h3>
+        <h3 class="promo-titulo">
+            @if($linkProduto)
+                <a href="{{ $linkProduto }}">{{ $promo->titulo }}</a>
+            @else
+                {{ $promo->titulo }}
+            @endif
+        </h3>
 
-        @if($promo->descricao)
+        @if($destaque && $promo->descricao)
             <p class="promo-desc">{{ $promo->descricao }}</p>
         @endif
 
         @if($precoPrincipal)
             <div class="promo-preco">
                 @if($temDe)
-                    <s>De {{ \App\Models\Promocao::formatarPreco($promo->preco_de) }}</s>
+                    <s>{{ \App\Models\Promocao::formatarPreco($promo->preco_de) }}</s>
                 @endif
-                <strong><span>{{ $temDe ? 'Por' : '' }}</span> {{ \App\Models\Promocao::formatarPreco($precoPrincipal) }}</strong>
-                @if($temDe)
-                    <em>Economize {{ \App\Models\Promocao::formatarPreco($promo->preco_de - $promo->preco_por) }}</em>
+                <div class="promo-preco-linha">
+                    <strong>{{ \App\Models\Promocao::formatarPreco($precoPrincipal) }}</strong>
+                    @if($temDe)<em>{{ $promo->desconto }}% OFF</em>@endif
+                </div>
+                @if($destaque && $temDe)
+                    <span class="promo-economia">Economize {{ \App\Models\Promocao::formatarPreco($promo->preco_de - $promo->preco_por) }}</span>
                 @endif
             </div>
         @endif
 
-        <ul class="promo-info">
-            <li><i class="fas fa-location-dot"></i> {{ collect($lojasPromo)->pluck('nome')->implode(' e ') }}</li>
-            <li>
-                <i class="far fa-calendar"></i>
-                @if($promo->termina_em)
-                    Válida até {{ $promo->termina_em->format('d/m') }}
-                @else
-                    Enquanto durar o estoque
-                @endif
-            </li>
-        </ul>
+        @if($meta)
+            <p class="promo-meta"><i class="{{ count($lojasPromo) === 1 ? 'fas fa-location-dot' : 'far fa-calendar' }}"></i> {{ implode(' · ', $meta) }}</p>
+        @endif
 
         <div class="promo-acoes">
             @if(count($lojasPromo) === 1)
@@ -86,9 +91,6 @@
                         @endforeach
                     </div>
                 </details>
-            @endif
-            @if($linkProduto)
-                <a class="promo-link" href="{{ $linkProduto }}">Ver produto</a>
             @endif
         </div>
     </div>

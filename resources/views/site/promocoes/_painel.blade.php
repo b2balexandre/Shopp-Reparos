@@ -24,16 +24,9 @@
     </div>
 
     <div class="promo-body">
-        <p class="promo-painel-validade {{ $urgencia ? 'is-urgente' : '' }}">
+        <p class="promo-meta {{ $urgencia ? 'is-urgente' : '' }}">
             <i class="{{ $urgencia ? 'fas fa-clock' : 'far fa-calendar' }}"></i>
-            @if($urgencia)
-                {{ $urgencia }}
-            @elseif($promo->termina_em)
-                Válido até {{ $promo->termina_em->format('d/m') }}
-            @else
-                Enquanto durar o estoque
-            @endif
-            <span>· {{ collect($lojasPromo)->pluck('nome')->implode(' e ') }}</span>
+            {{ $urgencia ?? ($promo->termina_em ? 'Até ' . $promo->termina_em->format('d/m') : 'Enquanto durar o estoque') }}{{ count($lojasPromo) === 1 ? ' · Só em ' . $lojasPromo[0]['nome'] : '' }}
         </p>
 
         <div class="promo-acoes">
