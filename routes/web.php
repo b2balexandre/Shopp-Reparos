@@ -14,17 +14,26 @@ Route::get('/', function () {
     $produtos = Produto::with('categoria')->take(6)->get(); // Limita a 6 produtos
     $todasCategorias = Categoria::distinct()->pluck('nome');
     $banners = App\Models\Banner::getActiveAll(); // Buscar banners ativos
-    return view('site', compact('servicos', 'todasMarcas', 'produtos', 'todasCategorias', 'banners'));
+    $assistencias = App\Models\AssistenciaMarca::ativas();
+    return view('site', compact('servicos', 'todasMarcas', 'produtos', 'todasCategorias', 'banners', 'assistencias'));
 })->name('home');
 
 // Páginas institucionais públicas
-Route::view('/assistencia-tecnica', 'site.assistencia-tecnica');
+Route::get('/assistencia-tecnica', function () {
+    $assistencias = App\Models\AssistenciaMarca::ativas();
+
+    return view('site.assistencia-tecnica', compact('assistencias'));
+});
 Route::get('/lojas', [App\Http\Controllers\LojaController::class, 'index'])->name('lojas.index');
 Route::get('/lojas/{slug}', [App\Http\Controllers\LojaController::class, 'show'])
     ->whereIn('slug', ['aguas-claras', 'taguatinga'])
     ->name('lojas.show');
 Route::get('/promocoes', [App\Http\Controllers\PromocaoController::class, 'vitrine'])->name('promocoes.index');
-Route::view('/reparos-hidraulicos', 'site.reparos-hidraulicos');
+Route::get('/reparos-hidraulicos', function () {
+    $assistencias = App\Models\AssistenciaMarca::ativas();
+
+    return view('site.reparos-hidraulicos', compact('assistencias'));
+});
 Route::view('/contato', 'site.contato');
 
 // Listagem de serviços e produtos
@@ -123,6 +132,11 @@ Route::middleware('auth')->group(function () {
             ->parameters(['promocoes' => 'promocao']);
         Route::patch('promocoes/{promocao}/toggle', [App\Http\Controllers\PromocaoController::class, 'toggle'])->name('promocoes.toggle');
         Route::post('promocoes/{promocao}/duplicate', [App\Http\Controllers\PromocaoController::class, 'duplicate'])->name('promocoes.duplicate');
+
+        Route::get('assistencias', [App\Http\Controllers\AssistenciaMarcaController::class, 'index'])->name('assistencias.index');
+        Route::post('assistencias', [App\Http\Controllers\AssistenciaMarcaController::class, 'store'])->name('assistencias.store');
+        Route::put('assistencias/{assistencia}', [App\Http\Controllers\AssistenciaMarcaController::class, 'update'])->name('assistencias.update');
+        Route::delete('assistencias/{assistencia}', [App\Http\Controllers\AssistenciaMarcaController::class, 'destroy'])->name('assistencias.destroy');
 
         // Banners
         Route::get('banners', [App\Http\Controllers\BannerController::class, 'index'])->name('banners.index');

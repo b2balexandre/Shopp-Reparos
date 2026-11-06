@@ -36,8 +36,8 @@ class BannerController extends Controller
         
         $request->validate([
             'titulo' => 'required|string|max:255',
-            'desktop_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
-            'mobile_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:5120',
+            'desktop_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:10240',
+            'mobile_image' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:10240',
             'ordem' => 'nullable|integer|min:1'
         ]);
 
@@ -58,7 +58,7 @@ class BannerController extends Controller
             // Upload otimizado da imagem desktop
             if ($request->hasFile('desktop_image')) {
                 $desktopFile = $request->file('desktop_image');
-                $desktopName = 'desktop_' . time() . '_' . Str::random(10) . '.' . $desktopFile->getClientOriginalExtension();
+                $desktopName = $this->nomeArquivoBanner($desktopFile, 'desktop');
                 
                 // Garantir diretórios no disco 'public'
                 if (!Storage::disk('public')->exists('banners/desktop')) {
@@ -87,7 +87,7 @@ class BannerController extends Controller
             // Upload otimizado da imagem mobile
             if ($request->hasFile('mobile_image')) {
                 $mobileFile = $request->file('mobile_image');
-                $mobileName = 'mobile_' . time() . '_' . Str::random(10) . '.' . $mobileFile->getClientOriginalExtension();
+                $mobileName = $this->nomeArquivoBanner($mobileFile, 'mobile');
                 
                 // Garantir diretórios no disco 'public'
                 if (!Storage::disk('public')->exists('banners/mobile')) {
@@ -143,9 +143,14 @@ class BannerController extends Controller
             
             $request->validate([
                 'titulo' => 'nullable|string|max:255',
-                'desktop_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
-                'mobile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
+                'desktop_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
+                'mobile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
                 'ordem' => 'nullable|integer|min:1'
+            ], [
+                'desktop_image.image' => 'Cole uma imagem de verdade (JPEG, PNG ou WEBP).',
+                'desktop_image.max' => 'A imagem desktop passa de 10 MB.',
+                'mobile_image.image' => 'Cole uma imagem de verdade (JPEG, PNG ou WEBP).',
+                'mobile_image.max' => 'A imagem mobile passa de 10 MB.',
             ]);
 
             // Atualizar campos se fornecidos
@@ -170,7 +175,7 @@ class BannerController extends Controller
             if ($request->hasFile('desktop_image')) {
                 Log::info('Processando upload desktop');
                 $desktopFile = $request->file('desktop_image');
-                $desktopName = 'desktop_' . time() . '_' . Str::random(10) . '.' . $desktopFile->getClientOriginalExtension();
+                $desktopName = $this->nomeArquivoBanner($desktopFile, 'desktop');
                 
                 try {
                     // Usar método nativo para upload mais confiável
@@ -221,7 +226,7 @@ class BannerController extends Controller
             if ($request->hasFile('mobile_image')) {
                 Log::info('Processando upload mobile');
                 $mobileFile = $request->file('mobile_image');
-                $mobileName = 'mobile_' . time() . '_' . Str::random(10) . '.' . $mobileFile->getClientOriginalExtension();
+                $mobileName = $this->nomeArquivoBanner($mobileFile, 'mobile');
                 
                 try {
                     // Usar método nativo para upload mais confiável
@@ -276,12 +281,20 @@ class BannerController extends Controller
                 return response()->json([
                     'success' => true,
                     'message' => 'Banner atualizado com sucesso!',
-                    'banner' => $banner
+                    'banner' => [
+                        'id' => $banner->id,
+                        'titulo' => $banner->titulo,
+                        'ordem' => $banner->ordem,
+                        'desktop_image_url' => $banner->desktop_image_path,
+                        'mobile_image_url' => $banner->mobile_image_path,
+                    ],
                 ]);
             }
 
             return redirect()->route('admin.banners.index')->with('success', 'Banners atualizados com sucesso!');
             
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            throw $e;
         } catch (\Exception $e) {
             Log::error('Erro ao atualizar banner: ' . $e->getMessage());
             Log::error('Stack trace: ' . $e->getTraceAsString());
@@ -329,5 +342,21 @@ class BannerController extends Controller
             Log::error('Erro ao deletar banner: ' . $e->getMessage());
             return redirect()->route('admin.banners.index')->with('error', 'Erro ao deletar banner: ' . $e->getMessage());
         }
+    }
+
+    private function nomeArquivoBanner($file, string $prefix): string
+    {
+        $ext = strtolower((string) $file->getClientOriginalExtension());
+        if ($ext === 'jpeg') {
+            $ext = 'jpg';
+        }
+        if ($ext === '') {
+            $ext = strtolower((string) ($file->guessExtension() ?: 'png'));
+            if ($ext === 'jpeg') {
+                $ext = 'jpg';
+            }
+        }
+
+        return $prefix . '_' . time() . '_' . Str::random(10) . '.' . $ext;
     }
 }

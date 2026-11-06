@@ -22,6 +22,15 @@
 </div>
 
 <div class="max-w-6xl mx-auto py-6 px-2 sm:px-4 md:px-6">
+    <div class="mb-12">
+        <h2 class="text-2xl font-bold text-blue-700 mb-3 text-center">Assistência técnica Docol</h2>
+        <p class="text-gray-700 text-center mb-6 max-w-3xl mx-auto">{{ \App\Models\AssistenciaMarca::frase($assistencias) }} Para torneiras, duchas e aquecedores, o atendimento dessas marcas fica na mesma equipe.</p>
+        @include('partials.assistencias', ['assistencias' => $assistencias])
+        <p class="text-center mt-6">
+            <a href="/assistencia-tecnica" class="inline-block text-blue-700 font-semibold hover:underline">Ver a página de assistência</a>
+        </p>
+    </div>
+
     <!-- Seção de Serviços Hidráulicos -->
     <div class="mb-12">
         <h2 class="text-2xl font-bold text-blue-700 mb-6 flex items-center gap-2 text-center justify-center">

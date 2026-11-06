@@ -343,7 +343,7 @@
         <div class="home-wrap">
             <p class="home-kicker">Águas Claras e Taguatinga</p>
             <h1>Ferragens, hidráulica e reparos em Brasília</h1>
-            <p>Produtos para obra e serviços de assistência técnica, com duas lojas físicas e atendimento pelo WhatsApp.</p>
+            <p>Produtos para obra e assistência técnica Docol, com duas lojas físicas e atendimento pelo WhatsApp.</p>
             <div class="home-actions">
                 <a class="home-btn home-btn-primary" href="/site/produtos">Ver produtos</a>
                 <a class="home-btn home-btn-ghost" href="/lojas">Encontrar uma loja</a>
@@ -369,9 +369,18 @@
                 </a>
                 <a class="home-path" href="/assistencia-tecnica">
                     <strong>Assistência</strong>
-                    <span>Docol e marcas especializadas</span>
+                    <span>Assistência Docol e outras marcas</span>
                 </a>
             </div>
+        </div>
+    </section>
+
+    <section class="home-section">
+        <div class="home-wrap">
+            <h2>Assistência técnica</h2>
+            <p style="margin:0 0 .9rem; max-width:40rem; color:var(--muted);">{{ \App\Models\AssistenciaMarca::frase($assistencias) }}</p>
+            @include('partials.assistencias', ['assistencias' => $assistencias])
+            <a class="home-more" href="/assistencia-tecnica">Ver assistência técnica</a>
         </div>
     </section>
 

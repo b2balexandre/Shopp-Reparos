@@ -127,6 +127,18 @@
             </div>
         </div>
 
+        <div class="bg-cyan-50 rounded-lg p-4 lg:p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex items-center mb-3">
+                <i class="fas fa-wrench text-cyan-700 text-xl mr-3"></i>
+                <h2 class="text-lg lg:text-xl font-semibold text-cyan-900">Assistências</h2>
+            </div>
+            <div class="space-y-2">
+                <a href="{{ route('admin.assistencias.index') }}" class="block text-cyan-800 hover:text-cyan-950 hover:underline text-sm lg:text-base">
+                    <i class="fas fa-image mr-2"></i>Imagens das assistências
+                </a>
+            </div>
+        </div>
+
         <!-- Blog -->
         <div class="bg-indigo-50 rounded-lg p-4 lg:p-6 shadow-sm hover:shadow-md transition-shadow">
             <div class="flex items-center mb-3">
