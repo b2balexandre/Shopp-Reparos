@@ -46,8 +46,12 @@ class AssistenciaMarca extends Model
             return null;
         }
 
-        if (str_starts_with($this->imagem, 'img/') || str_starts_with($this->imagem, 'storage/')) {
+        if (str_starts_with($this->imagem, 'img/') || str_starts_with($this->imagem, 'storage/') || str_starts_with($this->imagem, 'http')) {
             return asset($this->imagem);
+        }
+
+        if (is_file(public_path('img/assistencias/' . $this->imagem))) {
+            return asset('img/assistencias/' . $this->imagem);
         }
 
         return asset('storage/assistencias/' . $this->imagem);

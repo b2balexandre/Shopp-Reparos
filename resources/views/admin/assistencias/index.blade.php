@@ -131,16 +131,25 @@
         el.classList.toggle('is-error', tipo === 'error');
     }
 
+    function normalizarImagem(blob) {
+        const type = blob.type && blob.type.startsWith('image/') ? blob.type : 'image/png';
+        let ext = (type.split('/')[1] || 'png').toLowerCase();
+        if (ext === 'jpeg') ext = 'jpg';
+        const nome = blob.name && blob.name.includes('.') ? blob.name : `colado-${Date.now()}.${ext}`;
+        return new File([blob], nome, { type });
+    }
+
     function arquivoDaArea(evento) {
         const dados = evento.clipboardData;
         if (!dados) return null;
         const lista = dados.files ? Array.from(dados.files) : [];
         const direto = lista.find((arquivo) => arquivo.type.startsWith('image/'));
-        if (direto) return direto;
+        if (direto) return normalizarImagem(direto);
         const itens = dados.items ? Array.from(dados.items) : [];
         for (const item of itens) {
             if (item.kind === 'file' && item.type.startsWith('image/')) {
-                return item.getAsFile();
+                const blob = item.getAsFile();
+                if (blob) return normalizarImagem(blob);
             }
         }
         return null;
@@ -173,7 +182,7 @@
         const corpo = new FormData();
         corpo.append('_token', axCsrf);
         corpo.append('_method', 'PUT');
-        corpo.append('imagem', arquivo);
+        corpo.append('imagem', arquivo, arquivo.name);
         try {
             const resposta = await fetch(zone.dataset.uploadUrl, {
                 method: 'POST',
@@ -198,6 +207,7 @@
     }
 
     function receber(zone, arquivo) {
+        arquivo = normalizarImagem(arquivo);
         if (!arquivo || !arquivo.type.startsWith('image/')) {
             nota(zone, 'Cole uma imagem.', 'error');
             return;

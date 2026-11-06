@@ -85,7 +85,7 @@ class AssistenciaMarcaController extends Controller
             if ($request->ajax() || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Não foi possível salvar a imagem.',
+                    'message' => 'Não foi possível salvar a imagem. ' . $e->getMessage(),
                 ], 500);
             }
 
@@ -122,18 +122,17 @@ class AssistenciaMarcaController extends Controller
         }
 
         $nome = 'assistencia_' . time() . '_' . Str::random(8) . '.' . $ext;
-        $destino = storage_path('app/public/assistencias');
-        if (!is_dir($destino)) {
-            mkdir($destino, 0755, true);
+        $destino = public_path('img/assistencias');
+        if (!is_dir($destino) && !mkdir($destino, 0755, true) && !is_dir($destino)) {
+            throw new \RuntimeException('Não foi possível criar a pasta da imagem.');
         }
+
+        $arquivo = $destino . DIRECTORY_SEPARATOR . $nome;
         $file->move($destino, $nome);
-
-        $publico = public_path('storage/assistencias');
-        if (!is_dir($publico)) {
-            mkdir($publico, 0755, true);
+        if (!is_file($arquivo)) {
+            throw new \RuntimeException('A imagem não foi gravada.');
         }
-        copy($destino . DIRECTORY_SEPARATOR . $nome, $publico . DIRECTORY_SEPARATOR . $nome);
 
-        return $nome;
+        return 'img/assistencias/' . $nome;
     }
 }
