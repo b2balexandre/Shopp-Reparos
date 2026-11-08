@@ -135,7 +135,7 @@ Route::middleware('auth')->group(function () {
 
         Route::get('assistencias', [App\Http\Controllers\AssistenciaMarcaController::class, 'index'])->name('assistencias.index');
         Route::post('assistencias', [App\Http\Controllers\AssistenciaMarcaController::class, 'store'])->name('assistencias.store');
-        Route::put('assistencias/{assistencia}', [App\Http\Controllers\AssistenciaMarcaController::class, 'update'])->name('assistencias.update');
+        Route::match(['post', 'put'], 'assistencias/{assistencia}', [App\Http\Controllers\AssistenciaMarcaController::class, 'update'])->name('assistencias.update');
         Route::delete('assistencias/{assistencia}', [App\Http\Controllers\AssistenciaMarcaController::class, 'destroy'])->name('assistencias.destroy');
 
         // Banners

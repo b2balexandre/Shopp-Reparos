@@ -44,7 +44,7 @@
 <div class="ax-admin">
     <header class="ax-head">
         <h1>Assistências</h1>
-        <p>Clique na imagem e aperte <strong>Ctrl+V</strong>. Ela aparece na página inicial, na assistência técnica e nos reparos hidráulicos.</p>
+        <p>Clique na imagem e aperte <strong>Ctrl+V</strong>. Na assistência que já existe, a foto é salva na hora. Ela aparece na página inicial, na assistência técnica e nos reparos hidráulicos.</p>
     </header>
 
     @if(session('success'))
@@ -53,36 +53,37 @@
     @if(session('error'))
         <div class="flash bad">{{ session('error') }}</div>
     @endif
+    @if($errors->any())
+        <div class="flash bad">{{ $errors->first() }}</div>
+    @endif
 
     @foreach($marcas as $marca)
         <article class="ax-card">
-            <form class="ax-row" action="{{ route('admin.assistencias.update', $marca) }}" method="POST">
+            <form action="{{ route('admin.assistencias.update', $marca) }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                @method('PUT')
-                <input class="ax-nome" type="text" name="nome" value="{{ $marca->nome }}" aria-label="Nome da assistência" required>
-                <input class="ax-ordem" type="number" min="1" name="ordem" value="{{ $marca->ordem }}" aria-label="Ordem">
-                <button class="ax-save" type="submit">Salvar</button>
-                <button class="ax-del" type="button" onclick="removerAssistencia({{ $marca->id }})" aria-label="Remover">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </form>
-            <div class="ax-stage">
-                <div class="ax-zone {{ $marca->imagem_url ? 'has-image' : '' }}" tabindex="0" data-ax-zone data-upload-url="{{ route('admin.assistencias.update', $marca) }}" data-label="{{ $marca->nome }}">
-                    @if($marca->imagem_url)
-                        <img src="{{ $marca->imagem_url }}" alt="{{ $marca->nome }}">
-                    @endif
-                    <div class="ax-empty" @if($marca->imagem_url) hidden @endif>Espaço da imagem</div>
-                    <div class="ax-hud"><span><kbd>Ctrl</kbd>+<kbd>V</kbd></span><button type="button" class="ax-file" data-ax-file>Arquivo</button></div>
-                    <input class="ax-input" type="file" accept="image/jpeg,image/png,image/jpg,image/gif,image/webp" tabindex="-1">
+                <div class="ax-row">
+                    <input class="ax-nome" type="text" name="nome" value="{{ $marca->nome }}" aria-label="Nome da assistência" required>
+                    <input class="ax-ordem" type="number" min="1" name="ordem" value="{{ $marca->ordem }}" aria-label="Ordem">
+                    <button class="ax-save" type="submit">Salvar</button>
+                    <button class="ax-del" type="button" onclick="removerAssistencia({{ $marca->id }})" aria-label="Remover">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </div>
-                <form action="{{ route('admin.assistencias.update', $marca) }}" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <input type="text" name="texto" value="{{ $marca->texto }}" placeholder="Frase curta, ex.: Assistência técnica Docol" aria-label="Texto de {{ $marca->nome }}" style="width:100%; border:1px solid #e2e8f0; background:#f8fafc; border-radius:12px; padding:10px 12px;">
-                    <button class="ax-save" type="submit" style="margin-top:10px;">Salvar texto</button>
-                    <p class="ax-note" data-ax-note>{{ $marca->imagem_url ? 'Clique na imagem para trocar' : 'Ainda sem imagem' }}</p>
-                </form>
-            </div>
+                <div class="ax-stage">
+                    <div class="ax-zone {{ $marca->imagem_url ? 'has-image' : '' }}" tabindex="0" data-ax-zone data-label="{{ $marca->nome }}">
+                        @if($marca->imagem_url)
+                            <img src="{{ $marca->imagem_url }}" alt="{{ $marca->nome }}">
+                        @endif
+                        <div class="ax-empty" @if($marca->imagem_url) hidden @endif>Espaço da imagem</div>
+                        <div class="ax-hud"><span><kbd>Ctrl</kbd>+<kbd>V</kbd></span><button type="button" class="ax-file" data-ax-file>Arquivo</button></div>
+                        <input class="ax-input" type="file" name="imagem" accept="image/jpeg,image/png,image/jpg,image/gif,image/webp" tabindex="-1">
+                    </div>
+                    <div>
+                        <input type="text" name="texto" value="{{ $marca->texto }}" placeholder="Frase curta, ex.: Assistência técnica Docol" aria-label="Texto de {{ $marca->nome }}" style="width:100%; border:1px solid #e2e8f0; background:#f8fafc; border-radius:12px; padding:10px 12px;">
+                        <p class="ax-note" data-ax-note>{{ $marca->imagem_url ? 'Clique na imagem para trocar' : 'Ainda sem imagem' }}</p>
+                    </div>
+                </div>
+            </form>
         </article>
     @endforeach
 
@@ -132,11 +133,20 @@
     }
 
     function normalizarImagem(blob) {
+        if (!blob) return null;
         const type = blob.type && blob.type.startsWith('image/') ? blob.type : 'image/png';
         let ext = (type.split('/')[1] || 'png').toLowerCase();
         if (ext === 'jpeg') ext = 'jpg';
-        const nome = blob.name && blob.name.includes('.') ? blob.name : `colado-${Date.now()}.${ext}`;
+        const generico = !blob.name || blob.name === 'image.png' || !blob.name.includes('.');
+        const nome = generico ? `colado-${Date.now()}.${ext}` : blob.name;
         return new File([blob], nome, { type });
+    }
+
+    function colocarNoInput(zone, arquivo) {
+        const entrada = zone.querySelector('input[type="file"]');
+        const transferencia = new DataTransfer();
+        transferencia.items.add(arquivo);
+        entrada.files = transferencia.files;
     }
 
     function arquivoDaArea(evento) {
@@ -169,43 +179,6 @@
         return anterior;
     }
 
-    async function enviar(zone, arquivo, anterior) {
-        if (zone.dataset.mode === 'draft') {
-            const entrada = zone.querySelector('input[type="file"]');
-            const transferencia = new DataTransfer();
-            transferencia.items.add(arquivo);
-            entrada.files = transferencia.files;
-            return;
-        }
-        zone.classList.add('is-busy');
-        nota(zone, 'Salvando…');
-        const corpo = new FormData();
-        corpo.append('_token', axCsrf);
-        corpo.append('_method', 'PUT');
-        corpo.append('imagem', arquivo, arquivo.name);
-        try {
-            const resposta = await fetch(zone.dataset.uploadUrl, {
-                method: 'POST',
-                headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' },
-                body: corpo,
-            });
-            const dados = await resposta.json().catch(() => ({}));
-            if (!resposta.ok || !dados.success) {
-                throw new Error(dados.errors?.imagem?.[0] || dados.message || 'Não foi possível trocar a imagem.');
-            }
-            if (dados.imagem_url) {
-                zone.querySelector('img').src = dados.imagem_url + '?t=' + Date.now();
-            }
-            nota(zone, 'Imagem atualizada', 'ok');
-        } catch (erro) {
-            const img = zone.querySelector('img');
-            if (anterior) img.src = anterior;
-            nota(zone, erro.message || 'Falha ao colar.', 'error');
-        } finally {
-            zone.classList.remove('is-busy');
-        }
-    }
-
     function receber(zone, arquivo) {
         arquivo = normalizarImagem(arquivo);
         if (!arquivo || !arquivo.type.startsWith('image/')) {
@@ -216,8 +189,21 @@
             nota(zone, 'A imagem passa de 10 MB.', 'error');
             return;
         }
-        const anterior = mostrar(zone, arquivo);
-        enviar(zone, arquivo, anterior);
+        mostrar(zone, arquivo);
+        colocarNoInput(zone, arquivo);
+        if (zone.dataset.mode === 'draft') {
+            nota(zone, 'Imagem pronta. Clique em Adicionar.', 'ok');
+            return;
+        }
+        const form = zone.closest('form');
+        if (!form || zone.dataset.sending === '1') return;
+        zone.dataset.sending = '1';
+        zone.classList.add('is-busy');
+        nota(zone, 'Salvando…');
+        setTimeout(() => {
+            if (form.requestSubmit) form.requestSubmit();
+            else form.submit();
+        }, 60);
     }
 
     document.querySelectorAll('[data-ax-zone]').forEach((zone) => {
